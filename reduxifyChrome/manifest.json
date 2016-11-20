@@ -1,0 +1,46 @@
+{
+  "manifest_version": 2,
+  "name": "Reduxify",
+  "description": "Redux dev tool",
+  "version": "1.0",
+  "author": "Amad Kanwi, Michael Lampe, Stephenie Reimer",
+  "browser_action": {
+    "default_icon": "icon.png",
+    "default_popup": "popup.html",
+    "default_title": "Reduxify here!"
+  },
+  "permissions": [
+    "activeTab",
+    "https://ajax.googleapis.com/",
+    "storage"
+  ],
+   "content_scripts": [
+    {
+      "matches": ["http://*/*"],
+      "js": ["content/script.js"]
+    }
+  ]
+}
+
+
+//permissions: (e.g. read and write on goole sites)
+
+// chrome url override: lets you override the new tab
+
+// popup.js holds the logic of the popup content
+
+
+
+/*PERMISSIONS array:
+  - storage: just like localStorage but user's extension settings persist, user data can be stored as an object
+ */
+
+/*ENVIRONMENTS of the Chrome Extension
+  1. Background (isolated) Environment - w/ access to all of the Chrome API's.
+
+  2. Extension environment (the popup area)
+
+  3. User-based environment (scripts are executed w/in the context of the webpage)
+  matches: -- will run on every page w/ http protocol
+*/
+
