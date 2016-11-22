@@ -6,3 +6,5 @@ for(let i = 0; i < headingText.length; i++){
 
 
 //try it w/ this site: http://www.color-hex.com/color/0000ff
+
+
