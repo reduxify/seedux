@@ -1,7 +1,7 @@
 var headingText = document.getElementsByTagName("div");
 
 for(let i = 0; i < headingText.length; i++){
-	headingText[i].style.color = "#ffff00";
+	headingText[i].style.color = "#0000ff";
 }
 
 
