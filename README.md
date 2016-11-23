@@ -1,4 +1,0 @@
-# reduxifyChrome
-Chrome extension feature
-
-
