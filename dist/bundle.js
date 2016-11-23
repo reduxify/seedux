@@ -63,7 +63,7 @@
 /******/ 	}
 
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "f3c4f2640937e7c891ef"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "d7356bffbe58d3c51878"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 
@@ -8422,7 +8422,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var array = ['some array'];
+	var array = ['Button1', 'Button2', 'Button3'];
 
 	_reactDom2.default.render(_react2.default.createElement(_Rewind2.default, { array: array }), document.getElementById('app'));
 
@@ -29629,9 +29629,44 @@
 
 /***/ },
 /* 254 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(78);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = _react2.default.createClass({
+	  displayName: "Rewind",
+
+	  print: function print() {
+	    return this.props.array || [];
+	  },
+	  render: function render() {
+	    return _react2.default.createElement(
+	      "div",
+	      { className: "rewind" },
+	      this.print().map(function (value) {
+	        return _react2.default.createElement(
+	          "button",
+	          { key: value },
+	          _react2.default.createElement(
+	            "h1",
+	            null,
+	            value
+	          )
+	        );
+	      })
+	    );
+	  }
+	});
 
 /***/ }
 /******/ ]);

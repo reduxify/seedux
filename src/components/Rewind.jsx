@@ -6,9 +6,9 @@ export default React.createClass({
   },
   render: function() {
     return <div className="rewind">
-      {this.print().map(entry =>
-        <button key={entry}>
-          <h1>{entry}</h1>
+      {this.print().map(value =>
+        <button key={value}>
+          <h1>{value}</h1>
         </button>
       )}
     </div>;

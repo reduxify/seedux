@@ -6,7 +6,7 @@
   "author": "Ammad Kanwi, Michael Lampe, Stephenie Reimer",
   "browser_action": {
     "default_icon": "icon.png",
-    "default_popup": "./popup/popup.html",
+    "default_popup": "./dist/index.html",
     "default_title": "Reduxify"
   },
   "permissions": [
