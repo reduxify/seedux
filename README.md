@@ -1,0 +1,2 @@
+# reduxifyChrome
+Chrome extension feature
