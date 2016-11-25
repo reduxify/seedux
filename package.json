@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha ./test/reduxifyActionExtractorTests",
+    "test": "mocha ./test/reduxifyReducersExtractorTests",
     "build": "webpack -w",
     "dev": "webpack-dev-server --hot --inline -w"
   },
@@ -17,7 +17,6 @@
     "babel-preset-es2015": "^6.18.0",
     "babel-preset-react": "^6.16.0",
     "chai": "^3.5.0",
-    "expect": "^1.20.2",
     "mocha": "^3.1.2",
     "react-hot-loader": "^3.0.0-beta.6",
     "webpack": "^1.13.3",

@@ -1,4 +1,7 @@
-function reduxifyUIExtractor(UI) {
+const reduxify = {};
+const coerceStr = '';
+
+reduxify.UIExtractor = (UI) => {
   
 }
 
@@ -7,14 +10,14 @@ function reduxifyUIExtractor(UI) {
  *  Pushes object containing @name: String and @cases: String[] to @structuredReducers: Array.
  */
 
-function reduxifyReducerExtractor(reducers) {  
-  let structuredReducers = [];  
-  const reducersKeys = Object.keys(reducers);
-  const reducersCases = reducersKeys.forEach(key => {
-  let cases = JSON.stringify(reducers[key]).match(/case\s[a-z'"]*:$/gi);
-    structuredReducers.push({ name: key, cases });
-  });
-  return structuredReducers;
+reduxify.ReducerExtractor = (reducers) => {  
+  console.log(reducers)
+  let structuredReducerObj = {};
+  const reducersArr = reducers.split(',');
+  const reducerNames = reducers.match(/"\w*":"/gi).map(key => key.replace(/["':]/gi, ''));
+    reducerNames.forEach((reducer, i) => structuredReducerObj[reducer] = reducersArr[i]);
+ // const reducerCases 
+  return structuredReducerObj;
 }
 
 /**
@@ -24,7 +27,7 @@ function reduxifyReducerExtractor(reducers) {
  * 
  */
 
-function reduxifyActionExtractor(actions) {
+reduxify.ActionExtractor = (actions) => {
   let structuredActions = [];
   const actionCreatorsKeys = Object.keys(this.actionCreators);
   const actionCreatorsTypes = actionCreatorsKeys.forEach(key => {
@@ -34,4 +37,4 @@ function reduxifyActionExtractor(actions) {
   return structuredActions;
 }
 
-module.exports = { reduxifyUIExtractor, reduxifyReducerExtractor, reduxifyActionExtractor };
+module.exports = { reduxify };
