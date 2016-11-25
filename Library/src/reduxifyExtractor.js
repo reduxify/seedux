@@ -11,43 +11,40 @@ reduxify.UIExtractor = (UI) => {
  */
 
 reduxify.ReducerExtractor = (reducers) => {  
-  console.log(reducers)
-  let structuredReducerObj = {};
-  const reducersArr = reducers.split(',');
+  let reducersObj = {};
+  let structuredReducersArr = [];
+  const reducersArr = reducers.split('switch');
   const reducerNames = reducers.match(/"\w*":"/gi).map(key => key.replace(/["':]/gi, ''));
-    reducerNames.forEach((reducer, i) => structuredReducerObj[reducer] = reducersArr[i]);
- // const reducerCases 
-  return structuredReducerObj;
-}
+    reducerNames.forEach((reducer, i) => reducersObj[reducer] = []);
+  const reducerCases = reducersArr.map(cases => cases.match(/case\s[\\'"\w]*:/gi, '')).join('').replace(/case|break|return/g, '').replace(/['";,\s]/g, '').split(':');
 
-//repl.it
-
-// function abc () { switch(def) { case 'ACTION': break; case 'REACTION': break;  } }
-// function def () { switch(abc) { case 'INACTION': break; } }
-
-// var testReducers = (reducers) => {
-//   let reduxifyObj = {};
-//   let coerceToStr = '';
-//     for (let k in reducers) {
-//       reduxifyObj[k] = reducers[k] + coerceToStr;
-//     }
-//   let returnVal = JSON.stringify(reduxifyObj);
-//  // console.log(returnVal)
-//   var structuredReducers = {};
-//    var reducersKeys = returnVal.match(/"\w*":"/gi).map(key => key.replace(/["':]/gi, ''));
-//       var reducersArr = returnVal.split(',');
-//    reducersKeys.forEach((key, i) => structuredReducers[key] = reducersArr[i]);
-//   console.log(structuredReducers)
+  let reducerKeys = Object.keys(reducersObj);
+  let i = 1;
+  let j = 0;
+  let k = 0;
+  while (j < reducerCases.length) {
+    if (reducersArr[i].includes(reducerCases[j])) {
+      if (reducerCases[j].length > 0) { 
+        reducersObj[reducerKeys[k]].push(reducerCases[j]);
+      }
+      j++;
+    }
+    else {
+      i++;
+      k++;
+    }
+  }
   
-// }
+  reducerKeys.forEach(key => {
+    structuredReducersArr.push({
+      name: key,
+      cases: reducersObj[key]
+    })
+  });
 
-// console.log(testReducers({abc, def}))
-
-
-//    //var reducerCases = reducersArr.map(reducer => reducer.match(/case\s.*':/gi));
-//   // var reducerCases2 = reducerCases.map(c => c.replace(/[case\\':]/gi, ''));
-//  // const reducersKeys2 = reducersKeys.map(key => key.replace(/["':]/gi, '').slice(0, -8))
-
+  // console.log(structuredReducersArr)
+  return structuredReducersArr;
+}
 
 /**
  * 
