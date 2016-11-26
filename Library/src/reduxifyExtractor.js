@@ -1,8 +1,7 @@
 const reduxify = {};
-const coerceStr = '';
 
 reduxify.UIExtractor = (UI) => {
-  
+  console.log(UI)
 }
 
 /**
