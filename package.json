@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha ./test/reduxifyReducersExtractorTests",
+    "test": "mocha ./test/reduxifyActionExtractorTests mocha ./test/reduxifyReducersExtractorTests",
     "build": "webpack -w",
     "dev": "webpack-dev-server --hot --inline -w"
   },

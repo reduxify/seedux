@@ -1,3 +1,5 @@
+// Todo: Enable handling of actionCreators returning multiple payloads with different types
+
 const addTodo = (text) => {
   return {
     type: 'ADD_TODO',
@@ -32,24 +34,40 @@ const redoAction = () => {
   }
 }
 
+// Simulates code injected into Redux's native bindActionCreators function
+
+function reduxifybindActionCreatorsLogic(actionCreators, dispatch) {
+  let reduxifyObj = {};
+  let coerceToStr = '';
+    for (let k in actionCreators) {
+      reduxifyObj[k] = actionCreators[k] + coerceToStr;
+    }
+  return JSON.stringify(reduxifyObj);
+}
+
+const testActionCreators = reduxifybindActionCreatorsLogic({addTodo, setVisibilityFilter, toggleTodo, undoAction, redoAction});
+
 const answerActions = [
   {
-    name: 'ADD_TODO'
+    name: 'addTodo',
+    type: 'ADD_TODO'
   },
   {
-    name: 'SET_VISIBILITY_FILTER'
+    name: 'setVisibilityFilter',
+    type: 'SET_VISIBILITY_FILTER'
   },
   {
-    name: 'TOGGLE_TODO'
+    name: 'toggleTodo',
+    type: 'TOGGLE_TODO'
   },
   {
-    name: 'UNDO'
+    name: 'undoAction',
+    type: 'UNDO'
   },
   {
-    name: 'REDO'
+    name: 'redoAction',
+    type: 'REDO'
   }
 ]
-
-const testActionCreators = { addTodo, setVisibilityFilter, toggleTodo, redoAction };
 
 module.exports = { testActionCreators, answerActions };

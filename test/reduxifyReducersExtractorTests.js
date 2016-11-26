@@ -16,12 +16,12 @@ const output = reduxify.ReducerExtractor(testReducers);
     expect(output[0]).to.be.an('object');
   })
 
-  it('should return an array composed of objects with the keys "name" and "type"', () => {
+  it('should return an array composed of objects with the keys "name" and "cases"', () => {
     expect(output[0].name).to.exist;
     expect(output[0].cases).to.exist;
   })
 
-  it('should return an array composed of objects with the key types of "string" and "array"', () => {
+  it('should return an array composed of objects with the value types of "string" and "array"', () => {
     expect(output[0].name).to.be.a('string');
     expect(output[0].cases).to.be.an('array');
   })

@@ -5,27 +5,29 @@ const { reduxify } = require('./../Library/src/reduxifyExtractor');
 
 describe('reduxify.ActionExtractor', () => {
 
+const output = reduxify.ActionExtractor(testActionCreators);
+
   it('should be a function', () => {
     expect(reduxify.ActionExtractor).to.be.a.function;
   })
 
   it('should return an array composed of objects', () => {
-    expect(reduxify.ActionExtractor(testActionCreators).to.be.an('array'));
-    expect(reduxify.ActionExtractor(testActionCreators)[0].to.be.an('object'));
+    expect(output).to.be.an('array');
+    expect(output[0]).to.be.an('object');
   })
 
   it('should return an array composed of objects with the keys "name" and "type"', () => {
-    expect(reduxify.ActionExtractor(testActionCreators)[0].hasOwnProperty('name').to.be.true);
-    expect(reduxify.ActionExtractor(testActionCreators)[0].hasOwnProperty('type').to.be.true);
+    expect(output[0].name).to.exist;
+    expect(output[0].type).to.exist;
   })
 
-  it('should return an array composed of objects with keys possessing the types "string" and "string"', () => {
-    expect(reduxify.ActionExtractor(testActionCreators)[0].name.to.be.a('string'));
-    expect(reduxify.ActionExtractor(testActionCreators)[0].type.to.be.a('string'));
+  it('should return an array composed of objects with value types of "string"', () => {
+    expect(output[0].name).to.be.a('string');
+    expect(output[0].type).to.be.a('string');
   })
 
   it('should return a properly structured output for a given input', () => {
-    expect(reduxify.ActionExtractor(testActionCreators).to.deep.equal(answerActions));
+    expect(output).to.deep.equal(answerActions);
   })
 
 });

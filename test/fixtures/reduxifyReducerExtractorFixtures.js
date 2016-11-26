@@ -45,6 +45,8 @@ const todos = (state = [], action) => {
   }
 }
 
+// Simulates code injected into Redux's native combineReducers function
+
 function reduxifyCombineReducersLogic(reducers) {
   let reduxifyObj = {};
   let coerceToStr = '';
