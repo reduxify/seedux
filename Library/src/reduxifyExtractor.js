@@ -1,7 +1,20 @@
 const reduxify = {};
 
+/**
+ *  Parses component for name and propNames. 
+ *  Pushes object containing @name: String and @propNames: String[] to @structuredUIArr: Array.
+ */
+
+// TODO: Figure out how to pass structuredUIArr to visualization once all containers and their propNames have been added.
+
 reduxify.UIExtractor = (UI) => {
-  console.log(UI)
+  let UIObj = {};
+  let structuredUIArr = [];
+  const UIName = UI[0];
+  const UIPropNames = UI[1];
+  UIObj[UIName] = UIPropNames;
+  structuredUIArr.push({name: UIName, propNames: UIPropNames});
+  return structuredUIArr;
 }
 
 /**

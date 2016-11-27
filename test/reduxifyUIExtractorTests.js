@@ -1,6 +1,6 @@
 const chai = require('chai');
 const expect = require('chai').expect;
-const { testUI, answerUI } = require('./fixtures/reduxifyActionCreatorExtractorFixtures');
+const { testUI, answerUI } = require('./fixtures/reduxifyUIExtractorFixtures');
 const { reduxify } = require('./../Library/src/reduxifyExtractor');
 
 describe('reduxify.UIExtractor', () => {
