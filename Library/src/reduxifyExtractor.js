@@ -2,7 +2,8 @@ const reduxify = {};
 
 /**
  *  Parses component for name and propNames. 
- *  Pushes object containing @name: String and @propNames: String[] to @structuredUIArr: Array.
+ *  INPUT: Array = Array[0] = WrappedComponent.name, Array[1] = Object.keys(WrappedComponent.propTypes);
+ *  OUTPUT: Pushes object containing @name: String and @propNames: String[] to @structuredUIArr: Array.
  */
 
 // TODO: Figure out how to pass structuredUIArr to visualization once all containers and their propNames have been added.
@@ -19,15 +20,17 @@ reduxify.UIExtractor = (UI) => {
 
 /**
  *  Parses reducer function definitions for switch statement cases. 
- *  Pushes object containing @name: String and @cases: String[] to @structuredReducersArr: Array.
+ *  INPUT: Object = Keys: Reducer Names, Values: Stringified function definitions
+ *  OUTPUT: Pushes object containing @name: String and @cases: String[] to @structuredReducersArr: Array.
  */
 
 reduxify.ReducerExtractor = (reducers) => {  
   let reducersObj = {};
   let structuredReducersArr = [];
-  const reducersArr = reducers.split('switch');
-  const reducerNames = reducers.match(/"\w*":"/gi).map(key => key.replace(/["':]/gi, ''));
+  const reducerNames = Object.keys(reducers);
     reducerNames.forEach(reducer => reducersObj[reducer] = []);
+  reducers = JSON.stringify(reducers);
+  const reducersArr = reducers.split('switch');
   const reducerCases = reducersArr.map(cases => cases.match(/case\s[\\'"\w]*:/gi, '')).join('').replace(/case|break|return/g, '').replace(/['";,\s]/g, '').split(':');
 
 // Handles data anomalies and populates the reducersObj in the format of name: cases key-value pairs.
@@ -63,15 +66,17 @@ reduxify.ReducerExtractor = (reducers) => {
 /**
  * 
  *  Parses actionCreators function definitions for type properties on returned payloads. 
- *  Pushes object containing @name: String and @type: String to @structuredActionCreatorsArr: Array.
+ *  INPUT: Object = Keys: ActionCreator names, Values: Stringified function definitions
+ *  OUTPUT: Pushes object containing @name: String and @type: String to @structuredActionCreatorsArr: Array.
  * 
  */
 
 reduxify.ActionExtractor = (actionCreators) => {
   let actionCreatorsObj = {};
   let structuredActionCreatorsArr = [];
+  const actionCreatorsNames = Object.keys(actionCreators);
+  actionCreators = JSON.stringify(actionCreators);
   const actionCreatorsArr = actionCreators.split('type:');
-  const actionCreatorsNames = actionCreators.match(/['"]\w*['"]:['"]/gi).map(n => n = n.slice(1, -3));
   const actionTypes = actionCreatorsArr.map(t => t.match(/['"]\w*['",]/gi), '').slice(1);
 
 // Handles data anomalies and populates the actionCreatorsObj in the format of name: type key-value pairs.
