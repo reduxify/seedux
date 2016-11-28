@@ -1,7 +1,7 @@
 const reduxify = {};
-
+const some_element = document;
 /**
- *  Parses component for name and propNames. 
+ *  Parses component for name and propNames.
  *  INPUT: Array = Array[0] = WrappedComponent.name, Array[1] = Object.keys(WrappedComponent.propTypes);
  *  OUTPUT: Pushes object containing @name: String and @propNames: String[] to @structuredUIArr: Array.
  */
@@ -14,17 +14,21 @@ reduxify.UIExtractor = (UI) => {
   const UIName = UI[0];
   const UIPropNames = UI[1];
   UIObj[UIName] = UIPropNames;
-  structuredUIArr.push({name: UIName, propNames: UIPropNames});
+  structuredUIArr.push({ name: UIName, propNames: UIPropNames });
+  // var evt = document.createEvent('CustomEvent');
+  // evt.initCustomEvent('codeParsed', true, true, structuredUIArr);
+  // console.log('Dispatching event: ', evt);
+  // some_element.dispatchEvent(evt);
   return structuredUIArr;
 }
 
 /**
- *  Parses reducer function definitions for switch statement cases. 
+ *  Parses reducer function definitions for switch statement cases.
  *  INPUT: Object = Keys: Reducer Names, Values: Stringified function definitions
  *  OUTPUT: Pushes object containing @name: String and @cases: String[] to @structuredReducersArr: Array.
  */
 
-reduxify.ReducerExtractor = (reducers) => {  
+reduxify.ReducerExtractor = (reducers) => {
   let reducersObj = {};
   let structuredReducersArr = [];
   const reducerNames = Object.keys(reducers);
@@ -34,13 +38,14 @@ reduxify.ReducerExtractor = (reducers) => {
   const reducerCases = reducersArr.map(cases => cases.match(/case\s[\\'"\w]*:/gi, '')).join('').replace(/case|break|return/g, '').replace(/['";,\s]/g, '').split(':');
 
 // Handles data anomalies and populates the reducersObj in the format of name: cases key-value pairs.
+  if (reducersArr.length > 1) {
 
   let i = 1;
   let j = 0;
   let k = 0;
   while (j < reducerCases.length) {
     if (reducersArr[i].includes(reducerCases[j])) {
-      if (reducerCases[j].length > 0) { 
+      if (reducerCases[j].length > 0) {
         reducersObj[reducerNames[k]].push(reducerCases[j]);
       }
       j++;
@@ -50,7 +55,8 @@ reduxify.ReducerExtractor = (reducers) => {
       k++;
     }
   }
-  
+}
+
 // Populates the structuredReducersArr with objects containing name and cases properties.
 
   reducerNames.forEach(key => {
@@ -59,16 +65,19 @@ reduxify.ReducerExtractor = (reducers) => {
       cases: reducersObj[key]
     })
   });
-
+  var evt = document.createEvent('CustomEvent');
+  evt.initCustomEvent('codeParsed:reducers', true, true, structuredReducersArr);
+  console.log('Dispatching event: ', evt);
+  some_element.dispatchEvent(evt);
   return structuredReducersArr;
 }
 
 /**
- * 
- *  Parses actionCreators function definitions for type properties on returned payloads. 
+ *
+ *  Parses actionCreators function definitions for type properties on returned payloads.
  *  INPUT: Object = Keys: ActionCreator names, Values: Stringified function definitions
  *  OUTPUT: Pushes object containing @name: String and @type: String to @structuredActionCreatorsArr: Array.
- * 
+ *
  */
 
 reduxify.ActionExtractor = (actionCreators) => {
@@ -85,7 +94,7 @@ reduxify.ActionExtractor = (actionCreators) => {
     actionTypes[i] = actionTypes[i][0].replace(/['"\\]/g, '');
     actionCreatorsObj[actionCreatorsNames[i]] = actionTypes[i];
   }
-  
+
 // Populates the structuredActionCreatorsArr with objects containing name and type properties.
 
   actionCreatorsNames.forEach(key => {

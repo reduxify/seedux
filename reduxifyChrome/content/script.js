@@ -15,13 +15,13 @@ document.addEventListener('actionDispatched', function(e){
 }, false);
 
 // Listen for custom DOM event dispatched by our code within combineReducers
-document.addEventListener('codeParsed', function(e){
+document.addEventListener('codeParsed:reducers', function(e){
   // send message to background script with parsed code object
 	// which was sent via e.detail property
 	console.log('Code Parsing event heard! Sending to background...', e.detail);
   const msg = {};
   msg.codeObj = e.detail;
-  msg.type = 'storeVizData';
+  msg.type = 'storeReducers';
   chrome.extension.sendMessage(msg, function(response) {
 });
 }, false);
