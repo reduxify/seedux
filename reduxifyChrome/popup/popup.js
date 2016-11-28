@@ -6,7 +6,7 @@ function setDOMInfo(data) {
 	document.write(data);
 }
 
-chrome.tabs.create({ url: 'toolTab/toolTab.html' });
+chrome.tabs.create({ url: 'dist/index.html' });
 
 // window.addEventListener('DOMContentLoaded', function () {
 // 	console.log('Querying!');
