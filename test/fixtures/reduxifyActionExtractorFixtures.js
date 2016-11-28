@@ -42,7 +42,7 @@ function reduxifybindActionCreatorsLogic(actionCreators, dispatch) {
     for (let k in actionCreators) {
       reduxifyObj[k] = actionCreators[k] + coerceToStr;
     }
-  return JSON.stringify(reduxifyObj);
+  return reduxifyObj;
 }
 
 const testActionCreators = reduxifybindActionCreatorsLogic({addTodo, setVisibilityFilter, toggleTodo, undoAction, redoAction});

@@ -53,7 +53,7 @@ function reduxifyCombineReducersLogic(reducers) {
     for (let k in reducers) {
       reduxifyObj[k] = reducers[k] + coerceToStr;
     }
-  return JSON.stringify(reduxifyObj);
+  return reduxifyObj;
 }
 
 const testReducers = reduxifyCombineReducersLogic({ visibilityFilter, todos });
