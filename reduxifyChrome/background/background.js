@@ -1,4 +1,4 @@
-const history = [];
+let history = [];
 
 chrome.runtime.onMessage.addListener((msg, sender, response) => {
     // sent from another content script, intended for saving source
@@ -9,6 +9,10 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
   }
   // sent from newtab-contentscript, to get the source
   if (msg.type === 'populateLog') {
+    response({ history });
+  }
+  if (msg.type === 'resetLog') {
+    history = [];
     response({ history });
   }
 });

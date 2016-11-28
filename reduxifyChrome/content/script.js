@@ -27,11 +27,12 @@
 // });
 
 document.addEventListener('actionDispatched', function(e){
-   //send message to ext
-	 console.log('I heard an action! Sending to background...', e.detail);
-	 const msg = {};
-	 msg.historyEntry = e.detail;
-	 msg.type = 'addToLog';
-   chrome.extension.sendMessage(msg, function(response) {
-   });
+  // send message to background script with new historyEntry object
+	// which was sent via e.detail property
+	console.log('I heard an action! Sending to background...', e.detail);
+  const msg = {};
+  msg.historyEntry = e.detail;
+  msg.type = 'addToLog';
+  chrome.extension.sendMessage(msg, function(response) {
+});
 }, false);

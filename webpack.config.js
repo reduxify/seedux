@@ -6,12 +6,15 @@ module.exports = {
     'webpack/hot/only-dev-server',
     './reduxifyChrome/src/index.jsx'
   ],
-    module: {
+  module: {
     loaders: [{
       test: /\.jsx?$/,
       exclude: /node_modules/,
       loaders: ["babel-loader"]
-    }]
+    }, {
+      test: /\.(css|scss)$/,
+      loaders: ['style', 'css', 'sass']
+    }],
   },
   resolve: {
     extensions: ['', '.js', '.jsx']
