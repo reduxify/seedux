@@ -14,12 +14,19 @@
     "https://ajax.googleapis.com/",
     "storage"
   ],
-   "content_scripts": [
+  "externally_connectable": {
+    "matches": ["*://localhost/*"]
+  },
+  "content_scripts": [
     {
-      "matches": ["http://*/*"],
+      "matches": ["http://localhost/*"],
       "js": ["content/script.js"]
     }
-  ]
+  ],
+  "background": {
+    "scripts": ["background/background.js"],
+    "persistent": true
+  }
 }
 
 
@@ -43,4 +50,3 @@
   3. User-based environment (scripts are executed w/in the context of the webpage)
   matches: -- will run on every page w/ http protocol
 */
-
