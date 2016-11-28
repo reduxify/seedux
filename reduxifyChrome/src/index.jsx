@@ -1,11 +1,12 @@
-import React from 'react';
 import ReactDOM from 'react-dom';
-import Rewind from './components/Rewind';
+import React from 'react';
+import App from './app';
 
-const array = ['Button1', 'Button2','Button3'];
+require('./main.scss');
 
+console.log("We're here!");
 
 ReactDOM.render(
-  <Rewind array={array} />,
+  <App />,
   document.getElementById('app')
 );

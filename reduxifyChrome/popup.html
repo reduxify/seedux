@@ -1,0 +1,23 @@
+<!doctype html>
+<!--
+ This page is shown when the extension button is clicked, because the
+ "browser_action" field in manifest.json contains the "default_popup" key with
+ value "popup.html".
+ -->
+<html>
+  <head>
+    <title>Reduxify Main Page</title>
+    <link rel="stylesheet" type="text/css" href="popup/popup.css"/>
+    <style>
+    </style>
+    <!--
+      - JavaScript and HTML must be in separate files
+     -->
+  </head>
+  <body>
+    <div id="status"></div>
+    <div> <button id="mainbutton" name="button"> Click Me to Reduxify</button>
+    </div>
+    <script src="popup/popup.js"></script>
+  </body>
+</html>
