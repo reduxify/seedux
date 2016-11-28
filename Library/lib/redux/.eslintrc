@@ -1,5 +1,5 @@
 {
-  "extends": "rackt",
+  "extends": "airbnb",
   "rules": {
     "valid-jsdoc": 2,
     // Disable until Flow supports let and const

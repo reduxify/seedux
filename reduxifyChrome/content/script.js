@@ -1,31 +1,8 @@
-// var headingText = document.getElementsByTagName("div");
+// Content Script for Reduxify
+// Acts as an intermediary between our code in the app being examined
+// and our extension.
 
-// for(let i = 0; i < headingText.length; i++){
-// 	headingText[i].style.color = "#0000ff";
-// }
-
-
-// //try it w/ this site: http://www.color-hex.com/color/0000ff
-
-// chrome.runtime.onMessage.addListener(function (msg, sender, response) {
-// 	console.log('Request for info received!');
-//   // First, validate the message's structure
-//   if ((msg.from === 'popup') && (msg.subject === 'DOMInfo')) {
-//     // Collect the necessary data
-//     // (For your specific requirements `document.querySelectorAll(...)`
-//     //  should be equivalent to jquery's `$(...)`)
-//     var domInfo = {
-//       total:   document.querySelectorAll('*').length,
-//       inputs:  document.querySelectorAll('input').length,
-//       buttons: document.querySelectorAll('button').length
-//     };
-//
-//     // Directly respond to the sender (popup),
-//     // through the specified callback */
-//     response('oh heiiii');
-//   }
-// });
-
+// Listen for custom DOM event dispatched by our code within the logger middlware
 document.addEventListener('actionDispatched', function(e){
   // send message to background script with new historyEntry object
 	// which was sent via e.detail property
@@ -37,13 +14,14 @@ document.addEventListener('actionDispatched', function(e){
 });
 }, false);
 
-document.addEventListener('codeParsed', function(e){
+// Listen for custom DOM event dispatched by our code within combineReducers
+document.addEventListener('codeParsed:reducers', function(e){
   // send message to background script with parsed code object
 	// which was sent via e.detail property
 	console.log('Code Parsing event heard! Sending to background...', e.detail);
   const msg = {};
   msg.codeObj = e.detail;
-  msg.type = 'storeVizData';
+  msg.type = 'storeReducers';
   chrome.extension.sendMessage(msg, function(response) {
 });
 }, false);

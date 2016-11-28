@@ -1,5 +1,4 @@
-/* global chrome */
-import { diff } from '../../public/deep-diff.min.js'
+import { diff } from '../lib/deep-diff.min.js'
 // const ACTION_TYPES = {
 //   UNDO: "GLOBAL_UNDO",
 //   REDO: "GLOBAL_REDO",

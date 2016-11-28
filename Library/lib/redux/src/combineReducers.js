@@ -102,14 +102,14 @@ function assertReducerSanity(reducers) {
  */
 export default function combineReducers(reducers) {
   var reducerKeys = Object.keys(reducers)
-  
+
   // REDUXIFY
-  // let reduxifyObj = {};
-  // let coerceToStr = '';
-  //   for (let k in reducers) {
-  //     reduxifyObj[k] = reducers[k] + coerceToStr;
-  //   }
-  // reduxify.ReducerExtractor(reduxifyObj);
+  let reduxifyObj = {};
+  let coerceToStr = '';
+    for (let k in reducers) {
+      reduxifyObj[k] = reducers[k] + coerceToStr;
+    }
+  reduxify.ReducerExtractor(reduxifyObj);
 
   var finalReducers = {}
   for (var i = 0; i < reducerKeys.length; i++) {

@@ -17,7 +17,8 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
     response({ history });
   }
   // sent from the content script to store parsing data
-  if (msg.type === 'storeVizData') {
-    codeObj = msg.codeObj;
+  if (msg.type === 'storeReducers') {
+    console.log('Got Reducer CodeObj: ', msg.codeObj);
+    codeObj.reducers = msg.codeObj;
   }
 });
