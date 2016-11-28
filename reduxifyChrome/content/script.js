@@ -36,3 +36,14 @@ document.addEventListener('actionDispatched', function(e){
   chrome.extension.sendMessage(msg, function(response) {
 });
 }, false);
+
+document.addEventListener('codeParsed', function(e){
+  // send message to background script with parsed code object
+	// which was sent via e.detail property
+	console.log('Code Parsing event heard! Sending to background...', e.detail);
+  const msg = {};
+  msg.codeObj = e.detail;
+  msg.type = 'storeVizData';
+  chrome.extension.sendMessage(msg, function(response) {
+});
+}, false);
