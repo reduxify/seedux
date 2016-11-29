@@ -1,0 +1,50 @@
+$bgColor: darkblue;
+$primColor: #ddd;
+
+.well {
+  border-radius: 0.2em;
+  background-color: $bgColor * 1.5;
+  border: 1px dotted white;
+  padding: 1em;
+  margin: 0
+}
+
+body {
+  color: $primColor;
+  background-color: $bgColor;
+}
+
+.diff-json-container {
+  @extend .well;
+  vertical-align: top;
+  white-space: pre;
+  width: 30%;
+  display: inline-block;
+}
+.log-action-label {
+  font-weight: 700;
+}
+// debug borders
+.col1, .col2, .col3 {
+  display: inline-block;
+  border-top: 1px solid $primColor;
+  border-left: 1px solid $primColor;
+  border-right: 1px solid $primColor;
+  width: 15em;
+}
+.diff-json-container {
+  width: 13em;
+}
+.diff-path, .diff-json-container {
+  height: inherit;
+}
+.Collapsible__trigger {
+  font-size: 1.5em;
+  font-weight: 700;
+}
+.Collapsible:nth-of-type(odd) {
+  background-color: $bgColor * 0.8;
+}
+.Collapsible {
+  border: 1px solid $primColor;
+}

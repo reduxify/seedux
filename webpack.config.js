@@ -6,26 +6,25 @@ module.exports = {
   entry: [
     'webpack-dev-server/client?http://localhost:8080',
     'webpack/hot/only-dev-server',
-    './reduxifyChrome/src/index.jsx',
-    './reduxifyChrome/d3/basicTree.js'
+    './reduxifyChrome/src/index.jsx'
   ],
-  resolve: {
-    extensions: ['', '.js', '.jsx']
-  },
   module: {
     loaders: [{
       test: /\.jsx?$/,
       exclude: /node_modules/,
-      loader: 'babel-loader'
-    }]
+      loaders: ["babel-loader"]
+    }, {
+      test: /\.(css|scss)$/,
+      loaders: ['style', 'css', 'sass']
+    }],
   },
   output: {
-    path: path.join(__dirname + '/reduxifyChrome/dist'),
+    path: __dirname + '/reduxifyChrome/dist',
     publicPath: '/',
     filename: 'bundle.js'
   },
   devServer: {
-    contentBase: './dist',
+    contentBase: './reduxifyChrome/dist',
      hot: true
   },
   "babel": {

@@ -1,11 +1,13 @@
 const chai = require('chai');
 const expect = require('chai').expect;
-const { testActionCreators, answerActions } = require('./fixtures/reduxifyActionExtractorFixtures');
+const { testActionCreators, answerActions, answerD3Actions } = require('./fixtures/reduxifyActionExtractorFixtures');
 const { reduxify } = require('./../Library/src/reduxifyExtractor');
+const { D3ActionCreatorStructurer } = require('./../Library/src/reduxifyD3Structurer');
 
 describe('reduxify.ActionExtractor', () => {
 
 const output = reduxify.ActionExtractor(testActionCreators);
+const outputD3 = D3ActionCreatorStructurer(output);
 
   it('should be a function', () => {
     expect(reduxify.ActionExtractor).to.be.a.function;
@@ -28,6 +30,10 @@ const output = reduxify.ActionExtractor(testActionCreators);
 
   it('should return a properly structured output for a given input', () => {
     expect(output).to.deep.equal(answerActions);
+  })
+
+  it('should return a properly structured D3 hierarchical tree output for a given input', () => {
+    expect(outputD3).to.deep.equal(answerD3Actions);
   })
 
 });
