@@ -70,4 +70,50 @@ const answerActions = [
   }
 ]
 
-module.exports = { testActionCreators, answerActions };
+const answerD3Actions = {
+  'name': 'Action Creators',
+  'children': [
+    {
+      'name': 'addTodo',
+      'children': [
+        {
+          'name': 'ADD_TODO'
+        }
+      ]
+    },
+    {
+      'name': 'setVisibilityFilter',
+      'children': [
+        {
+          'name': 'SET_VISIBILITY_FILTER'
+        }
+      ]
+    },
+    {
+      'name': 'toggleTodo',
+      'children': [
+        {
+          'name': 'TOGGLE_TODO'
+        }
+      ]
+    },
+    {
+      'name': 'undoAction',
+      'children': [
+        {
+          'name': 'UNDO'
+        }
+      ]
+    },
+    {
+      'name': 'redoAction',
+      'children': [
+        {
+          'name': 'REDO'
+        }
+      ]
+    }
+  ]
+}
+
+module.exports = { testActionCreators, answerActions, answerD3Actions };

@@ -69,4 +69,29 @@ const answerReducers = [
   }
 ]
 
-module.exports = { testReducers, answerReducers };
+const answerD3Reducers = {
+  'name': 'Reducers',
+  'children': [
+      {
+        'name': 'visibilityFilter',
+        'children': [
+          {
+            'name': 'SET_VISIBILITY_FILTER'
+          }
+        ]
+      },
+      {
+        'name': 'todos',
+        'children': [
+          {
+            'name': 'ADD_TODO'
+          },
+          {
+            'name': 'TOGGLE_TODO'
+          }
+        ]
+      }
+  ]
+}
+
+module.exports = { testReducers, answerReducers, answerD3Reducers };
