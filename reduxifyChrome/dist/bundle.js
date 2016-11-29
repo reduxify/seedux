@@ -63,7 +63,7 @@
 /******/ 	}
 
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "bf5a48f8a81837835836"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "38194d64d0a04183c033"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 
@@ -3283,7 +3283,7 @@
 /* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(process) {
+	
 	/**
 	 * This is the web browser implementation of `debug()`.
 	 *
@@ -3324,8 +3324,7 @@
 
 	function useColors() {
 	  // is webkit? http://stackoverflow.com/a/16459606/376773
-	  // document is undefined in react-native: https://github.com/facebook/react-native/pull/1632
-	  return (typeof document !== 'undefined' && 'WebkitAppearance' in document.documentElement.style) ||
+	  return ('WebkitAppearance' in document.documentElement.style) ||
 	    // is firebug? http://stackoverflow.com/a/398120/376773
 	    (window.console && (console.firebug || (console.exception && console.table))) ||
 	    // is firefox >= v31?
@@ -3338,11 +3337,7 @@
 	 */
 
 	exports.formatters.j = function(v) {
-	  try {
-	    return JSON.stringify(v);
-	  } catch (err) {
-	    return '[UnexpectedJSONParseError]: ' + err.message;
-	  }
+	  return JSON.stringify(v);
 	};
 
 
@@ -3429,13 +3424,9 @@
 	function load() {
 	  var r;
 	  try {
-	    return exports.storage.debug;
+	    r = exports.storage.debug;
 	  } catch(e) {}
-
-	  // If debug isn't set in LS, and we're in Electron, try to load $DEBUG
-	  if (typeof process !== 'undefined' && 'env' in process) {
-	    return process.env.DEBUG;
-	  }
+	  return r;
 	}
 
 	/**
@@ -3461,7 +3452,6 @@
 	  } catch (e) {}
 	}
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(14)))
 
 /***/ },
 /* 24 */
@@ -3475,7 +3465,7 @@
 	 * Expose `debug()` as the module.
 	 */
 
-	exports = module.exports = debug.debug = debug;
+	exports = module.exports = debug;
 	exports.coerce = coerce;
 	exports.disable = disable;
 	exports.enable = enable;
@@ -3552,10 +3542,7 @@
 	    if (null == self.useColors) self.useColors = exports.useColors();
 	    if (null == self.color && self.useColors) self.color = selectColor();
 
-	    var args = new Array(arguments.length);
-	    for (var i = 0; i < args.length; i++) {
-	      args[i] = arguments[i];
-	    }
+	    var args = Array.prototype.slice.call(arguments);
 
 	    args[0] = exports.coerce(args[0]);
 
@@ -3582,9 +3569,9 @@
 	      return match;
 	    });
 
-	    // apply env-specific formatting
-	    args = exports.formatArgs.apply(self, args);
-
+	    if ('function' === typeof exports.formatArgs) {
+	      args = exports.formatArgs.apply(self, args);
+	    }
 	    var logFn = enabled.log || exports.log || console.log.bind(console);
 	    logFn.apply(self, args);
 	  }
@@ -3613,7 +3600,7 @@
 
 	  for (var i = 0; i < len; i++) {
 	    if (!split[i]) continue; // ignore empty strings
-	    namespaces = split[i].replace(/[\\^$+?.()|[\]{}]/g, '\\$&').replace(/\*/g, '.*?');
+	    namespaces = split[i].replace(/\*/g, '.*?');
 	    if (namespaces[0] === '-') {
 	      exports.skips.push(new RegExp('^' + namespaces.substr(1) + '$'));
 	    } else {
@@ -3677,11 +3664,11 @@
 	 * Helpers.
 	 */
 
-	var s = 1000
-	var m = s * 60
-	var h = m * 60
-	var d = h * 24
-	var y = d * 365.25
+	var s = 1000;
+	var m = s * 60;
+	var h = m * 60;
+	var d = h * 24;
+	var y = d * 365.25;
 
 	/**
 	 * Parse or format the given `val`.
@@ -3692,23 +3679,17 @@
 	 *
 	 * @param {String|Number} val
 	 * @param {Object} options
-	 * @throws {Error} throw an error if val is not a non-empty string or a number
 	 * @return {String|Number}
 	 * @api public
 	 */
 
-	module.exports = function (val, options) {
-	  options = options || {}
-	  var type = typeof val
-	  if (type === 'string' && val.length > 0) {
-	    return parse(val)
-	  } else if (type === 'number' && isNaN(val) === false) {
-	    return options.long ?
-				fmtLong(val) :
-				fmtShort(val)
-	  }
-	  throw new Error('val is not a non-empty string or a valid number. val=' + JSON.stringify(val))
-	}
+	module.exports = function(val, options){
+	  options = options || {};
+	  if ('string' == typeof val) return parse(val);
+	  return options.long
+	    ? long(val)
+	    : short(val);
+	};
 
 	/**
 	 * Parse the given `str` and return milliseconds.
@@ -3719,53 +3700,47 @@
 	 */
 
 	function parse(str) {
-	  str = String(str)
-	  if (str.length > 10000) {
-	    return
-	  }
-	  var match = /^((?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|years?|yrs?|y)?$/i.exec(str)
-	  if (!match) {
-	    return
-	  }
-	  var n = parseFloat(match[1])
-	  var type = (match[2] || 'ms').toLowerCase()
+	  str = '' + str;
+	  if (str.length > 10000) return;
+	  var match = /^((?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|years?|yrs?|y)?$/i.exec(str);
+	  if (!match) return;
+	  var n = parseFloat(match[1]);
+	  var type = (match[2] || 'ms').toLowerCase();
 	  switch (type) {
 	    case 'years':
 	    case 'year':
 	    case 'yrs':
 	    case 'yr':
 	    case 'y':
-	      return n * y
+	      return n * y;
 	    case 'days':
 	    case 'day':
 	    case 'd':
-	      return n * d
+	      return n * d;
 	    case 'hours':
 	    case 'hour':
 	    case 'hrs':
 	    case 'hr':
 	    case 'h':
-	      return n * h
+	      return n * h;
 	    case 'minutes':
 	    case 'minute':
 	    case 'mins':
 	    case 'min':
 	    case 'm':
-	      return n * m
+	      return n * m;
 	    case 'seconds':
 	    case 'second':
 	    case 'secs':
 	    case 'sec':
 	    case 's':
-	      return n * s
+	      return n * s;
 	    case 'milliseconds':
 	    case 'millisecond':
 	    case 'msecs':
 	    case 'msec':
 	    case 'ms':
-	      return n
-	    default:
-	      return undefined
+	      return n;
 	  }
 	}
 
@@ -3777,20 +3752,12 @@
 	 * @api private
 	 */
 
-	function fmtShort(ms) {
-	  if (ms >= d) {
-	    return Math.round(ms / d) + 'd'
-	  }
-	  if (ms >= h) {
-	    return Math.round(ms / h) + 'h'
-	  }
-	  if (ms >= m) {
-	    return Math.round(ms / m) + 'm'
-	  }
-	  if (ms >= s) {
-	    return Math.round(ms / s) + 's'
-	  }
-	  return ms + 'ms'
+	function short(ms) {
+	  if (ms >= d) return Math.round(ms / d) + 'd';
+	  if (ms >= h) return Math.round(ms / h) + 'h';
+	  if (ms >= m) return Math.round(ms / m) + 'm';
+	  if (ms >= s) return Math.round(ms / s) + 's';
+	  return ms + 'ms';
 	}
 
 	/**
@@ -3801,12 +3768,12 @@
 	 * @api private
 	 */
 
-	function fmtLong(ms) {
-	  return plural(ms, d, 'day') ||
-	    plural(ms, h, 'hour') ||
-	    plural(ms, m, 'minute') ||
-	    plural(ms, s, 'second') ||
-	    ms + ' ms'
+	function long(ms) {
+	  return plural(ms, d, 'day')
+	    || plural(ms, h, 'hour')
+	    || plural(ms, m, 'minute')
+	    || plural(ms, s, 'second')
+	    || ms + ' ms';
 	}
 
 	/**
@@ -3814,13 +3781,9 @@
 	 */
 
 	function plural(ms, n, name) {
-	  if (ms < n) {
-	    return
-	  }
-	  if (ms < n * 1.5) {
-	    return Math.floor(ms / n) + ' ' + name
-	  }
-	  return Math.ceil(ms / n) + ' ' + name + 's'
+	  if (ms < n) return;
+	  if (ms < n * 1.5) return Math.floor(ms / n) + ' ' + name;
+	  return Math.ceil(ms / n) + ' ' + name + 's';
 	}
 
 
