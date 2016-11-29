@@ -1,3 +1,5 @@
+// import parsedCodeObj?
+
 /*IMPORTING THE D3 library */
 // import {hierarchy, tree, select, path} from "d3";
 // import {hierarchy, tree} from "d3-hierarchy";
@@ -6,119 +8,97 @@
 // var d3 = Object.assign({}, require("d3-hierarchy"), require("d3-selection"), require("d3-path"));
 //----*-------*-----*//
 /* ACTUAL DATA FOR NOW (IN JSON) */
-var treeDataAnswerActions = [
-{
-	"name": "ActionCreators",
-	"children": [
-		{
-			"name": "addTodo",
-			"children": [ {"name": "ADD_TOODO"} ]
-		},
-	]
- },
-
- {
-	"name": "ActionCreators",
-	"children": [
-		{
-			"name": "setVisibilityFilter",
-			"children": [ {"name": "SET_VISIBILITY_FILTER"} ]
-		},
-	]
- },
-
-  {
-	"name": "ActionCreators",
-	"children": [
-		{
-			"name": "toggleTodo",
-			"children": [ {"name": "TOGGLE_TODO"} ]
-		},
-	]
- },
-
- {
-	"name": "ActionCreators",
-	"children": [
-		{
-			"name": "undoAction",
-			"children": [ {"name": "UNDO"} ]
-		},
-	]
- },
-
-  {
-	"name": "ActionCreators",
-	"children": [
-		{
-			"name": "redoAction",
-			"children": [ {"name": "REDO"} ]
-		},
-	]
- }
-];
-
-
-var treeDataAnswerUI =
-{
-	"name": "UI",
-	"children": [
-		{
-			"name":"TestTodoList",
-		},
-		{
-			"name": "propNames",
-			"children": [
-				{
-					"name": "todos"
-				},
-				{
-					"name": "onTodoClick"
-				}
-			]
-		}
-	]
+const answerD3Actions = {
+  'name': 'Action Creators',
+  'children': [
+    {
+      'name': 'addTodo',
+      'children': [
+        {
+          'name': 'ADD_TODO'
+        }
+      ]
+    },
+    {
+      'name': 'setVisibilityFilter',
+      'children': [
+        {
+          'name': 'SET_VISIBILITY_FILTER'
+        }
+      ]
+    },
+    {
+      'name': 'toggleTodo',
+      'children': [
+        {
+          'name': 'TOGGLE_TODO'
+        }
+      ]
+    },
+    {
+      'name': 'undoAction',
+      'children': [
+        {
+          'name': 'UNDO'
+        }
+      ]
+    },
+    {
+      'name': 'redoAction',
+      'children': [
+        {
+          'name': 'REDO'
+        }
+      ]
+    }
+  ]
 }
 
-var treeDataAnswerReducers = [
-	{
-		"name": "Reducers",
-		"children": [
-			{
-				"name": "visibilityFilter"
-			},
-			{
-				"name": "cases",
-				"children": [
-					{
-						"name": "SET_VISIBILITY_FILTER"
-					}
-				]
-			}
-		]
-	},
-	{
-		"name": "Reducers",
-		"children": [
-			{
-				"name": "todos",
-				"children": [
-					{
-						"name": "ADD_TODO"
-					},
-
-					{
-						"name": "TOGGLE_TODO"
-					}
-				]
-			}
-		]
-	}
-];
+const answerD3UI = {
+  'name': 'Containers',
+  'children': [
+    {
+      'name': 'TestTodoList',
+      'children': [
+        {
+          'name': 'todos'
+        },
+				{
+					'name': 'onTodoClick'
+				}
+      ]
+    }
+  ]
+}
 
 
+const answerD3Reducers = {
+  'name': 'Reducers',
+  'children': [
+      {
+        'name': 'visibilityFilter',
+        'children': [
+          {
+            'name': 'SET_VISIBILITY_FILTER'
+          }
+        ]
+      },
+      {
+        'name': 'todos',
+        'children': [
+          {
+            'name': 'ADD_TODO'
+          },
+          {
+            'name': 'TOGGLE_TODO'
+          }
+        ]
+      }
+  ]
+}
 
 
+const node = document.createElement('div');
 ////--- D3 LOGIC -----////
 //The canvas for the tree//
 	var width = 700;
@@ -153,7 +133,7 @@ var nodeEnter = svg.selectAll(".node")
 
 //creating links
 
-var link = svg.selectAll(".link")
+var link = svg.selectAll(".node")
     .data(nodeHierarchy.descendants().slice(1))
     .enter().append("path")
       .attr("class", "link")
@@ -164,6 +144,8 @@ var link = svg.selectAll(".link")
             + " " + d.parent.y + "," + d.parent.x;
       });
 
+console.log(link)
+
 nodeEnter.append("circle")
 	.attr("r", 10)
   .style("fill", "lightsteelblue");
@@ -173,5 +155,9 @@ nodeEnter.append("text")
    	return d.data.name;
 });
 }
- create("body", treeDataAnswerReducers[1]);
 
+const UIHeadNode = create(node, answerD3Reducers);
+const actionsHeadNode = create(node, answerD3Reducers);
+const reducersHeadNode = create(node, answerD3Reducers);
+
+module.exports = { UIHeadNode, actionsHeadNode, reducersHeadNode };
