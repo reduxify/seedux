@@ -29,7 +29,7 @@ module.exports = {
      hot: true
   },
   "babel": {
-  "presets": ["es2015", "react"]
+    "presets": ["es2015", "react"]
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin()

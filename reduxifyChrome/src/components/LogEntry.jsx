@@ -4,7 +4,7 @@ import JSONTree from 'react-json-tree'
 import Collapsible from 'react-collapsible';
 import Action from './Action'
 
-const LogEntry = ({ entry, index }) => {
+const LogEntry = ({ entry, index, futury }) => {
   const { diffs, modifiedAction, newState } = entry;
 
   // const payload = Object.keys(modifiedAction).reduce((actionKey, index) => {
@@ -12,9 +12,10 @@ const LogEntry = ({ entry, index }) => {
   // });
   const payload = Object.assign({}, modifiedAction);
   delete payload.type;
-  const actionString = `Action # ${index} : ${modifiedAction.type}`
+  const actionString = `Action # ${index} : ${modifiedAction.type}`;
+  const entryClass = futury ? 'log-entry-future' : 'log-entry-history'; 
   return (
-    <Collapsible trigger={actionString} className='log-entry'>
+    <Collapsible trigger={actionString} className={entryClass}>
       <p>
         <span className='log-action-label'>payload: </span>
         <JSONTree data={payload} shouldExpandNode={() => false}/>

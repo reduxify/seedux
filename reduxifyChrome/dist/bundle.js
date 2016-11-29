@@ -63,7 +63,7 @@
 /******/ 	}
 
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "bf5a48f8a81837835836"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "85f5a2b5f5867ad462e8"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 
@@ -8459,7 +8459,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	__webpack_require__(439);
+	__webpack_require__(440);
 
 	console.log("We're here!");
 
@@ -29710,6 +29710,10 @@
 
 	var _LogEntry2 = _interopRequireDefault(_LogEntry);
 
+	var _Graph = __webpack_require__(439);
+
+	var _Graph2 = _interopRequireDefault(_Graph);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -29727,13 +29731,21 @@
 	    var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 
 	    _this.state = {
-	      history: []
+	      history: [],
+	      future: [],
+	      codeObj: {
+	        reducers: [],
+	        actionCreators: [],
+	        UI: []
+	      }
 	    };
 	    // send a msg to the background script to ask for the current Log
 	    chrome.extension.sendMessage({ type: 'populateLog' }, function (response) {
 	      console.log('Initial Log Population: ', response.history);
 	      _this.setState({
-	        history: response.history
+	        codeObj: response.codeObj,
+	        history: response.history,
+	        future: response.future
 	      });
 	    });
 
@@ -29759,23 +29771,40 @@
 	      chrome.extension.sendMessage({ type: 'resetLog' }, function (response) {
 	        console.log('Log Reset.');
 	        _this2.setState({
+	          future: [],
 	          history: []
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'undo',
+	    value: function undo() {
+	      var _this3 = this;
+
+	      // send a message to the content script to emit an undo DOM event
+	      chrome.extension.sendMessage({ type: 'undoFromTool' }, function (response) {
+	        console.log('Undo Sent.');
+	        _this3.setState({
+	          history: _this3.state.history.slice(0, -1),
+	          future: _this3.state.future.concat(_this3.state.history.slice(-1))
 	        });
 	      });
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _this3 = this;
+	      var _this4 = this;
 
 	      var diffs = [];
 	      if (this.state.history.length) {
 	        diffs = this.state.history[this.state.history.length - 1].diffs;
 	      }
-	      var logEntries = this.state.history.map(function (historyEntry, index) {
-	        return _react2.default.createElement(_LogEntry2.default, { key: index, index: index, entry: historyEntry });
+	      var historyEntries = this.state.history.map(function (historyEntry, index) {
+	        return _react2.default.createElement(_LogEntry2.default, { key: index, index: index, entry: historyEntry, futury: false });
 	      });
-	      console.log(logEntries);
+	      var futureEntries = this.state.future.map(function (futureEntry, index) {
+	        return _react2.default.createElement(_LogEntry2.default, { key: index, index: index, entry: futureEntry, futury: true });
+	      });
 	      return _react2.default.createElement(
 	        'div',
 	        null,
@@ -29784,14 +29813,24 @@
 	          null,
 	          '[seedux]'
 	        ),
+	        _react2.default.createElement(_Graph2.default, { data: this.state.codeObj }),
 	        _react2.default.createElement(
 	          'button',
 	          { onClick: function onClick() {
-	              return _this3.resetLog();
+	              return _this4.resetLog();
 	            } },
 	          'Reset Log'
 	        ),
-	        logEntries
+	        _react2.default.createElement(
+	          'button',
+	          { onClick: function onClick() {
+	              return _this4.undo();
+	            } },
+	          'Undo'
+	        ),
+	        historyEntries,
+	        _react2.default.createElement('hr', null),
+	        futureEntries
 	      );
 	    }
 	  }]);
@@ -29876,7 +29915,8 @@
 
 	var LogEntry = function LogEntry(_ref) {
 	  var entry = _ref.entry,
-	      index = _ref.index;
+	      index = _ref.index,
+	      futury = _ref.futury;
 	  var diffs = entry.diffs,
 	      modifiedAction = entry.modifiedAction,
 	      newState = entry.newState;
@@ -29888,9 +29928,10 @@
 	  var payload = Object.assign({}, modifiedAction);
 	  delete payload.type;
 	  var actionString = 'Action # ' + index + ' : ' + modifiedAction.type;
+	  var entryClass = futury ? 'log-entry-future' : 'log-entry-history';
 	  return _react2.default.createElement(
 	    _reactCollapsible2.default,
-	    { trigger: actionString, className: 'log-entry' },
+	    { trigger: actionString, className: entryClass },
 	    _react2.default.createElement(
 	      'p',
 	      null,
@@ -29952,7 +29993,6 @@
 	      if (diff.kind === 'E') return _react2.default.createElement(_Diff2.default, { key: diff.kind + index, kind: diff.kind, path: diff.path, rhs: diff.rhs, lhs: diff.lhs });else if (diff.kind === 'A') return _react2.default.createElement(_Diff2.default, { key: diff.kind + index, kind: diff.item.kind, path: diff.path, rhs: diff.item.rhs, lhs: diff.item.lhs ? diff.item.lhs : 'undefined' });
 	    });
 	  }
-	  console.log('diffElements: ', diffElements);
 	  return _react2.default.createElement(
 	    'table',
 	    null,
@@ -30010,7 +30050,6 @@
 
 	  var diffClassName = 'diff-edit';
 	  if (kind === 'N') diffClassName = 'diff-new';
-	  console.log('diffClassName: ', diffClassName);
 	  return _react2.default.createElement(
 	    'tr',
 	    { className: diffClassName },
@@ -37037,20 +37076,80 @@
 /* 439 */
 /***/ function(module, exports, __webpack_require__) {
 
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(253);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Graph = function Graph(_ref) {
+	  var data = _ref.data;
+
+	  var reducerElements = data.reducers.map(function (reducerObj, index) {
+	    var casesElements = reducerObj.cases.map(function (thisCase) {
+	      return _react2.default.createElement(
+	        'li',
+	        { className: 'parse-list-subitem' },
+	        thisCase
+	      );
+	    });
+	    return _react2.default.createElement(
+	      'span',
+	      { className: 'parse-list-item', id: 'reducer' + index },
+	      reducerObj.name,
+	      _react2.default.createElement(
+	        'ul',
+	        null,
+	        casesElements
+	      )
+	    );
+	  });
+	  return _react2.default.createElement(
+	    'table',
+	    null,
+	    _react2.default.createElement(
+	      'tr',
+	      null,
+	      _react2.default.createElement(
+	        'td',
+	        null,
+	        _react2.default.createElement(
+	          'h2',
+	          null,
+	          'Reducers'
+	        ),
+	        reducerElements
+	      )
+	    )
+	  );
+	};
+
+	exports.default = Graph;
+
+/***/ },
+/* 440 */
+/***/ function(module, exports, __webpack_require__) {
+
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(440);
+	var content = __webpack_require__(441);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(442)(content, {});
+	var update = __webpack_require__(443)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(true) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-			module.hot.accept(440, function() {
-				var newContent = __webpack_require__(440);
+			module.hot.accept(441, function() {
+				var newContent = __webpack_require__(441);
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -37060,10 +37159,10 @@
 	}
 
 /***/ },
-/* 440 */
+/* 441 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(441)();
+	exports = module.exports = __webpack_require__(442)();
 	// imports
 
 
@@ -37074,7 +37173,7 @@
 
 
 /***/ },
-/* 441 */
+/* 442 */
 /***/ function(module, exports) {
 
 	/*
@@ -37130,7 +37229,7 @@
 
 
 /***/ },
-/* 442 */
+/* 443 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*

@@ -1,4 +1,5 @@
-import { diff } from '../lib/deep-diff.min.js'
+/* global chrome */
+import { diff } from '../lib/deep-diff.js'
 // const ACTION_TYPES = {
 //   UNDO: "GLOBAL_UNDO",
 //   REDO: "GLOBAL_REDO",
@@ -18,13 +19,34 @@ import { diff } from '../lib/deep-diff.min.js'
 // }
 // initialize new event for our logger to dispatch
 
-const dispatchLogger = ({ getState }) => {
+let listenerFlag = false;
+
+const dispatchLogger = ({ dispatch, getState }) => {
     return (next) => (action) => {
       console.log('Patching: ', action);
       const oldState = getState();
 
       // call next dispatch in middleware chain
       const modifiedAction = next(action);
+
+      // our 'action dispatcher'
+      if (listenerFlag === false) {
+        console.log('Attaching dispatchLogger listeners...');
+        listenerFlag = true;
+        document.addEventListener('reduxifyUndo', function(e){
+          console.log('dispatchLogger Listener heard event: ', e);
+          next({
+            type: 'ADD_TODO',
+            text: 'testing is great',
+          });
+        }, false);
+        document.addEventListener('reduxifyRedo', function(e){
+          next({
+              type: 'ADD_TODO',
+              text: 'coding is fun!'
+            });
+        }, false);
+      }
 
       const newState = getState();
       console.log('Modified Action:', modifiedAction);
