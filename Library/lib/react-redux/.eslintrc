@@ -1,5 +1,5 @@
 {
-  "extends": "eslint-config-rackt",
+  "extends": "eslint-config-airbnb",
   "env": {
     "browser": true,
     "mocha": true,

@@ -2,6 +2,10 @@
 // Acts as an intermediary between our code in the app being examined
 // and our extension.
 
+// Once we're injected, hit up the extractor for parsing information
+// by creating and emitting a custom event.
+
+
 // Listen for custom DOM event dispatched by our code within the logger middlware
 document.addEventListener('actionDispatched', function(e){
   // send message to background script with new historyEntry object
@@ -15,7 +19,7 @@ document.addEventListener('actionDispatched', function(e){
 }, false);
 
 // Listen for custom DOM event dispatched by our code within combineReducers
-document.addEventListener('codeParsed:reducers', function(e){
+document.addEventListener('codeParsed', function(e){
   // send message to background script with parsed code object
 	// which was sent via e.detail property
 	console.log('Code Parsing event heard! Sending to background...', e.detail);
@@ -25,3 +29,8 @@ document.addEventListener('codeParsed:reducers', function(e){
   chrome.extension.sendMessage(msg, function(response) {
 });
 }, false);
+
+var evt = document.createEvent('Event');
+evt.initEvent('scriptLoaded', true, true);
+console.log('CONTENT_SCRIPT: Dispatching event: ', evt);
+document.dispatchEvent(evt);

@@ -1,5 +1,6 @@
 const reduxify = {};
-const some_element = document;
+const parsedCodeObj = {};
+
 /**
  *  Parses component for name and propNames.
  *  INPUT: Array = Array[0] = WrappedComponent.name, Array[1] = Object.keys(WrappedComponent.propTypes);
@@ -15,10 +16,9 @@ reduxify.UIExtractor = (UI) => {
   const UIPropNames = UI[1];
   UIObj[UIName] = UIPropNames;
   structuredUIArr.push({ name: UIName, propNames: UIPropNames });
-  // var evt = document.createEvent('CustomEvent');
-  // evt.initCustomEvent('codeParsed', true, true, structuredUIArr);
-  // console.log('Dispatching event: ', evt);
-  // some_element.dispatchEvent(evt);
+
+  parsedCodeObj.UI = structuredUIArr;
+
   return structuredUIArr;
 }
 
@@ -65,10 +65,7 @@ reduxify.ReducerExtractor = (reducers) => {
       cases: reducersObj[key]
     })
   });
-  var evt = document.createEvent('CustomEvent');
-  evt.initCustomEvent('codeParsed:reducers', true, true, structuredReducersArr);
-  console.log('Dispatching event: ', evt);
-  some_element.dispatchEvent(evt);
+  parsedCodeObj.reducers = structuredReducersArr;
   return structuredReducersArr;
 }
 
@@ -81,6 +78,7 @@ reduxify.ReducerExtractor = (reducers) => {
  */
 
 reduxify.ActionExtractor = (actionCreators) => {
+  console.log('Extracting Actions...');
   let actionCreatorsObj = {};
   let structuredActionCreatorsArr = [];
   const actionCreatorsNames = Object.keys(actionCreators);
@@ -91,8 +89,10 @@ reduxify.ActionExtractor = (actionCreators) => {
 // Handles data anomalies and populates the actionCreatorsObj in the format of name: type key-value pairs.
 
   for (let i = 0; i < actionTypes.length; i++) {
-    actionTypes[i] = actionTypes[i][0].replace(/['"\\]/g, '');
-    actionCreatorsObj[actionCreatorsNames[i]] = actionTypes[i];
+    if (actionTypes[i] !== null) {
+      actionTypes[i] = actionTypes[i][0].replace(/['"\\]/g, '');
+      actionCreatorsObj[actionCreatorsNames[i]] = actionTypes[i];
+    }
   }
 
 // Populates the structuredActionCreatorsArr with objects containing name and type properties.
@@ -104,7 +104,20 @@ reduxify.ActionExtractor = (actionCreators) => {
     })
   });
 
+  parsedCodeObj.actionCreators = structuredActionCreatorsArr;
+
   return structuredActionCreatorsArr;
 }
+
+// attach a listener to respond with this data when the content script has loaded.
+document.addEventListener('scriptLoaded', function(e) {
+  // send message to background script with parsed code object
+  // which was sent via e.detail property
+  console.log('reduxifyExtractor hears the content script!');
+  var evt = document.createEvent('CustomEvent');
+  evt.initCustomEvent('codeParsed', true, true, parsedCodeObj);
+  console.log('EXTRACTOR: Dispatching event: ', evt);
+  document.dispatchEvent(evt);
+}, false);
 
 module.exports = { reduxify };
