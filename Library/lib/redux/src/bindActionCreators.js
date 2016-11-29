@@ -26,16 +26,15 @@ function bindActionCreator(actionCreator, dispatch) {
  * function.
  */
 export default function bindActionCreators(actionCreators, dispatch) {
-  if (typeof actionCreators === 'function') {
-
   // REDUXIFY
-  // let reduxifyObj = {};
-  // let coerceToStr = '';
-  //   for (let k in actionCreators) {
-  //     reduxifyObj[k] = actionCreators[k] + coerceToStr;
-  //   }
-  // reduxify.ActionExtractor(reduxifyObj);
+  let reduxifyObj = {};
+  let coerceToStr = '';
+  for (let k in actionCreators) {
+    reduxifyObj[k] = actionCreators[k] + coerceToStr;
+  }
+  reduxify.ActionExtractor(reduxifyObj);
 
+  if (typeof actionCreators === 'function') {
     return bindActionCreator(actionCreators, dispatch)
   }
 

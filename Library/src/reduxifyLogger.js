@@ -18,8 +18,6 @@ import { diff } from '../lib/deep-diff.min.js'
 // }
 // initialize new event for our logger to dispatch
 
-var some_element = document;
-
 const dispatchLogger = ({ getState }) => {
     return (next) => (action) => {
       console.log('Patching: ', action);
@@ -43,7 +41,7 @@ const dispatchLogger = ({ getState }) => {
       var evt = document.createEvent('CustomEvent');
       evt.initCustomEvent('actionDispatched', true, true, newHistoryEntry);
       console.log('Dispatching event: ', evt);
-      some_element.dispatchEvent(evt);
+      document.dispatchEvent(evt);
       // _reduxifyHistory.push(newHistoryEntry);
 
       return modifiedAction;
