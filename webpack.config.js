@@ -1,23 +1,26 @@
 var webpack = require('webpack');
 
+var path = require('path');
+
 module.exports = {
   entry: [
     'webpack-dev-server/client?http://localhost:8080',
     'webpack/hot/only-dev-server',
-    './src/index.jsx'
+    './reduxifyChrome/src/index.jsx',
+    './reduxifyChrome/d3/basicTree.js'
   ],
-    module: {
-    loaders: [{
-      test: /\.jsx?$/,
-      exclude: /node_modules/,
-      loaders: ["babel-loader"]
-    }]
-  },
   resolve: {
     extensions: ['', '.js', '.jsx']
   },
+  module: {
+    loaders: [{
+      test: /\.jsx?$/,
+      exclude: /node_modules/,
+      loader: 'babel-loader'
+    }]
+  },
   output: {
-    path: __dirname + '/dist',
+    path: path.join(__dirname + '/reduxifyChrome/dist'),
     publicPath: '/',
     filename: 'bundle.js'
   },
@@ -26,7 +29,10 @@ module.exports = {
      hot: true
   },
   "babel": {
-  "presets": ["es2015", "react"]
+    "presets": [
+      "es2015",
+      "react"
+    ]
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin()
