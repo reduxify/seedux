@@ -9,6 +9,8 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
   if (msg.type === 'addToLog') {
     console.log('Got New Entry! History: ', history);
     history.push(msg.historyEntry);
+    // clear any 'future' events
+    future = [];
   }
   // sent from new instance of tool to get the current log
   if (msg.type === 'populateLog') {
@@ -18,7 +20,7 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
   if (msg.type === 'resetLog') {
     history = [];
     future = [];
-    response({ history });
+    response({ history, future });
   }
   // sent from our tool to implement undo/redo
   if (msg.type === 'undoFromTool' && history.length) {
@@ -26,9 +28,9 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
     future.unshift(history.pop());
     chrome.tabs.sendMessage(tabId, { type: 'reduxifyUndo' });
   }
-  if (msg.type === 'redoFromTool' && history.length) {
+  if (msg.type === 'redoFromTool' && future.length) {
     console.log('Got a Redo! Sending msg along to tab: ', tabId);
-    future.unshift(history.pop());
+    history.push(future.shift());
     chrome.tabs.sendMessage(tabId, { type: 'reduxifyRedo' });
   }
   // sent from the content script to store parsing data

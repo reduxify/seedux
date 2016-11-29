@@ -13,7 +13,7 @@
 document.addEventListener('actionDispatched', function(e){
   // send message to background script with new historyEntry object
 	// which was sent via e.detail property
-	console.log('I heard an action! Sending to background...', e.detail);
+	// console.log('I heard an action! Sending to background...', e.detail);
 	const msg = {};
 	msg.historyEntry = e.detail;
 	msg.type = 'addToLog';
@@ -24,7 +24,7 @@ document.addEventListener('actionDispatched', function(e){
 document.addEventListener('codeParsed', function(e){
   // send message to background script with parsed code object
 	// which was sent via e.detail property
-	console.log('Code Parsing event heard! Sending to background...', e.detail);
+	// console.log('Code Parsing event heard! Sending to background...', e.detail);
   const msg = {};
   msg.codeObj = e.detail;
   msg.type = 'storeCode';

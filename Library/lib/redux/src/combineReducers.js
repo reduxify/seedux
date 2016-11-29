@@ -5,6 +5,10 @@ import { reduxify } from './../../../src/reduxifyExtractor';
 
 var NODE_ENV = typeof process !== 'undefined' ? process.env.NODE_ENV : 'development'
 
+// REDUXIFY Memory
+let history = [];
+let future = [];
+
 function getUndefinedStateErrorMessage(key, action) {
   var actionType = action && action.type
   var actionName = actionType && `"${actionType.toString()}"` || 'an action'
@@ -149,21 +153,40 @@ export default function combineReducers(reducers) {
         warning(warningMessage)
       }
     }
-
-    var hasChanged = false
-    var nextState = {}
-    for (var i = 0; i < finalReducerKeys.length; i++) {
-      var key = finalReducerKeys[i]
-      var reducer = finalReducers[key]
-      var previousStateForKey = state[key]
-      var nextStateForKey = reducer(previousStateForKey, action)
-      if (typeof nextStateForKey === 'undefined') {
-        var errorMessage = getUndefinedStateErrorMessage(key, action)
-        throw new Error(errorMessage)
-      }
-      nextState[key] = nextStateForKey
-      hasChanged = hasChanged || nextStateForKey !== previousStateForKey
+    // REDUXIFY
+    if (action && action.type === 'REDUXIFY_UNDO') {
+      console.log('UNDO-ING...');
+      const theNewPresent = history.pop();
+      future.unshift(state);
+      console.log('Past: ', history, 'Future: ', future);
+      return theNewPresent;
     }
+    else if (action && action.type === 'REDUXIFY_REDO') {
+      console.log('REDO-ING...');
+      const theNewPresent = future.shift();
+      history.push(state);
+      console.log('Past: ', history, 'Future: ', future);
+      return theNewPresent;
+    }
+    else {
+      // add the current state to the history, and discard any 'future' entries
+      history.push(state);
+      future = [];
+      var hasChanged = false
+      var nextState = {}
+      for (var i = 0; i < finalReducerKeys.length; i++) {
+        var key = finalReducerKeys[i]
+        var reducer = finalReducers[key]
+        var previousStateForKey = state[key]
+        var nextStateForKey = reducer(previousStateForKey, action)
+        if (typeof nextStateForKey === 'undefined') {
+          var errorMessage = getUndefinedStateErrorMessage(key, action)
+          throw new Error(errorMessage)
+        }
+        nextState[key] = nextStateForKey
+        hasChanged = hasChanged || nextStateForKey !== previousStateForKey
+    }
+  }
     return hasChanged ? nextState : state
   }
 }

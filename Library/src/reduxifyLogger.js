@@ -34,16 +34,15 @@ const dispatchLogger = ({ dispatch, getState }) => {
         console.log('Attaching dispatchLogger listeners...');
         listenerFlag = true;
         document.addEventListener('reduxifyUndo', function(e){
-          console.log('dispatchLogger Listener heard event: ', e);
+          console.log('dispatchLogger Listener heard undo event: ', e);
           next({
-            type: 'ADD_TODO',
-            text: 'testing is great',
+            type: 'REDUXIFY_UNDO',
           });
         }, false);
         document.addEventListener('reduxifyRedo', function(e){
+          console.log('dispatchLogger Listener heard redo event: ', e);
           next({
-              type: 'ADD_TODO',
-              text: 'coding is fun!'
+              type: 'REDUXIFY_REDO',
             });
         }, false);
       }

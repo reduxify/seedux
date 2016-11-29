@@ -63,7 +63,7 @@
 /******/ 	}
 
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "85f5a2b5f5867ad462e8"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "04fbaef8bd153c5a6314"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 
@@ -29741,7 +29741,7 @@
 	    };
 	    // send a msg to the background script to ask for the current Log
 	    chrome.extension.sendMessage({ type: 'populateLog' }, function (response) {
-	      console.log('Initial Log Population: ', response.history);
+	      // console.log('Initial Log Population: ', response.history);
 	      _this.setState({
 	        codeObj: response.codeObj,
 	        history: response.history,
@@ -29753,10 +29753,15 @@
 	    chrome.runtime.onMessage.addListener(function (msg, sender, response) {
 	      // msg from content script with new history entry
 	      if (msg.type === 'addToLog') {
+	        // add to our local copy of the log and update State,
+	        // discarding any existing future
 	        var newHistory = _this.state.history;
-	        console.log('Got New Entry! History: ');
+	        // console.log('Got New Entry!');
 	        newHistory.push(msg.historyEntry);
-	        _this.setState({ newHistory: newHistory });
+	        _this.setState({
+	          history: newHistory,
+	          future: []
+	        });
 	      }
 	    });
 	    return _this;
@@ -29786,24 +29791,38 @@
 	        console.log('Undo Sent.');
 	        _this3.setState({
 	          history: _this3.state.history.slice(0, -1),
-	          future: _this3.state.future.concat(_this3.state.history.slice(-1))
+	          future: _this3.state.history.slice(-1).concat(_this3.state.future)
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'redo',
+	    value: function redo() {
+	      var _this4 = this;
+
+	      // send a message to the content script to emit a redo DOM event
+	      chrome.extension.sendMessage({ type: 'redoFromTool' }, function (response) {
+	        console.log('Redo Sent.');
+	        _this4.setState({
+	          history: _this4.state.history.concat(_this4.state.future.slice(0, 1)),
+	          future: _this4.state.future.slice(1)
 	        });
 	      });
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _this4 = this;
+	      var _this5 = this;
 
 	      var diffs = [];
 	      if (this.state.history.length) {
 	        diffs = this.state.history[this.state.history.length - 1].diffs;
 	      }
 	      var historyEntries = this.state.history.map(function (historyEntry, index) {
-	        return _react2.default.createElement(_LogEntry2.default, { key: index, index: index, entry: historyEntry, futury: false });
+	        return _react2.default.createElement(_LogEntry2.default, { key: index, index: index, entry: historyEntry, futury: false, present: index === _this5.state.history.length - 1 });
 	      });
 	      var futureEntries = this.state.future.map(function (futureEntry, index) {
-	        return _react2.default.createElement(_LogEntry2.default, { key: index, index: index, entry: futureEntry, futury: true });
+	        return _react2.default.createElement(_LogEntry2.default, { key: index, index: index, entry: futureEntry, futury: true, present: false });
 	      });
 	      return _react2.default.createElement(
 	        'div',
@@ -29817,16 +29836,23 @@
 	        _react2.default.createElement(
 	          'button',
 	          { onClick: function onClick() {
-	              return _this4.resetLog();
+	              return _this5.resetLog();
 	            } },
 	          'Reset Log'
 	        ),
 	        _react2.default.createElement(
 	          'button',
 	          { onClick: function onClick() {
-	              return _this4.undo();
+	              return _this5.undo();
 	            } },
 	          'Undo'
+	        ),
+	        _react2.default.createElement(
+	          'button',
+	          { onClick: function onClick() {
+	              return _this5.redo();
+	            } },
+	          'Redo'
 	        ),
 	        historyEntries,
 	        _react2.default.createElement('hr', null),
@@ -29916,7 +29942,8 @@
 	var LogEntry = function LogEntry(_ref) {
 	  var entry = _ref.entry,
 	      index = _ref.index,
-	      futury = _ref.futury;
+	      futury = _ref.futury,
+	      present = _ref.present;
 	  var diffs = entry.diffs,
 	      modifiedAction = entry.modifiedAction,
 	      newState = entry.newState;
@@ -29931,7 +29958,7 @@
 	  var entryClass = futury ? 'log-entry-future' : 'log-entry-history';
 	  return _react2.default.createElement(
 	    _reactCollapsible2.default,
-	    { trigger: actionString, className: entryClass },
+	    { trigger: actionString, open: present, className: entryClass },
 	    _react2.default.createElement(
 	      'p',
 	      null,
