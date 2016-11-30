@@ -39,14 +39,7 @@ function reduxifyConnectLogic(WrappedComponent) {
 
 const testUI = reduxifyConnectLogic(TestTodoList);
 
-const answerUI = [
-  {
-    name: 'TestTodoList',
-    propNames: ['todos', 'onTodoClick']
-  }
-]
-
-const answerD3UI = {
+const answerUI = {
   'name': 'Containers',
   'children': [
     {
@@ -63,4 +56,4 @@ const answerD3UI = {
   ]
 }
 
-module.exports = { testUI, answerUI, answerD3UI };
+module.exports = { testUI, answerUI };

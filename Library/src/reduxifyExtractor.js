@@ -1,29 +1,41 @@
+const reduxify = {};
+const parsedCodeObj = {};
+const uiHeadNode = new Node('Containers');
+uiHeadNode.children = [];
+
+/**
+ * Functional Node constructor used to assemble hierarchical tree objects.
+ */
+
+function Node(name) {
+  this.name = name;
+}
+
 /**
 *
-* Turns an array that consists of objects containing the name and corresponding
-* propNames of each container passed to our version of the react-redux's connect
-* function into a hierarchical tree object ready for rendering as a D3 visualization.
+* Turns an array that consists of the name and the propNames of the container passed into reduxify.uiExtractor, 
+* which occurs on invocation of the Connect function from our library's version of React-Redux, into a hierarchical 
+* tree object ready for rendering as a D3 visualization.
 *
-* @param {Array} parsedUI is an array whose values are objects with keys of
-* name (value: string) and propNames (value: string[]).
+* @param {Array} ui is an array whose values are name (value: string) and 
+* propNames (value: string[]).
 *
 * @returns {Object} headNode is a hierarchical tree object whose nodes are objects
 * with keys of name (value: string) and children (value: string[], optional).
 *
 */
 
-const D3UIStructurer = (parsedUI) => {
-  console.log('ParsedUI: ', parsedUI);
-  const headNode = new Node('Containers');
-  headNode.children = [];
-  parsedUI.forEach(container => {
-    const containerNode = new Node(container.name);
-    containerNode.children = [];
-    headNode.children.push(containerNode);
-    container.propNames.forEach(p => containerNode.children.push(new Node(p)));
-  });
-  console.log('headNode: ', headNode);
-  return headNode;
+reduxify.uiExtractor = (ui) => {
+  console.log('Extracting ui...');
+  const uiObj = {};
+  const uiName = ui[0];
+  const uiPropNames = ui[1];
+  const uiNameNode = new Node(uiName);
+    uiNameNode.children = [];
+    uiPropNames.forEach(p => uiNameNode.children.push(new Node(p)));
+    uiHeadNode.children.push(uiNameNode);
+    parsedCodeObj.ui = uiHeadNode;
+    return uiHeadNode;
 }
 
 /**
@@ -40,155 +52,67 @@ const D3UIStructurer = (parsedUI) => {
 *
 */
 
-const D3ReducersStructurer = (parsedReducers) => {
-  const headNode = new Node('Reducers');
+reduxify.reducersExtractor = (reducers) => {
+  const headNode = new Node('Reducers')
+  const reducerNames = Object.keys(reducers);
+  const strReducers = JSON.stringify(reducers);
+  const reducerCases = strReducers.split('switch').map(cases => cases.match(/case\s[\\'"\w]*:/gi, '')).slice(1);
   headNode.children = [];
-  parsedReducers.forEach(reducer => {
-    const reducerNode = new Node(reducer.name);
+
+  for (let i = 0; i < reducerCases.length; i++) {
+    for (let j = 0; j < reducerCases[i].length; j++) {
+      reducerCases[i][j] = reducerCases[i][j].replace(/case|break|return/g, '').replace(/['":;,\s]/g, '');
+    }
+  }
+
+  reducerNames.forEach((reducer, i) => {
+    const reducerNode = new Node(reducer);
     reducerNode.children = [];
+    reducerCases[i].forEach(c => reducerNode.children.push(new Node(c)));
     headNode.children.push(reducerNode);
-    reducer.cases.forEach(c => reducerNode.children.push(new Node(c)));
   });
-  return headNode;
-}
+
+parsedCodeObj.reducers = headNode;
+return headNode;
+};
 
 /**
 *
-* Turns an array that consists of objects containing the name and corresponding
-* action types of each actionCreator passed to our version of the react-redux's bindActionCreators
-* function into a hierarchical tree object ready for rendering as a D3 visualization.
+* Turns an object consisting of keys that are action creator names and values that are stringified
+* action creator function definitions passed into reduxify.actionCreatorsExtractor, which occurs 
+* on invocation of the bindActionCreators function from our library's version of Redux, into a hierarchical 
+* tree object ready for rendering as a D3 visualization.
 *
-* @param {Array} parsedActionCreators is an array whose values are objects with keys of
-* name (value: string) and type (value: string[]).
+* @param {Object} actionCreators is an object whose keys are action creator function names (value: string) 
+* and whose values are stringified action creator function definitions (value: string).
 *
 * @returns {Object} headNode is a hierarchical tree object whose nodes are objects
 * with keys of name (value: string) and children (value: string[], optional).
 *
 */
 
-const D3ActionCreatorStructurer = (parsedActionCreators) => {
-  const headNode = new Node('Action Creators');
-  headNode.children = [];
-  parsedActionCreators.forEach(actionCreator => {
-    const actionCreatorNode = new Node(actionCreator.name);
-    actionCreatorNode.children = [new Node(actionCreator.type)];
-    headNode.children.push(actionCreatorNode);
-  });
-  return headNode;
-}
-
-// import { D3UIStructurer, D3ReducerStructurer, D3ActionCreatorStructurer } from './reduxifyD3Structurer'
-const reduxify = {};
-const parsedCodeObj = {};
-const structuredUIArr = [];
-
-/**
- *  Parses component for name and propNames.
- *  INPUT: Array = Array[0] = WrappedComponent.name, Array[1] = Object.keys(WrappedComponent.propTypes);
- *  OUTPUT: Pushes object containing @name: String and @propNames: String[] to @structuredUIArr: Array.
- */
-
-// TODO: Figure out how to pass structuredUIArr to visualization once all containers and their propNames have been added.
-
-reduxify.UIExtractor = (UI) => {
-  console.log('Extracting UI...');
-  let UIObj = {};
-  const UIName = UI[0];
-  const UIPropNames = UI[1];
-  UIObj[UIName] = UIPropNames;
-  structuredUIArr.push({ name: UIName, propNames: UIPropNames });
-
-  parsedCodeObj.ui = D3UIStructurer(structuredUIArr);
-  console.log('ParsedCodeObj.ui: ', parsedCodeObj.ui);
-
-  return D3UIStructurer(structuredUIArr);
-}
-
-/**
- *  Parses reducer function definitions for switch statement cases.
- *  INPUT: Object = Keys: Reducer Names, Values: Stringified function definitions
- *  OUTPUT: Pushes object containing @name: String and @cases: String[] to @structuredReducersArr: Array.
- */
-
-reduxify.ReducerExtractor = (reducers) => {
-  let reducersObj = {};
-  let structuredReducersArr = [];
-  const reducerNames = Object.keys(reducers);
-    reducerNames.forEach(reducer => reducersObj[reducer] = []);
-  reducers = JSON.stringify(reducers);
-  const reducersArr = reducers.split('switch');
-  const reducerCases = reducersArr.map(cases => cases.match(/case\s[\\'"\w]*:/gi, '')).join('').replace(/case|break|return/g, '').replace(/['";,\s]/g, '').split(':');
-
-// Handles data anomalies and populates the reducersObj in the format of name: cases key-value pairs.
-  if (reducersArr.length > 1) {
-
-  let i = 1;
-  let j = 0;
-  let k = 0;
-  while (j < reducerCases.length) {
-    if (reducersArr[i].includes(reducerCases[j])) {
-      if (reducerCases[j].length > 0) {
-        reducersObj[reducerNames[k]].push(reducerCases[j]);
-      }
-      j++;
-    }
-    else {
-      i++;
-      k++;
-    }
-  }
-}
-
-// Populates the structuredReducersArr with objects containing name and cases properties.
-
-  reducerNames.forEach(key => {
-    structuredReducersArr.push({
-      name: key,
-      cases: reducersObj[key]
-    })
-  });
-  parsedCodeObj.reducers = D3ReducersStructurer(structuredReducersArr);
-  return D3ReducersStructurer(structuredReducersArr);
-}
-
-/**
- *
- *  Parses actionCreators function definitions for type properties on returned payloads.
- *  INPUT: Object = Keys: ActionCreator names, Values: Stringified function definitions
- *  OUTPUT: Pushes object containing @name: String and @type: String to @structuredActionCreatorsArr: Array.
- *
- */
-
-reduxify.ActionExtractor = (actionCreators) => {
+reduxify.actionCreatorsExtractor = (actionCreators) => {
   console.log('Extracting Actions...!');
-  let actionCreatorsObj = {};
-  let structuredActionCreatorsArr = [];
-  const actionCreatorsNames = Object.keys(actionCreators);
-  actionCreators = JSON.stringify(actionCreators);
-  const actionCreatorsArr = actionCreators.split('type:');
-  const actionTypes = actionCreatorsArr.map(t => t.match(/['"]\w*['",]/gi), '').slice(1);
-
-// Handles data anomalies and populates the actionCreatorsObj in the format of name: type key-value pairs.
+  const headNode = new Node('Action Creators');
+  const actionCreatorNames = Object.keys(actionCreators);
+  const strActionCreators = JSON.stringify(actionCreators);
+  const actionTypes = strActionCreators.split('type:').map(t => t.match(/['"]\w*['",]/gi), '').slice(1);
+  headNode.children = [];
 
   for (let i = 0; i < actionTypes.length; i++) {
     if (actionTypes[i] !== null) {
       actionTypes[i] = actionTypes[i][0].replace(/['"\\]/g, '');
-      actionCreatorsObj[actionCreatorsNames[i]] = actionTypes[i];
     }
   }
 
-// Populates the structuredActionCreatorsArr with objects containing name and type properties.
-
-  actionCreatorsNames.forEach(key => {
-    structuredActionCreatorsArr.push({
-      name: key,
-      type: actionCreatorsObj[key]
-    })
+    actionCreatorNames.forEach((ac, i) => {
+    const actionCreatorNode = new Node(ac);
+    actionCreatorNode.children === undefined ? actionCreatorNode.children = [new Node(actionTypes[i])] : actionCreatorNode.children.push(new Node(actionTypes[i]));
+    headNode.children.push(actionCreatorNode);
   });
 
-  parsedCodeObj.actionCreators = D3ActionCreatorStructurer(structuredActionCreatorsArr);
-
-  return D3ActionCreatorStructurer(structuredActionCreatorsArr);
+parsedCodeObj.actionCreators = headNode;
+return headNode;
 }
 
 // attach a listener to respond with this data when the content script has loaded.
@@ -202,15 +126,4 @@ document.addEventListener('scriptLoaded', function(e) {
   document.dispatchEvent(evt);
 }, false);
 
-/**
- *
- * Functional Node constructor used to assemble hierarchical tree objects.
- *
- */
-
-function Node(name) {
-  this.name = name;
-}
-
-
-module.exports = { reduxify };
+module.exports = { reduxify, Node };
