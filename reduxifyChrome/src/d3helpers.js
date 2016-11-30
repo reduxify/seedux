@@ -1,6 +1,10 @@
 // import parsedCodeObj?
 
 /*IMPORTING THE D3 library */
+import { select, cluster, hierarchy, append } from "d3";
+
+const exports = {};
+
 // import {hierarchy, tree, select, path} from "d3";
 // import {hierarchy, tree} from "d3-hierarchy";
 // import {select} from "d3-selection";
@@ -98,28 +102,27 @@ const answerD3Reducers = {
 }
 
 
-const node = document.createElement('div');
 ////--- D3 LOGIC -----////
 //The canvas for the tree//
-	var width = 700;
-	var height = 700; //length
 
-//function that creates the tree: //takes in DOM element the graph && data that the tree visualizes
-function create(element, data){
+// takes in DOM element to be transformed into Cluster, && data that the Cluster visualizes
+exports.transformVizNode = function transformVizNode(element, data) {
+  var width = 700;
+  var height = 700; //length
 	//creates the cluster
 
-	var svg = d3.select(element)
+	var svg = select(element)
 		.append("svg")
 		.attr("width", width)
 		.attr("height", height)
 		.append("g").attr("transform", "translate(20,0)");
 
 
-	var cluster = d3.cluster().size([height-400, width-200]);
+	var ourCluster = cluster().size([height-400, width-200]);
 //passes hierarchiacalsdf data into cluster to create the root node
-	var nodeHierarchy = d3.hierarchy(data);
+	var nodeHierarchy = hierarchy(data);
 
-	cluster(nodeHierarchy);
+	ourCluster(nodeHierarchy);
 
 	// entering the nodes --> finally appending to DOM
 var nodeEnter = svg.selectAll(".node")
@@ -156,8 +159,4 @@ nodeEnter.append("text")
 });
 }
 
-const UIHeadNode = create(node, answerD3Reducers);
-const actionsHeadNode = create(node, answerD3Reducers);
-const reducersHeadNode = create(node, answerD3Reducers);
-
-module.exports = { UIHeadNode, actionsHeadNode, reducersHeadNode };
+module.exports = exports;

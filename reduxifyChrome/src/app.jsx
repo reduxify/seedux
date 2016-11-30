@@ -2,10 +2,10 @@ import React from 'react';
 import Rewind from './components/Rewind.jsx';
 import LogEntry from './components/LogEntry.jsx';
 import Graph from './components/Graph.jsx';
-import D3UI from './components/D3UI';
-import D3Actions from './components/D3Actions';
-import D3Reducers from './components/D3Reducers';
-import { UIHeadNode, actionsHeadNode, reducersHeadNode } from './../d3/basicTree';
+// import D3UI from './components/D3UI';
+import D3Viz from './components/D3Viz';
+// import D3Reducers from './components/D3Reducers';
+// import { UIHeadNode, actionsHeadNode, reducersHeadNode } from './../d3/basicTree';
 
 class App extends React.Component {
   constructor(props) {
@@ -13,17 +13,17 @@ class App extends React.Component {
     this.state = {
       history: [],
       future: [],
-      Actions: {},
-      Reducers: {},
-      UI: {},
+      actionCreators: {},
+      reducers: {},
+      ui: {},
     }
     // send a msg to the background script to ask for the current Log
     chrome.extension.sendMessage({type: 'populateLog'}, (response) => {
-      // console.log('Initial Log Population: ', response.history);
+      console.log('Initial Log Population: ', response.history);
       this.setState({
-        UI: UIHeadNode,
-        Actions: actionsHeadNode,
-        Reducers: reducersHeadNode,
+        ui: response.codeObj.ui,
+        actionCreators: response.codeObj.actionCreators,
+        reducers: response.codeObj.reducers,
         history: response.history,
         future: response.future,
       });
@@ -90,9 +90,9 @@ class App extends React.Component {
       <div>
         <h1>[seedux]</h1>
           <div>
-          <D3UI UI = {this.state.UI} />
-          <D3Actions Actions = {this.state.Actions} /> 
-          <D3Reducers Reducers = {this.state.Reducers} />
+          <D3Viz data={this.state.ui} />
+          <D3Viz data={this.state.actionCreators} />
+          <D3Viz data={this.state.reducers} />
         </div>
         <button onClick={() => this.resetLog()}>Reset Log</button>
         <button onClick={() => this.undo()}>Undo</button>
@@ -106,3 +106,92 @@ class App extends React.Component {
 }
 
 export default App;
+
+const answerD3Actions = {
+  'name': 'Action Creators',
+  'children': [
+    {
+      'name': 'addTodo',
+      'children': [
+        {
+          'name': 'ADD_TODO'
+        }
+      ]
+    },
+    {
+      'name': 'setVisibilityFilter',
+      'children': [
+        {
+          'name': 'SET_VISIBILITY_FILTER'
+        }
+      ]
+    },
+    {
+      'name': 'toggleTodo',
+      'children': [
+        {
+          'name': 'TOGGLE_TODO'
+        }
+      ]
+    },
+    {
+      'name': 'undoAction',
+      'children': [
+        {
+          'name': 'UNDO'
+        }
+      ]
+    },
+    {
+      'name': 'redoAction',
+      'children': [
+        {
+          'name': 'REDO'
+        }
+      ]
+    }
+  ]
+}
+
+const answerD3UI = {
+  'name': 'Containers',
+  'children': [
+    {
+      'name': 'TestTodoList',
+      'children': [
+        {
+          'name': 'todos'
+        },
+				{
+					'name': 'onTodoClick'
+				}
+      ]
+    }
+  ]
+}
+
+
+const answerD3Reducers = {
+  'name': 'reducers',
+  'children': [
+      {
+        'name': 'visibilityFilter',
+        'children': [
+          {
+            'name': 'SET_VISIBILITY_FILTER'
+          }
+        ]
+      },
+      {
+        'name': 'todos',
+        'children': [
+          {
+            'name': 'ADD_TODO'
+          },
+          {
+            'name': 'TOGGLE_TODO'
+          }
+        ]
+      }
+  ]
+}

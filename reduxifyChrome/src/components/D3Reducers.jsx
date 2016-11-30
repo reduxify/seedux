@@ -10,7 +10,6 @@ const D3Reducers = ({ Reducers }) => {
   );
 };
 
-
 D3Reducers.propTypes = {
   Reducers: React.PropTypes.object.isRequired
 };
