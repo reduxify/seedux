@@ -58,18 +58,7 @@ function reduxifyCombineReducersLogic(reducers) {
 
 const testReducers = reduxifyCombineReducersLogic({ visibilityFilter, todos });
 
-const answerReducers = [
-  {
-    name: 'visibilityFilter',
-    cases: ['SET_VISIBILITY_FILTER']
-  },
-  {
-    name: 'todos',
-    cases: ['ADD_TODO', 'TOGGLE_TODO']
-  }
-]
-
-const answerD3Reducers = {
+const answerReducers = {
   'name': 'Reducers',
   'children': [
       {
@@ -94,4 +83,4 @@ const answerD3Reducers = {
   ]
 }
 
-module.exports = { testReducers, answerReducers, answerD3Reducers };
+module.exports = { testReducers, answerReducers };
