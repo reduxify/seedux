@@ -1,6 +1,7 @@
 import { D3UIStructurer, D3ReducerStructurer, D3ActionCreatorStructurer } from './reduxifyD3Structurer'
 const reduxify = {};
 const parsedCodeObj = {};
+const structuredUIArr = [];
 
 /**
  *  Parses component for name and propNames.
@@ -12,7 +13,6 @@ const parsedCodeObj = {};
 
 reduxify.UIExtractor = (UI) => {
   let UIObj = {};
-  let structuredUIArr = [];
   const UIName = UI[0];
   const UIPropNames = UI[1];
   UIObj[UIName] = UIPropNames;

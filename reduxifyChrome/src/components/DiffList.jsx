@@ -9,7 +9,6 @@ const DiffList = ({ diffs }) => {
       else if (diff.kind === 'A') return (<Diff key={diff.kind + index} kind={diff.item.kind} path={diff.path} rhs={diff.item.rhs} lhs={diff.item.lhs ? diff.item.lhs : 'undefined'} />)
     });
 }
-  console.log('diffElements: ', diffElements);
   return (
     <table>
       <tr>

@@ -1,24 +1,44 @@
 let history = [];
-let codeObj;
+const codeObj = {};
+let future = [];
+let tabId = 0;
 
 chrome.runtime.onMessage.addListener((msg, sender, response) => {
-    // sent from the content script to store log entry
+  console.log('Background got MSG: ', msg);
+  // sent from the content script to store log entry
   if (msg.type === 'addToLog') {
     console.log('Got New Entry! History: ', history);
     history.push(msg.historyEntry);
+    // clear any 'future' events
+    future = [];
   }
   // sent from new instance of tool to get the current log
   if (msg.type === 'populateLog') {
-    response({ history });
+    response({ future, history, codeObj });
   }
   // sent from our tool to clear its history
   if (msg.type === 'resetLog') {
     history = [];
-    response({ history });
+    future = [];
+    response({ history, future });
+  }
+  // sent from our tool to implement undo/redo
+  if (msg.type === 'undoFromTool' && history.length) {
+    console.log('Got an Undo! Sending msg along to tab: ', tabId);
+    future.unshift(history.pop());
+    chrome.tabs.sendMessage(tabId, { type: 'reduxifyUndo' });
+  }
+  if (msg.type === 'redoFromTool' && future.length) {
+    console.log('Got a Redo! Sending msg along to tab: ', tabId);
+    history.push(future.shift());
+    chrome.tabs.sendMessage(tabId, { type: 'reduxifyRedo' });
   }
   // sent from the content script to store parsing data
-  if (msg.type === 'storeReducers') {
-    console.log('Got Reducer CodeObj: ', msg.codeObj);
-    codeObj.reducers = msg.codeObj;
+  if (msg.type === 'storeCode') {
+    console.log('Got New CodeObj: ', msg.codeObj);
+    Object.assign(codeObj, msg.codeObj);
+    console.log('Aggregated CodeObj:', codeObj);
+    tabId = sender.tab.id;
+    // store the app's tab ID for use later in passing UNDO/REDO messages
   }
 });

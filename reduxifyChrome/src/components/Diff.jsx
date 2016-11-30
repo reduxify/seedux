@@ -4,7 +4,6 @@ import JSONTree from 'react-json-tree'
 const Diff = ({ kind, path, rhs, lhs='undefined' }) => {
   let diffClassName = 'diff-edit';
   if (kind === 'N') diffClassName = 'diff-new';
-  console.log('diffClassName: ', diffClassName);
   return (
     <tr className={diffClassName}>
       <td className='diff-path col1'>{path.join(':')}</td>

@@ -1,6 +1,5 @@
 import React from 'react';
 import rd3 from 'react-d3-library';
-// import UIHeadNode from 'tbd';
 const RD3Component = rd3.Component;
 
 const D3UI = ({ UI }) => {
@@ -12,7 +11,7 @@ const D3UI = ({ UI }) => {
 };
 
 D3UI.propTypes = {
-  UI: React.propTypes.object.isRequired
+  UI: React.PropTypes.object.isRequired
 };
 
 export default D3UI;

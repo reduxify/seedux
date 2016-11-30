@@ -9,9 +9,8 @@ const D3Actions = ({ Actions }) => {
     </div>
   );
 };
-
 D3Actions.propTypes = {
-  Actions: React.propTypes.object.isRequired
+  Actions: React.PropTypes.object.isRequired
 };
 
 export default D3Actions;

@@ -1,8 +1,8 @@
+
 var webpack = require('webpack');
 
-var path = require('path');
-
 module.exports = {
+  devtool: 'cheap-module-source-map',
   entry: [
     'webpack-dev-server/client?http://localhost:8080',
     'webpack/hot/only-dev-server',
@@ -18,6 +18,9 @@ module.exports = {
       loaders: ['style', 'css', 'sass']
     }],
   },
+  resolve: {
+    extensions: ['', '.js', '.jsx']
+  },
   output: {
     path: __dirname + '/reduxifyChrome/dist',
     publicPath: '/',
@@ -28,10 +31,7 @@ module.exports = {
      hot: true
   },
   "babel": {
-    "presets": [
-      "es2015",
-      "react"
-    ]
+    "presets": ["es2015", "react"]
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin()
