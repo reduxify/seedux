@@ -42,7 +42,7 @@ function reduxifybindActionCreatorsLogic(actionCreators, dispatch) {
     for (let k in actionCreators) {
       reduxifyObj[k] = actionCreators[k] + coerceToStr;
     }
-  return reduxifyObj;
+  return JSON.stringify(reduxifyObj);
 }
 
 const testActionCreators = reduxifybindActionCreatorsLogic({addTodo, setVisibilityFilter, toggleTodo, undoAction, redoAction});
@@ -70,50 +70,4 @@ const answerActions = [
   }
 ]
 
-const answerD3Actions = {
-  'name': 'Action Creators',
-  'children': [
-    {
-      'name': 'addTodo',
-      'children': [
-        {
-          'name': 'ADD_TODO'
-        }
-      ]
-    },
-    {
-      'name': 'setVisibilityFilter',
-      'children': [
-        {
-          'name': 'SET_VISIBILITY_FILTER'
-        }
-      ]
-    },
-    {
-      'name': 'toggleTodo',
-      'children': [
-        {
-          'name': 'TOGGLE_TODO'
-        }
-      ]
-    },
-    {
-      'name': 'undoAction',
-      'children': [
-        {
-          'name': 'UNDO'
-        }
-      ]
-    },
-    {
-      'name': 'redoAction',
-      'children': [
-        {
-          'name': 'REDO'
-        }
-      ]
-    }
-  ]
-}
-
-module.exports = { testActionCreators, answerActions, answerD3Actions };
+module.exports = { testActionCreators, answerActions };

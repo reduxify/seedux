@@ -1,8 +1,8 @@
 import React from 'react'
-import DiffList from './DiffList'
+import DiffList from './DiffList.jsx'
 import JSONTree from 'react-json-tree'
 import Collapsible from 'react-collapsible';
-import Action from './Action'
+import Action from './Action.jsx'
 
 const LogEntry = ({ entry, index, futury, present }) => {
   const { diffs, modifiedAction, newState } = entry;

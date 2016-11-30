@@ -1,6 +1,8 @@
+
 var webpack = require('webpack');
 
 module.exports = {
+  devtool: 'cheap-module-source-map',
   entry: [
     'webpack-dev-server/client?http://localhost:8080',
     'webpack/hot/only-dev-server',

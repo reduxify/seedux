@@ -1,7 +1,11 @@
 import React from 'react';
-import Rewind from './components/Rewind';
-import LogEntry from './components/LogEntry';
-import Graph from './components/Graph';
+import Rewind from './components/Rewind.jsx';
+import LogEntry from './components/LogEntry.jsx';
+import Graph from './components/Graph.jsx';
+import D3UI from './components/D3UI';
+import D3Actions from './components/D3Actions';
+import D3Reducers from './components/D3Reducers';
+import { UIHeadNode, actionsHeadNode, reducersHeadNode } from './../d3/basicTree';
 
 class App extends React.Component {
   constructor(props) {
@@ -9,17 +13,17 @@ class App extends React.Component {
     this.state = {
       history: [],
       future: [],
-      codeObj: {
-        reducers: [],
-        actionCreators: [],
-        UI: [],
-      },
+      Actions: {},
+      Reducers: {},
+      UI: {},
     }
     // send a msg to the background script to ask for the current Log
     chrome.extension.sendMessage({type: 'populateLog'}, (response) => {
       // console.log('Initial Log Population: ', response.history);
       this.setState({
-        codeObj: response.codeObj,
+        UI: UIHeadNode,
+        Actions: actionsHeadNode,
+        Reducers: reducersHeadNode,
         history: response.history,
         future: response.future,
       });
@@ -85,7 +89,11 @@ class App extends React.Component {
     return (
       <div>
         <h1>[seedux]</h1>
-        <Graph data={this.state.codeObj} />
+          <div>
+          <D3UI UI = {this.state.UI} />
+          <D3Actions Actions = {this.state.Actions} /> 
+          <D3Reducers Reducers = {this.state.Reducers} />
+        </div>
         <button onClick={() => this.resetLog()}>Reset Log</button>
         <button onClick={() => this.undo()}>Undo</button>
         <button onClick={() => this.redo()}>Redo</button>

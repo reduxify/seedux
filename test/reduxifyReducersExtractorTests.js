@@ -1,11 +1,13 @@
 const chai = require('chai');
 const expect = require('chai').expect;
-const { testReducers, answerReducers } = require('./fixtures/reduxifyReducerExtractorFixtures');
+const { testReducers, answerReducers, answerD3Reducers } = require('./fixtures/reduxifyReducerExtractorFixtures');
 const { reduxify } = require('./../Library/src/reduxifyExtractor');
+const { D3ReducerStructurer } = require('./../Library/src/reduxifyD3Structurer');
 
 describe('reduxify.ReducerExtractor', () => {
 
 const output = reduxify.ReducerExtractor(testReducers);
+const outputD3 = D3ReducerStructurer(output);
 
   it('should be a function', () => {
     expect(reduxify.ReducerExtractor).to.be.a.function;
@@ -28,6 +30,10 @@ const output = reduxify.ReducerExtractor(testReducers);
 
   it('should return a properly structured output for a given input', () => {
     expect(output).to.deep.equal(answerReducers);
+  })
+
+  it('should return a properly structured D3 hierarchical tree output for a given input', () => {
+    expect(outputD3).to.deep.equal(answerD3Reducers);
   })
 
 });

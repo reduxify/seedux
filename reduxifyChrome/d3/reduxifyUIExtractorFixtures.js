@@ -46,21 +46,4 @@ const answerUI = [
   }
 ]
 
-const answerD3UI = {
-  'name': 'Containers',
-  'children': [
-    {
-      'name': 'TestTodoList',
-      'children': [
-        {
-          'name': 'todos'
-        },
-				{
-					'name': 'onTodoClick'
-				}
-      ]
-    }
-  ]
-}
-
-module.exports = { testUI, answerUI, answerD3UI };
+module.exports = { testUI, answerUI };

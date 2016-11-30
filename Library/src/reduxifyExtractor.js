@@ -1,3 +1,4 @@
+import { D3UIStructurer, D3ReducerStructurer, D3ActionCreatorStructurer } from './reduxifyD3Structurer'
 const reduxify = {};
 const parsedCodeObj = {};
 const structuredUIArr = [];
@@ -17,9 +18,9 @@ reduxify.UIExtractor = (UI) => {
   UIObj[UIName] = UIPropNames;
   structuredUIArr.push({ name: UIName, propNames: UIPropNames });
 
-  parsedCodeObj.UI = structuredUIArr;
+  parsedCodeObj.UI = D3UIStructurer(structuredUIArr);
 
-  return structuredUIArr;
+  return D3UIStructurer(structuredUIArr);
 }
 
 /**
@@ -65,8 +66,8 @@ reduxify.ReducerExtractor = (reducers) => {
       cases: reducersObj[key]
     })
   });
-  parsedCodeObj.reducers = structuredReducersArr;
-  return structuredReducersArr;
+  parsedCodeObj.reducers = D3ReducersStructurer(structuredReducersArr);
+  return D3ReducersStructurer(structuredReducersArr);
 }
 
 /**
@@ -104,9 +105,9 @@ reduxify.ActionExtractor = (actionCreators) => {
     })
   });
 
-  parsedCodeObj.actionCreators = structuredActionCreatorsArr;
+  parsedCodeObj.actionCreators = D3ActionCreatorStructurer(structuredActionCreatorsArr);
 
-  return structuredActionCreatorsArr;
+  return D3ActionCreatorStructurer(structuredActionCreatorsArr);
 }
 
 // attach a listener to respond with this data when the content script has loaded.
@@ -120,4 +121,4 @@ document.addEventListener('scriptLoaded', function(e) {
   document.dispatchEvent(evt);
 }, false);
 
-module.exports = { reduxify };
+module.exports = { reduxify, structuredUIArr, structuredReducersArr, structuredActionCreatorsArr };

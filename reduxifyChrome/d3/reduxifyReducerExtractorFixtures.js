@@ -22,7 +22,7 @@ const todo = (state = {}, action) => {
       return Object.assign({}, state, {
         completed: !state.completed
       })
-    
+
     default:
       return state;
   }
@@ -35,11 +35,11 @@ const todos = (state = [], action) => {
         ...state,
         todo(undefined, action)
       ]
-    case 'TOGGLE_TODO': 
+    case 'TOGGLE_TODO':
       return state.map(t => {
         return todo(t, action)
       })
-      
+
     default:
       return state;
   }
@@ -53,7 +53,7 @@ function reduxifyCombineReducersLogic(reducers) {
     for (let k in reducers) {
       reduxifyObj[k] = reducers[k] + coerceToStr;
     }
-  return reduxifyObj;
+  return JSON.stringify(reduxifyObj);
 }
 
 const testReducers = reduxifyCombineReducersLogic({ visibilityFilter, todos });
@@ -69,29 +69,4 @@ const answerReducers = [
   }
 ]
 
-const answerD3Reducers = {
-  'name': 'Reducers',
-  'children': [
-      {
-        'name': 'visibilityFilter',
-        'children': [
-          {
-            'name': 'SET_VISIBILITY_FILTER'
-          }
-        ]
-      },
-      {
-        'name': 'todos',
-        'children': [
-          {
-            'name': 'ADD_TODO'
-          },
-          {
-            'name': 'TOGGLE_TODO'
-          }
-        ]
-      }
-  ]
-}
-
-module.exports = { testReducers, answerReducers, answerD3Reducers };
+module.exports = { testReducers, answerReducers };
