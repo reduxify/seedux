@@ -1,5 +1,5 @@
 $bgColor: #fff5cc;
-$primColor: #ddd;
+$primColor: darkblue;
 
 .well {
   border-radius: 0.2em;
@@ -47,4 +47,12 @@ body {
 }
 .Collapsible {
   border: 1px solid $primColor;
+}
+button, select {
+  background-color: $primColor;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 0.25em 0.5em;
+  margin: 0.5em;
 }
