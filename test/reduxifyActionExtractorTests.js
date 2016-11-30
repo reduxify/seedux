@@ -1,39 +1,40 @@
 const chai = require('chai');
 const expect = require('chai').expect;
-const { testActionCreators, answerActions, answerD3Actions } = require('./fixtures/reduxifyActionExtractorFixtures');
-const { reduxify } = require('./../Library/src/reduxifyExtractor');
-const { D3ActionCreatorStructurer } = require('./../Library/src/reduxifyD3Structurer');
+const { testActionCreators, answerActionCreators } = require('./fixtures/reduxifyActionExtractorFixtures');
+const { reduxify, Node } = require('./../Library/src/reduxifyExtractor');
+const output = reduxify.actionCreatorsExtractor(testActionCreators);
 
-describe('reduxify.ActionExtractor', () => {
-
-const output = reduxify.ActionExtractor(testActionCreators);
-const outputD3 = D3ActionCreatorStructurer(output);
+describe('reduxify.actionCreatorsExtractor', () => {
 
   it('should be a function', () => {
-    expect(reduxify.ActionExtractor).to.be.a.function;
+    expect(reduxify.actionCreatorsExtractor).to.be.a.function;
   })
 
-  it('should return an array composed of objects', () => {
-    expect(output).to.be.an('array');
-    expect(output[0]).to.be.an('object');
+  it('should return an object-typed instance of Node named "Action Creators"', () => {
+    expect(output).to.be.an('object');
+    expect(output.constructor).to.deep.equal(Node);
+    expect(output.name).to.deep.equal('Action Creators');
   })
 
-  it('should return an array composed of objects with the keys "name" and "type"', () => {
-    expect(output[0].name).to.exist;
-    expect(output[0].type).to.exist;
-  })
-
-  it('should return an array composed of objects with value types of "string"', () => {
-    expect(output[0].name).to.be.a('string');
-    expect(output[0].type).to.be.a('string');
-  })
-
-  it('should return a properly structured output for a given input', () => {
-    expect(output).to.deep.equal(answerActions);
-  })
 
   it('should return a properly structured D3 hierarchical tree output for a given input', () => {
-    expect(outputD3).to.deep.equal(answerD3Actions);
+    expect(output).to.deep.equal(answerActionCreators);
+  })
+
+});
+
+describe('"Action Creators" node', () => {
+
+  it('should have an array-typed property named children composed of object-typed Node(s)', () => {
+    expect(output.children).to.be.an('array');
+    expect(output.children[0]).to.be.an('object');
+    expect(output.children[0].constructor).to.deep.equal(Node);
+  })
+
+  it('should have child nodes that each possess an array-typed property named children composed of object-typed Node(s)', () => {
+    expect(output.children[0].children).to.be.an('array');
+    expect(output.children[0].children[0]).to.be.an('object');
+    expect(output.children[0].children[0].constructor).to.deep.equal(Node);
   })
 
 });

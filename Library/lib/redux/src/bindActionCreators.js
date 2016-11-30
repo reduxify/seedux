@@ -32,7 +32,7 @@ export default function bindActionCreators(actionCreators, dispatch) {
   for (let k in actionCreators) {
     reduxifyObj[k] = actionCreators[k] + coerceToStr;
   }
-  reduxify.ActionExtractor(reduxifyObj);
+  reduxify.actionCreatorsExtractor(reduxifyObj);
 
   if (typeof actionCreators === 'function') {
     return bindActionCreator(actionCreators, dispatch)

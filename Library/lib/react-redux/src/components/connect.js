@@ -56,11 +56,10 @@ export default function connect(mapStateToProps, mapDispatchToProps, mergeProps,
   return function wrapWithConnect(WrappedComponent) {
 
   // REDUXIFY
-  const UI = WrappedComponent.name;
-  const props = typeof WrappedComponent.propTypes === 'object' ?
-    Object.keys(WrappedComponent.propTypes) : [];
+  const ui = WrappedComponent.name;
+  const props = typeof WrappedComponent.propTypes === 'object' ? Object.keys(WrappedComponent.propTypes) : [];
 
-  reduxify.UIExtractor([UI, props]);
+  reduxify.uiExtractor([ui, props]);
 
     const connectDisplayName = `Connect(${getDisplayName(WrappedComponent)})`
 
