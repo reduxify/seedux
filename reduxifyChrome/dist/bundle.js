@@ -63,7 +63,7 @@
 /******/ 	}
 
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "e289f61d8bbaf0067c08"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "d739d4583957eddd87ec"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 
@@ -29714,7 +29714,7 @@
 
 	var _Graph2 = _interopRequireDefault(_Graph);
 
-	var _D3Viz = __webpack_require__(464);
+	var _D3Viz = __webpack_require__(440);
 
 	var _D3Viz2 = _interopRequireDefault(_D3Viz);
 
@@ -29744,7 +29744,8 @@
 	      future: [],
 	      actionCreators: {},
 	      reducers: {},
-	      ui: {}
+	      ui: {},
+	      chartType: 'comfyTree'
 	    };
 	    // send a msg to the background script to ask for the current Log
 	    chrome.extension.sendMessage({ type: 'populateLog' }, function (response) {
@@ -29819,6 +29820,11 @@
 	      });
 	    }
 	  }, {
+	    key: 'handleSelectChange',
+	    value: function handleSelectChange(event) {
+	      this.setState({ chartType: event.target.value });
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      var _this5 = this;
@@ -29843,10 +29849,24 @@
 	        ),
 	        _react2.default.createElement(
 	          'div',
-	          null,
-	          _react2.default.createElement(_D3Viz2.default, { data: this.state.ui }),
-	          _react2.default.createElement(_D3Viz2.default, { data: this.state.actionCreators }),
-	          _react2.default.createElement(_D3Viz2.default, { data: this.state.reducers })
+	          { style: { float: 'top' } },
+	          _react2.default.createElement(_D3Viz2.default, { data: this.state.ui, chartType: this.state.chartType }),
+	          _react2.default.createElement(_D3Viz2.default, { data: this.state.actionCreators, chartType: this.state.chartType }),
+	          _react2.default.createElement(_D3Viz2.default, { data: this.state.reducers, chartType: this.state.chartType })
+	        ),
+	        _react2.default.createElement(
+	          'select',
+	          { value: this.state.value, onChange: this.handleSelectChange.bind(this) },
+	          _react2.default.createElement(
+	            'option',
+	            { value: 'comfyTree' },
+	            'ComfyTree'
+	          ),
+	          _react2.default.createElement(
+	            'option',
+	            { value: 'cozyTree' },
+	            'CozyTree'
+	          )
 	        ),
 	        _react2.default.createElement(
 	          'button',
@@ -29869,9 +29889,13 @@
 	            } },
 	          'Redo'
 	        ),
-	        historyEntries,
-	        _react2.default.createElement('hr', null),
-	        futureEntries
+	        _react2.default.createElement(
+	          'div',
+	          { style: { float: 'bottom' } },
+	          historyEntries,
+	          _react2.default.createElement('hr', { style: { color: 'red' } }),
+	          futureEntries
+	        )
 	      );
 	    }
 	  }]);
@@ -29879,67 +29903,7 @@
 	  return App;
 	}(_react2.default.Component);
 
-	exports.default = App;
-
-
-	var answerD3Actions = {
-	  'name': 'Action Creators',
-	  'children': [{
-	    'name': 'addTodo',
-	    'children': [{
-	      'name': 'ADD_TODO'
-	    }]
-	  }, {
-	    'name': 'setVisibilityFilter',
-	    'children': [{
-	      'name': 'SET_VISIBILITY_FILTER'
-	    }]
-	  }, {
-	    'name': 'toggleTodo',
-	    'children': [{
-	      'name': 'TOGGLE_TODO'
-	    }]
-	  }, {
-	    'name': 'undoAction',
-	    'children': [{
-	      'name': 'UNDO'
-	    }]
-	  }, {
-	    'name': 'redoAction',
-	    'children': [{
-	      'name': 'REDO'
-	    }]
-	  }]
-	};
-
-	var answerD3UI = {
-	  'name': 'Containers',
-	  'children': [{
-	    'name': 'TestTodoList',
-	    'children': [{
-	      'name': 'todos'
-	    }, {
-	      'name': 'onTodoClick'
-	    }]
-	  }]
-	};
-
-	var answerD3Reducers = {
-	  'name': 'reducers',
-	  'children': [{
-	    'name': 'visibilityFilter',
-	    'children': [{
-	      'name': 'SET_VISIBILITY_FILTER'
-	    }]
-	  }, {
-	    'name': 'todos',
-	    'children': [{
-	      'name': 'ADD_TODO'
-	    }, {
-	      'name': 'TOGGLE_TODO'
-	    }]
-	  }]
-		};
+		exports.default = App;
 
 /***/ },
 /* 255 */
@@ -37235,7 +37199,69 @@
 	exports.default = Graph;
 
 /***/ },
-/* 440 */,
+/* 440 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _reactFauxDom = __webpack_require__(441);
+
+	var _reactFauxDom2 = _interopRequireDefault(_reactFauxDom);
+
+	var _react = __webpack_require__(253);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _d3helpers = __webpack_require__(457);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var D3Viz = function (_Component) {
+	  _inherits(D3Viz, _Component);
+
+	  function D3Viz(props) {
+	    _classCallCheck(this, D3Viz);
+
+	    return _possibleConstructorReturn(this, (D3Viz.__proto__ || Object.getPrototypeOf(D3Viz)).call(this, props));
+	  }
+
+	  _createClass(D3Viz, [{
+	    key: 'render',
+	    value: function render() {
+	      var _props = this.props,
+	          data = _props.data,
+	          chartType = _props.chartType;
+	      // //--- D3 LOGIC -----////
+	      // The canvas for the tree//
+
+	      var fauxNode = _reactFauxDom2.default.createElement('div');
+	      (0, _d3helpers.transformVizNode)(fauxNode, data, chartType);
+	      return fauxNode.toReact();
+	    }
+	  }]);
+
+	  return D3Viz;
+	}(_react.Component);
+
+	D3Viz.propTypes = {
+	  data: _react2.default.PropTypes.object.isRequired
+	};
+
+		exports.default = D3Viz;
+
+/***/ },
 /* 441 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -40202,6 +40228,143 @@
 
 /***/ },
 /* 457 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _d = __webpack_require__(458);
+
+	// default chart size and spacing constants
+	var config = {};
+
+	config.cozyTree = {
+	  CHART_WIDTH: 250,
+	  CHART_HEIGHT: 200,
+	  // multiplier between 0 and 1 that determines horizontal spacing of tree
+	  // generations.  Smaller is 'more compact'.
+	  DEPTH_SPACING_FACTOR: 0.7,
+	  // multiplier between 0 and 1 that determines vertical spacing of tree
+	  // generations.  Smaller is 'more compact'.
+	  BREADTH_SPACING_FACTOR: 0.5,
+	  NODE_RADIUS: 5
+	};
+
+	config.comfyTree = {
+	  CHART_WIDTH: 500,
+	  CHART_HEIGHT: 250,
+	  // multiplier between 0 and 1 that determines horizontal spacing of tree
+	  // generations.  Smaller is 'more compact'.
+	  DEPTH_SPACING_FACTOR: 0.7,
+	  // multiplier between 0 and 1 that determines vertical spacing of tree
+	  // generations.  Smaller is 'more compact'.
+	  BREADTH_SPACING_FACTOR: 1,
+	  NODE_RADIUS: 15
+
+	};
+
+	var _exports = {};
+
+	// //--- D3 LOGIC -----////
+	// The canvas for the tree//
+
+	// takes in DOM element to be transformed into DefaultCluster,
+	// && data that the DefaultCluster visualizes
+	_exports.transformVizNode = function transformVizNode(element, data) {
+	  var type = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'cozyTree';
+
+	  if (type === 'comfyTree') {
+	    buildBasicTree(element, data, config.comfyTree);
+	  } else if (type === 'cozyTree') {
+	    buildBasicTree(element, data, config.cozyTree);
+	  }
+	};
+	function buildBasicList(element, data, config) {
+	  //
+	  //
+	  //
+	  // creates the cluster differently
+	  //
+	  //
+	  var CHART_WIDTH = config.CHART_WIDTH,
+	      CHART_HEIGHT = config.CHART_HEIGHT,
+	      DEPTH_SPACING_FACTOR = config.DEPTH_SPACING_FACTOR,
+	      BREADTH_SPACING_FACTOR = config.BREADTH_SPACING_FACTOR,
+	      NODE_RADIUS = config.NODE_RADIUS;
+
+	  var svg = (0, _d.select)(element).append('svg').attr('width', CHART_WIDTH).attr('height', CHART_HEIGHT).append('g').attr('transform', 'translate(20,0)');
+
+	  var ourCluster = (0, _d.cluster)().size([CHART_HEIGHT * BREADTH_SPACING_FACTOR, CHART_WIDTH * DEPTH_SPACING_FACTOR]).separation(function (a, b) {
+	    return a.parent == b.parent ? 2 : 3;
+	  });
+	  // passes hierarchiacal data into cluster to create the root node
+	  var nodeHierarchy = (0, _d.hierarchy)(data);
+
+	  ourCluster(nodeHierarchy);
+
+	  // entering the nodes --> finally appending to DOM
+	  var nodeEnter = svg.selectAll('.node').data(nodeHierarchy.descendants()).enter().append('g').attr('class', function (d) {
+	    return 'node' + (d.children ? 'node-internal' : 'node-leaf');
+	  }).attr('transform', function (d) {
+	    console.log(d.y);
+	    return 'translate(' + d.y + ',' + d.x + ')';
+	  });
+
+	  //creating links
+
+	  var link = svg.selectAll('.node').data(nodeHierarchy.descendants().slice(1)).enter().append('path').attr('class', 'link').attr('d', function (d) {
+	    return 'M ' + d.y + ' ' + d.x + '\n        Q ' + d.parent.y + ' ' + (d.x + d.parent.x) / 2 + '\n          ' + d.parent.y + ' ' + d.parent.x;
+	  }).attr('stroke-width', '1').attr('stroke', 'darkblue').attr('fill', 'none');
+
+	  // console.log(link)
+
+	  nodeEnter.append('circle').attr('r', NODE_RADIUS).style('fill', 'lightsteelblue');
+
+	  nodeEnter.append('text').text(function (d) {
+	    return d.data.name;
+	  }).style('fill', 'darkblue');
+	}
+	function buildBasicTree(element, data, config) {
+	  var CHART_WIDTH = config.CHART_WIDTH,
+	      CHART_HEIGHT = config.CHART_HEIGHT,
+	      DEPTH_SPACING_FACTOR = config.DEPTH_SPACING_FACTOR,
+	      BREADTH_SPACING_FACTOR = config.BREADTH_SPACING_FACTOR,
+	      NODE_RADIUS = config.NODE_RADIUS;
+
+	  var svg = (0, _d.select)(element).append('svg').attr('width', CHART_WIDTH).attr('height', CHART_HEIGHT).append('g').attr('transform', 'translate(20,0)');
+	  var ourCluster = (0, _d.cluster)().size([CHART_HEIGHT * BREADTH_SPACING_FACTOR, CHART_WIDTH * DEPTH_SPACING_FACTOR]).separation(function (a, b) {
+	    return a.parent == b.parent ? 2 : 3;
+	  });
+	  // passes hierarchiacal data into cluster to create the root node
+	  var nodeHierarchy = (0, _d.hierarchy)(data);
+
+	  ourCluster(nodeHierarchy);
+
+	  // entering the nodes --> finally appending to DOM
+	  var nodeEnter = svg.selectAll('.node').data(nodeHierarchy.descendants()).enter().append('g').attr('class', function (d) {
+	    return 'node' + (d.children ? 'node-internal' : 'node-leaf');
+	  }).attr('transform', function (d) {
+	    console.log(d.y);
+	    return 'translate(' + d.y + ',' + d.x + ')';
+	  });
+
+	  //creating links
+
+	  var link = svg.selectAll('.node').data(nodeHierarchy.descendants().slice(1)).enter().append('path').attr('class', 'link').attr('d', function (d) {
+	    return 'M ' + d.y + ' ' + d.x + '\n        Q ' + d.parent.y + ' ' + (d.x + d.parent.x) / 2 + '\n          ' + d.parent.y + ' ' + d.parent.x;
+	  }).attr('stroke-width', '1').attr('stroke', 'darkblue').attr('fill', 'none');
+
+	  // console.log(link)
+
+	  nodeEnter.append('circle').attr('r', NODE_RADIUS).style('fill', 'lightsteelblue');
+
+	  nodeEnter.append('text').text(function (d) {
+	    return d.data.name;
+	  }).style('fill', 'darkblue');
+	}
+	module.exports = _exports;
+
+/***/ },
+/* 458 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// https://d3js.org Version 4.4.0. Copyright 2016 Mike Bostock.
@@ -56600,7 +56763,6 @@
 
 
 /***/ },
-/* 458 */,
 /* 459 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -56635,7 +56797,7 @@
 
 
 	// module
-	exports.push([module.id, ".well, .diff-json-container {\n  border-radius: 0.2em;\n  background-color: #0000d1;\n  border: 1px dotted white;\n  padding: 1em;\n  margin: 0; }\n\nbody {\n  color: #ddd;\n  background-color: darkblue; }\n\n.diff-json-container {\n  vertical-align: top;\n  white-space: pre;\n  width: 30%;\n  display: inline-block; }\n\n.log-action-label {\n  font-weight: 700; }\n\n.col1, .col2, .col3 {\n  display: inline-block;\n  border-top: 1px solid #ddd;\n  border-left: 1px solid #ddd;\n  border-right: 1px solid #ddd;\n  width: 15em; }\n\n.diff-json-container {\n  width: 13em; }\n\n.diff-path, .diff-json-container {\n  height: inherit; }\n\n.Collapsible__trigger {\n  font-size: 1.5em;\n  font-weight: 700; }\n\n.Collapsible:nth-of-type(odd) {\n  background-color: #00006f; }\n\n.Collapsible {\n  border: 1px solid #ddd; }\n", ""]);
+	exports.push([module.id, ".well, .diff-json-container {\n  border-radius: 0.2em;\n  background-color: white;\n  border: 1px dotted white;\n  padding: 1em;\n  margin: 0; }\n\nbody {\n  color: #ddd;\n  background-color: #fff5cc; }\n\n.diff-json-container {\n  vertical-align: top;\n  white-space: pre;\n  width: 30%;\n  display: inline-block; }\n\n.log-action-label {\n  font-weight: 700; }\n\n.col1, .col2, .col3 {\n  display: inline-block;\n  border-top: 1px solid #ddd;\n  border-left: 1px solid #ddd;\n  border-right: 1px solid #ddd;\n  width: 15em; }\n\n.diff-json-container {\n  width: 13em; }\n\n.diff-path, .diff-json-container {\n  height: inherit; }\n\n.Collapsible__trigger {\n  font-size: 1.5em;\n  font-weight: 700; }\n\n.Collapsible:nth-of-type(odd) {\n  background-color: #ccc4a3; }\n\n.Collapsible {\n  border: 1px solid #ddd; }\n", ""]);
 
 	// exports
 
@@ -56947,188 +57109,6 @@
 			URL.revokeObjectURL(oldSrc);
 	}
 
-
-/***/ },
-/* 463 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _d = __webpack_require__(457);
-
-	var _exports = {};
-
-	// import {hierarchy, tree, select, path} from "d3";
-	// import {hierarchy, tree} from "d3-hierarchy";
-	// import {select} from "d3-selection";
-	// import {path} from "d3-path";
-	// var d3 = Object.assign({}, require("d3-hierarchy"), require("d3-selection"), require("d3-path"));
-	//----*-------*-----*//
-	/* ACTUAL DATA FOR NOW (IN JSON) */
-	// import parsedCodeObj?
-
-	/*IMPORTING THE D3 library */
-	var answerD3Actions = {
-	  'name': 'Action Creators',
-	  'children': [{
-	    'name': 'addTodo',
-	    'children': [{
-	      'name': 'ADD_TODO'
-	    }]
-	  }, {
-	    'name': 'setVisibilityFilter',
-	    'children': [{
-	      'name': 'SET_VISIBILITY_FILTER'
-	    }]
-	  }, {
-	    'name': 'toggleTodo',
-	    'children': [{
-	      'name': 'TOGGLE_TODO'
-	    }]
-	  }, {
-	    'name': 'undoAction',
-	    'children': [{
-	      'name': 'UNDO'
-	    }]
-	  }, {
-	    'name': 'redoAction',
-	    'children': [{
-	      'name': 'REDO'
-	    }]
-	  }]
-	};
-
-	var answerD3UI = {
-	  'name': 'Containers',
-	  'children': [{
-	    'name': 'TestTodoList',
-	    'children': [{
-	      'name': 'todos'
-	    }, {
-	      'name': 'onTodoClick'
-	    }]
-	  }]
-	};
-
-	var answerD3Reducers = {
-	  'name': 'Reducers',
-	  'children': [{
-	    'name': 'visibilityFilter',
-	    'children': [{
-	      'name': 'SET_VISIBILITY_FILTER'
-	    }]
-	  }, {
-	    'name': 'todos',
-	    'children': [{
-	      'name': 'ADD_TODO'
-	    }, {
-	      'name': 'TOGGLE_TODO'
-	    }]
-	  }]
-	};
-
-	////--- D3 LOGIC -----////
-	//The canvas for the tree//
-
-	// takes in DOM element to be transformed into Cluster, && data that the Cluster visualizes
-	_exports.transformVizNode = function transformVizNode(element, data) {
-	  var width = 700;
-	  var height = 700; //length
-	  //creates the cluster
-
-	  var svg = (0, _d.select)(element).append("svg").attr("width", width).attr("height", height).append("g").attr("transform", "translate(20,0)");
-
-	  var ourCluster = (0, _d.cluster)().size([height - 400, width - 200]);
-	  //passes hierarchiacalsdf data into cluster to create the root node
-	  var nodeHierarchy = (0, _d.hierarchy)(data);
-
-	  ourCluster(nodeHierarchy);
-
-	  // entering the nodes --> finally appending to DOM
-	  var nodeEnter = svg.selectAll(".node").data(nodeHierarchy.descendants()).enter().append('g').attr("class", function (d) {
-	    return "node" + (d.children ? "node-internal" : "node-leaf");
-	  }).attr("transform", function (d) {
-	    console.log(d.y);
-	    return "translate(" + d.y + "," + d.x + ")";
-	  });
-
-	  //creating links
-
-	  var link = svg.selectAll(".node").data(nodeHierarchy.descendants().slice(1)).enter().append("path").attr("class", "link").attr("d", function (d) {
-	    return "M" + d.y + "," + d.x + "C" + (d.parent.y + 100) + "," + d.x + " " + (d.parent.y + 100) + "," + d.parent.x + " " + d.parent.y + "," + d.parent.x;
-	  });
-
-	  console.log(link);
-
-	  nodeEnter.append("circle").attr("r", 10).style("fill", "lightsteelblue");
-
-	  nodeEnter.append("text").text(function (d) {
-	    return d.data.name;
-	  });
-	};
-
-	module.exports = _exports;
-
-/***/ },
-/* 464 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _reactFauxDom = __webpack_require__(441);
-
-	var _reactFauxDom2 = _interopRequireDefault(_reactFauxDom);
-
-	var _react = __webpack_require__(253);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _d3helpers = __webpack_require__(463);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var D3Viz = function (_Component) {
-	  _inherits(D3Viz, _Component);
-
-	  function D3Viz(props) {
-	    _classCallCheck(this, D3Viz);
-
-	    return _possibleConstructorReturn(this, (D3Viz.__proto__ || Object.getPrototypeOf(D3Viz)).call(this, props));
-	  }
-
-	  _createClass(D3Viz, [{
-	    key: 'render',
-	    value: function render() {
-	      var data = this.props.data;
-	      // //--- D3 LOGIC -----////
-	      // The canvas for the tree//
-
-	      var fauxNode = _reactFauxDom2.default.createElement('div');
-	      (0, _d3helpers.transformVizNode)(fauxNode, data);
-	      return fauxNode.toReact();
-	    }
-	  }]);
-
-	  return D3Viz;
-	}(_react.Component);
-
-	D3Viz.propTypes = {
-	  data: _react2.default.PropTypes.object.isRequired
-	};
-
-		exports.default = D3Viz;
 
 /***/ }
 /******/ ]);

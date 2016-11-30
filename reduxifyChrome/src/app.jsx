@@ -16,7 +16,8 @@ class App extends React.Component {
       actionCreators: {},
       reducers: {},
       ui: {},
-    }
+      chartType: 'comfyTree',
+    };
     // send a msg to the background script to ask for the current Log
     chrome.extension.sendMessage({type: 'populateLog'}, (response) => {
       console.log('Initial Log Population: ', response.history);
@@ -75,6 +76,9 @@ class App extends React.Component {
       });
     });
   }
+  handleSelectChange(event) {
+    this.setState({chartType: event.target.value})
+  }
   render() {
     let diffs = [];
     if (this.state.history.length) {
@@ -89,109 +93,27 @@ class App extends React.Component {
     return (
       <div>
         <h1>[seedux]</h1>
-          <div>
-          <D3Viz data={this.state.ui} />
-          <D3Viz data={this.state.actionCreators} />
-          <D3Viz data={this.state.reducers} />
+          <div style={{float: 'top'}}>
+          <D3Viz data={this.state.ui} chartType={this.state.chartType}/>
+          <D3Viz data={this.state.actionCreators} chartType={this.state.chartType}/>
+          <D3Viz data={this.state.reducers} chartType={this.state.chartType}/>
         </div>
+        <select value={this.state.value} onChange={this.handleSelectChange.bind(this)}>
+          <option value="comfyTree">ComfyTree</option>
+          <option value="cozyTree">CozyTree</option>
+        </select>
         <button onClick={() => this.resetLog()}>Reset Log</button>
         <button onClick={() => this.undo()}>Undo</button>
         <button onClick={() => this.redo()}>Redo</button>
-        {historyEntries}
-        <hr />
-        {futureEntries}
+        <div style={{float: 'bottom'}}>
+
+          {historyEntries}
+          <hr style={{color: 'red'}}/>
+          {futureEntries}
+        </div>
       </div>
     )
   }
 }
 
 export default App;
-
-const answerD3Actions = {
-  'name': 'Action Creators',
-  'children': [
-    {
-      'name': 'addTodo',
-      'children': [
-        {
-          'name': 'ADD_TODO'
-        }
-      ]
-    },
-    {
-      'name': 'setVisibilityFilter',
-      'children': [
-        {
-          'name': 'SET_VISIBILITY_FILTER'
-        }
-      ]
-    },
-    {
-      'name': 'toggleTodo',
-      'children': [
-        {
-          'name': 'TOGGLE_TODO'
-        }
-      ]
-    },
-    {
-      'name': 'undoAction',
-      'children': [
-        {
-          'name': 'UNDO'
-        }
-      ]
-    },
-    {
-      'name': 'redoAction',
-      'children': [
-        {
-          'name': 'REDO'
-        }
-      ]
-    }
-  ]
-}
-
-const answerD3UI = {
-  'name': 'Containers',
-  'children': [
-    {
-      'name': 'TestTodoList',
-      'children': [
-        {
-          'name': 'todos'
-        },
-				{
-					'name': 'onTodoClick'
-				}
-      ]
-    }
-  ]
-}
-
-
-const answerD3Reducers = {
-  'name': 'reducers',
-  'children': [
-      {
-        'name': 'visibilityFilter',
-        'children': [
-          {
-            'name': 'SET_VISIBILITY_FILTER'
-          }
-        ]
-      },
-      {
-        'name': 'todos',
-        'children': [
-          {
-            'name': 'ADD_TODO'
-          },
-          {
-            'name': 'TOGGLE_TODO'
-          }
-        ]
-      }
-  ]
-}
