@@ -28,7 +28,7 @@ Import and use dispatchLogger, combineReducers, bindActionCreators, and connect 
       document.getElementById('app')
     );
 
-### Replace Redux's combineReducers function with Reduxify's version and run normally
+### Replace Redux's combineReducers function with Reduxify's version
 
     // import { combineReducers } from 'redux';
     import { combineReducers } from *your filepath* + '/reduxify/lib/redux/dist/redux';
@@ -40,7 +40,7 @@ Import and use dispatchLogger, combineReducers, bindActionCreators, and connect 
       reducer2: reducer2
     })
 
-### Replace Redux's bindActionCreators function with Reduxify's version and run normally
+### Replace Redux's bindActionCreators function with Reduxify's version
 
     // import { bindActionCreators } from 'redux';
     import { bindActionCreators } from *your filepath* + '/reduxify/lib/redux/dist/redux';
@@ -48,7 +48,7 @@ Import and use dispatchLogger, combineReducers, bindActionCreators, and connect 
     
     const boundActionCreators = bindActionCreators(allActionCreators, dispatch);
 
-### Replace React-Redux's connect function with Reduxify's version and run normally
+### Replace React-Redux's connect function with Reduxify's version
 
     // import { connect } from 'react-redux';
     import { connect } from *your filepath* + 'reduxify/lib/react-redux/dist/react-redux';
