@@ -45,6 +45,40 @@ const todos = (state = [], action) => {
   }
 }
 
+const counter = (state = 0, action) => {
+  action.type === 'INCREMENT' ? state + 1 : state;
+  action.type === 'DECREMENT' ? state - 1 : state;
+}
+
+const stack = (state = [], action) => {
+  action.type === 'PUSH' ? [...state, action.value] : state;
+  action.type === 'UNSHIFT' ? [action.value, ...state] : state;
+}
+
+const counter2 = (state = 0, action) => {
+  if (action.type === 'INCREMENT') {
+    return state++;
+  }
+  else if (action.type === 'DECREMENT') {
+    return state--;
+  }
+  else {
+    return state;
+  }
+}
+
+const stack2 = (state = [], action) => {
+  if (action.type === 'PUSH') {
+    return [...state, action.value];
+  }
+  else if (action.type === 'UNSHIFT') {
+    return [action.value, ...state];
+  }
+  else {
+    return state;
+  }
+}
+
 // Simulates code injected into Redux's native combineReducers function
 
 function reduxifyCombineReducersLogic(reducers) {
@@ -57,6 +91,8 @@ function reduxifyCombineReducersLogic(reducers) {
 }
 
 const testReducers = reduxifyCombineReducersLogic({ visibilityFilter, todos });
+const testReducers2 = reduxifyCombineReducersLogic({ counter, stack });
+const testReducers3 = reduxifyCombineReducersLogic({ counter2, stack2 });
 
 const answerReducers = {
   'name': 'Reducers',
@@ -83,4 +119,60 @@ const answerReducers = {
   ]
 }
 
-module.exports = { testReducers, answerReducers };
+const answerReducers2 = {
+  'name': 'Reducers',
+  'children': [
+    {
+      'name': 'counter',
+      'children': [
+        {
+          'name': 'INCREMENT'
+        },
+        {
+          'name': 'DECREMENT'
+        }
+      ]
+    },
+    {
+      'name': 'stack',
+      'children': [
+        {
+          'name': 'PUSH'
+        },
+        {
+          'name': 'UNSHIFT'
+        }
+      ]
+    }
+  ]
+}
+
+const answerReducers3 = {
+  'name': 'Reducers',
+  'children': [
+    {
+      'name': 'counter2',
+      'children': [
+        {
+          'name': 'INCREMENT'
+        },
+        {
+          'name': 'DECREMENT'
+        }
+      ]
+    },
+    {
+      'name': 'stack2',
+      'children': [
+        {
+          'name': 'PUSH'
+        },
+        {
+          'name': 'UNSHIFT'
+        }
+      ]
+    }
+  ]
+}
+
+module.exports = { testReducers, testReducers2, testReducers3, answerReducers, answerReducers2, answerReducers3 };
