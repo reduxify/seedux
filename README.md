@@ -56,7 +56,7 @@ Import and use dispatchLogger, combineReducers, bindActionCreators, and connect 
     
     const container = connect()(myComponent);
     
-### Navigate to chrome://extensions, click load as an unpacked extension, and select *your filepath* + 'reduxify/reduxifyChrome'
+### Navigate to chrome://extensions, click 'load as an unpacked extension' and select *your filepath* + 'reduxify/reduxifyChrome'
 
 ### Open your project using localhost and your port of choice in the Chrome browser. Click on the Reduxify Chrome extension icon in your toolbar to launch the developer tool!
     
