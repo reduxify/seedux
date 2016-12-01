@@ -47,30 +47,7 @@ function reduxifybindActionCreatorsLogic(actionCreators, dispatch) {
 
 const testActionCreators = reduxifybindActionCreatorsLogic({addTodo, setVisibilityFilter, toggleTodo, undoAction, redoAction});
 
-const answerActions = [
-  {
-    name: 'addTodo',
-    type: 'ADD_TODO'
-  },
-  {
-    name: 'setVisibilityFilter',
-    type: 'SET_VISIBILITY_FILTER'
-  },
-  {
-    name: 'toggleTodo',
-    type: 'TOGGLE_TODO'
-  },
-  {
-    name: 'undoAction',
-    type: 'UNDO'
-  },
-  {
-    name: 'redoAction',
-    type: 'REDO'
-  }
-]
-
-const answerD3Actions = {
+const answerActionCreators = {
   'name': 'Action Creators',
   'children': [
     {
@@ -116,4 +93,4 @@ const answerD3Actions = {
   ]
 }
 
-module.exports = { testActionCreators, answerActions, answerD3Actions };
+module.exports = { testActionCreators, answerActionCreators };

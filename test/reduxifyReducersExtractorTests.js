@@ -1,39 +1,40 @@
 const chai = require('chai');
 const expect = require('chai').expect;
-const { testReducers, answerReducers, answerD3Reducers } = require('./fixtures/reduxifyReducerExtractorFixtures');
-const { reduxify } = require('./../Library/src/reduxifyExtractor');
-const { D3ReducerStructurer } = require('./../Library/src/reduxifyD3Structurer');
+const { testReducers, answerReducers } = require('./fixtures/reduxifyReducerExtractorFixtures');
+const { reduxify, Node } = require('./../Library/src/reduxifyExtractor');
+const output = reduxify.reducersExtractor(testReducers);
 
-describe('reduxify.ReducerExtractor', () => {
-
-const output = reduxify.ReducerExtractor(testReducers);
-const outputD3 = D3ReducerStructurer(output);
+describe('reduxify.reducersExtractor', () => {
 
   it('should be a function', () => {
-    expect(reduxify.ReducerExtractor).to.be.a.function;
+    expect(reduxify.reducersExtractor).to.be.a.function;
   })
 
-  it('should return an array composed of objects', () => {
-    expect(output).to.be.an('array');
-    expect(output[0]).to.be.an('object');
+  it('should return an object-typed instance of Node named "Reducers"', () => {
+    expect(output).to.be.an('object');
+    expect(output.constructor).to.deep.equal(Node);
+    expect(output.name).to.deep.equal('Reducers');
   })
 
-  it('should return an array composed of objects with the keys "name" and "cases"', () => {
-    expect(output[0].name).to.exist;
-    expect(output[0].cases).to.exist;
-  })
 
-  it('should return an array composed of objects with the value types of "string" and "array"', () => {
-    expect(output[0].name).to.be.a('string');
-    expect(output[0].cases).to.be.an('array');
-  })
-
-  it('should return a properly structured output for a given input', () => {
+  it('should return a properly structured D3 hierarchical tree output for a given input', () => {
     expect(output).to.deep.equal(answerReducers);
   })
 
-  it('should return a properly structured D3 hierarchical tree output for a given input', () => {
-    expect(outputD3).to.deep.equal(answerD3Reducers);
+});
+
+describe('"Reducers" node', () => {
+
+  it('should have an array-typed property named children composed of object-typed Node(s)', () => {
+    expect(output.children).to.be.an('array');
+    expect(output.children[0]).to.be.an('object');
+    expect(output.children[0].constructor).to.deep.equal(Node);
+  })
+
+  it('should have child nodes that each possess an array-typed property named children composed of object-typed Node(s)', () => {
+    expect(output.children[0].children).to.be.an('array');
+    expect(output.children[0].children[0]).to.be.an('object');
+    expect(output.children[0].children[0].constructor).to.deep.equal(Node);
   })
 
 });
