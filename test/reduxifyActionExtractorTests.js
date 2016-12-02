@@ -1,7 +1,7 @@
 const chai = require('chai');
 const expect = require('chai').expect;
 const { testActionCreators, answerActionCreators } = require('./fixtures/reduxifyActionExtractorFixtures');
-const { reduxify, Node } = require('./../Library/src/reduxifyExtractor');
+const { reduxify, Node } = require('./../lib/reduxify/src/reduxifyExtractor');
 const output = reduxify.actionCreatorsExtractor(testActionCreators);
 
 describe('reduxify.actionCreatorsExtractor', () => {
