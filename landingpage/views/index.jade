@@ -1,0 +1,27 @@
+doctype html
+html
+  include layout/includes.jade
+
+  head
+    title Seedux
+
+  body
+    .container-fluid.no-padding
+      nav.navbar.navbar-light.no-radius
+        a.navbar-brand(href="#") Seedux
+        ul.nav.navbar-nav
+          li.nav-item.active
+            a.nav-link.data-scroll#scroll(href="#") Home
+          li.nav-item
+            a.nav-link.data-scroll#scroll(href="#") Docs
+          li.nav-item
+            a.nav-link.data-scroll#scroll(href="#") Blog
+          li.nav-item
+            a.nav-link.data-scroll#scroll(href="#") Discuss
+    .container
+      .row
+        .col-xs-12.col
+          h1.text-center This is Seedux!
+
+    include layout/footer.jade
+
