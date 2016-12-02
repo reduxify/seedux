@@ -1,4 +1,4 @@
-# [ Seedux ]
+# [ seedux ]
 A Chrome developer tool that provides a new tab that actively logs and visualizes the Redux data flow, enabling easier, faster debugging of any React-Redux implementation. 
 
 # Instructions
@@ -7,7 +7,7 @@ A Chrome developer tool that provides a new tab that actively logs and visualize
 
 To use seeduxChrome, fork and clone our Git repository to an easily accessible file path on your computer.
 
-Import and use dispatchLogger, combineReducers, bindActionCreators, and connect from Seedux to ensure the full suite of lexical parsing, logging, and visualization of your Redux data flow occurs.
+Import and use dispatchLogger, combineReducers, bindActionCreators, and connect from seedux to ensure the full suite of lexical parsing, logging, and visualization of your Redux data flow occurs.
 
 ### Apply dispatchLogger middleware in index.js for app:
 
@@ -28,7 +28,7 @@ Import and use dispatchLogger, combineReducers, bindActionCreators, and connect 
       document.getElementById('app')
     );
 
-### Replace Redux's combineReducers function with Seedux's version:
+### Replace Redux's combineReducers function with seedux's version:
 
     // import { combineReducers } from 'redux';
     import { combineReducers } from *your filepath* + '/seedux/lib/redux/dist/redux';
@@ -40,7 +40,7 @@ Import and use dispatchLogger, combineReducers, bindActionCreators, and connect 
       reducer2: reducer2
     })
 
-### Replace Redux's bindActionCreators function with Seedux's version:
+### Replace Redux's bindActionCreators function with seedux's version:
 
     // import { bindActionCreators } from 'redux';
     import { bindActionCreators } from *your filepath* + '/seedux/lib/redux/dist/redux';
@@ -48,7 +48,7 @@ Import and use dispatchLogger, combineReducers, bindActionCreators, and connect 
     
     const boundActionCreators = bindActionCreators(allActionCreators, dispatch);
 
-### Replace React-Redux's connect function with Reduxify's version:
+### Replace React-Redux's connect function with seedux's version:
 
     // import { connect } from 'react-redux';
     import { connect } from *your filepath* + 'seedux/lib/react-redux/dist/react-redux';
