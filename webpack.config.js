@@ -6,7 +6,7 @@ module.exports = {
   entry: [
     'webpack-dev-server/client?http://localhost:8080',
     'webpack/hot/only-dev-server',
-    './reduxifyChrome/src/index.jsx'
+    './seeduxChrome/src/index.jsx'
   ],
   module: {
     loaders: [{
@@ -22,12 +22,12 @@ module.exports = {
     extensions: ['', '.js', '.jsx']
   },
   output: {
-    path: __dirname + '/reduxifyChrome/dist',
+    path: __dirname + '/seeduxChrome/dist',
     publicPath: '/',
     filename: 'bundle.js'
   },
   devServer: {
-    contentBase: './reduxifyChrome/dist',
+    contentBase: './seeduxChrome/dist',
      hot: true
   },
   "babel": {
