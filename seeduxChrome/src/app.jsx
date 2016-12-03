@@ -2,10 +2,8 @@ import React from 'react';
 import Rewind from './components/Rewind.jsx';
 import LogEntry from './components/LogEntry.jsx';
 import Graph from './components/Graph.jsx';
-// import D3UI from './components/D3UI';
 import D3Viz from './components/D3Viz';
-// import D3Reducers from './components/D3Reducers';
-// import { UIHeadNode, actionsHeadNode, reducersHeadNode } from './../d3/basicTree';
+import ParsingError from './components/ParsingError';
 
 class App extends React.Component {
   constructor(props) {
@@ -22,9 +20,9 @@ class App extends React.Component {
     chrome.extension.sendMessage({type: 'populateLog'}, (response) => {
       console.log('Initial Log Population: ', response.history);
       this.setState({
-        ui: response.codeObj.ui,
-        actionCreators: response.codeObj.actionCreators,
-        reducers: response.codeObj.reducers,
+        ui: response.codeObj.ui || {},
+        actionCreators: response.codeObj.actionCreators || {},
+        reducers: response.codeObj.reducers || {},
         history: response.history,
         future: response.future,
       });
@@ -79,11 +77,22 @@ class App extends React.Component {
   handleSelectChange(event) {
     this.setState({chartType: event.target.value})
   }
+  createViz(data, name) {
+    console.log('createVizdata: ', data);
+    // check if our code parsing data has come through.  if not, render a
+    // friendly message.
+    if (!data.children || !data.children.length) {
+      return <ParsingError failureType={name} />
+    }
+    return <D3Viz data={data} chartType={this.state.chartType}/>
+  }
   render() {
+    // retrieve latest diffs from our history
     let diffs = [];
     if (this.state.history.length) {
       diffs = this.state.history[this.state.history.length - 1].diffs;
     }
+    // map over history and future arrays to assemble their respective LogEntry components
     const historyEntries = this.state.history.map((historyEntry, index) => {
       return (<LogEntry key={index} index={index} entry={historyEntry} futury={false} present={index === this.state.history.length - 1}/>)
     });
@@ -93,19 +102,20 @@ class App extends React.Component {
     return (
       <div>
         <h1>[seedux]</h1>
-          <div style={{float: 'top'}}>
-          <D3Viz data={this.state.ui} chartType={this.state.chartType}/>
-          <D3Viz data={this.state.actionCreators} chartType={this.state.chartType}/>
-          <D3Viz data={this.state.reducers} chartType={this.state.chartType}/>
+          <div style={{float: 'bottom'}}>
+          {this.createViz(this.state.ui, 'UI Props')}
+          {this.createViz(this.state.actionCreators, 'Action Creators')}
+          {this.createViz(this.state.reducers, 'Reducers')}
         </div>
         <select value={this.state.value} onChange={this.handleSelectChange.bind(this)}>
           <option value="comfyTree">ComfyTree</option>
           <option value="cozyTree">CozyTree</option>
+          <option value="list">list</option>
         </select>
         <button onClick={() => this.resetLog()}>Reset Log</button>
         <button onClick={() => this.undo()}>Undo</button>
         <button onClick={() => this.redo()}>Redo</button>
-        <div style={{float: 'bottom'}}>
+        <div style={{float: 'top'}}>
 
           {historyEntries}
           <hr style={{color: 'red'}}/>

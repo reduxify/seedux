@@ -1,5 +1,7 @@
 let history = [];
-const codeObj = {};
+let codeObj = {
+  count: 0,
+};
 let future = [];
 let tabId = 0;
 
@@ -35,10 +37,22 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
   }
   // sent from the content script to store parsing data
   if (msg.type === 'storeCode') {
+    // on launch, an app should send 2 codeObj messages.
+    // since we want our extension's data to be persistent independent of the
+    // app being debugged, we must find another way to tell if the app has been
+    // reloaded, or different app has been loaded.  Hence a count on the CodeObj,
+    // representing how many messages have been received, and resetting our
+    // memory on a 'third' (ie the new App's first) codeObj message.
+    if (codeObj.count === 2) {
+      codeObj = Object.assign({}, msg.codeObj);
+      codeObj.count = 1;
+    } else {
+      Object.assign(codeObj, msg.codeObj);
+      codeObj.count++;
+    }
     console.log('Got New CodeObj: ', msg.codeObj);
-    Object.assign(codeObj, msg.codeObj);
     console.log('Aggregated CodeObj:', codeObj);
-    tabId = sender.tab.id;
     // store the app's tab ID for use later in passing UNDO/REDO messages
+    tabId = sender.tab.id;
   }
 });
