@@ -1,44 +1,43 @@
+/**
+ * Listens for events in the seedux lifecycle. Triggered when a message is sent from the content script or from the application; specifically in order to either: (a) log a story entry, (b) retrieve the current log, (c) clear the log's history, (d) undo an action from the log, (e) redo an action from the log, or (f) store the application's tab ID, which is used at a later point to implement the undo and redo messages.
+ *
+ * @type {String}
+ */
+
 let history = [];
 const codeObj = {};
 let future = [];
 let tabId = 0;
 
 chrome.runtime.onMessage.addListener((msg, sender, response) => {
-  console.log('Background got MSG: ', msg);
-  // sent from the content script to store log entry
+  // console.log('Background got MSG: ', msg);
   if (msg.type === 'addToLog') {
-    console.log('Got New Entry! History: ', history);
+    // console.log('Got New Entry! History: ', history);
     history.push(msg.historyEntry);
-    // clear any 'future' events
     future = [];
   }
-  // sent from new instance of tool to get the current log
   if (msg.type === 'populateLog') {
     response({ future, history, codeObj });
   }
-  // sent from our tool to clear its history
   if (msg.type === 'resetLog') {
     history = [];
     future = [];
     response({ history, future });
   }
-  // sent from our tool to implement undo/redo
   if (msg.type === 'undoFromTool' && history.length) {
-    console.log('Got an Undo! Sending msg along to tab: ', tabId);
+    // console.log('Got an Undo! Sending msg along to tab: ', tabId);
     future.unshift(history.pop());
     chrome.tabs.sendMessage(tabId, { type: 'seeduxUndo' });
   }
   if (msg.type === 'redoFromTool' && future.length) {
-    console.log('Got a Redo! Sending msg along to tab: ', tabId);
+    // console.log('Got a Redo! Sending msg along to tab: ', tabId);
     history.push(future.shift());
     chrome.tabs.sendMessage(tabId, { type: 'seeduxRedo' });
   }
-  // sent from the content script to store parsing data
   if (msg.type === 'storeCode') {
-    console.log('Got New CodeObj: ', msg.codeObj);
+    // console.log('Got New CodeObj: ', msg.codeObj);
     Object.assign(codeObj, msg.codeObj);
-    console.log('Aggregated CodeObj:', codeObj);
+    // console.log('Aggregated CodeObj:', codeObj);
     tabId = sender.tab.id;
-    // store the app's tab ID for use later in passing UNDO/REDO messages
   }
 });
