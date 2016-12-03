@@ -81,10 +81,9 @@ class App extends React.Component {
     console.log('createVizdata: ', data);
     // check if our code parsing data has come through.  if not, render a
     // friendly message.
-    if (!data.children || !data.children.length) {
-      return <ParsingError failureType={name} />
-    }
-    return <D3Viz data={data} chartType={this.state.chartType}/>
+    return (!data.children || !data.children.length) ?
+      <ParsingError failureType={name} /> :
+      <D3Viz data={data} chartType={this.state.chartType} searchTerm={this.state.history[this.state.history.length - 1].modifiedAction} />
   }
   render() {
     // retrieve latest diffs from our history
@@ -94,7 +93,7 @@ class App extends React.Component {
     }
     // map over history and future arrays to assemble their respective LogEntry components
     const historyEntries = this.state.history.map((historyEntry, index) => {
-      return (<LogEntry key={index} index={index} entry={historyEntry} futury={false} present={index === this.state.history.length - 1}/>)
+      return (<LogEntry key={index} index={index} entry={historyEntry} futury={false} present={index === this.state.history.length - 1} />)
     });
     const futureEntries = this.state.future.map((futureEntry, index) => {
       return (<LogEntry key={index} index={index} entry={futureEntry} futury={true} present={false}/>)
