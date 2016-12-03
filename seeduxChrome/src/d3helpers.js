@@ -180,17 +180,17 @@ function buildBasicTree(element, data, config, searchTerm) {
   nodeEnter.append('circle')
     .attr('r', NODE_RADIUS)
     .style('fill', function(d) {
-      if (d.data.children) {
-        if (d.data.children.includes(searchTerm)) {
+      if (searchTerm) {
+        if (d.data.children) {
+          if (d.data.children.includes(searchTerm)) {
+            return 'yellow';
+          }
+        }
+        else if (d.data.name === searchTerm) {
           return 'yellow';
         }
       }
-      else if (d.data.name === searchTerm) {
-        return 'yellow';
-      }
-      else {
-        return 'lightsteelblue';
-      }
+      return 'lightsteelblue';
     });
 
   nodeEnter.append('text')
