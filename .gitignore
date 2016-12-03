@@ -1,4 +1,5 @@
 node_modules
 npm-dist
 lib-bundle.js
+index.js
 seeduxChrome/dist
