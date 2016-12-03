@@ -1,0 +1,11 @@
+<!doctype html>
+<!--
+ This page is shown when the extension button is clicked, because the
+ "browser_action" field in manifest.json contains the "default_popup" key with
+ value "popup.html". It exists exclusively to run popup.js, which launches a new tab where the
+action actually takes place.  This tab runs a react app with entry point located in src/index.jsx -->
+<html>
+<body>
+    <script src="popup.js"></script>
+  </body>
+</html>
