@@ -26,12 +26,12 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
   if (msg.type === 'undoFromTool' && history.length) {
     console.log('Got an Undo! Sending msg along to tab: ', tabId);
     future.unshift(history.pop());
-    chrome.tabs.sendMessage(tabId, { type: 'reduxifyUndo' });
+    chrome.tabs.sendMessage(tabId, { type: 'seeduxUndo' });
   }
   if (msg.type === 'redoFromTool' && future.length) {
     console.log('Got a Redo! Sending msg along to tab: ', tabId);
     history.push(future.shift());
-    chrome.tabs.sendMessage(tabId, { type: 'reduxifyRedo' });
+    chrome.tabs.sendMessage(tabId, { type: 'seeduxRedo' });
   }
   // sent from the content script to store parsing data
   if (msg.type === 'storeCode') {

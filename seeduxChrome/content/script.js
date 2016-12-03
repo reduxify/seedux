@@ -1,4 +1,4 @@
-// Content Script for Reduxify
+// Content Script for seedux
 // Acts as an intermediary between our code in the app being examined
 // and our extension.
 
