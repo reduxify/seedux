@@ -36,16 +36,16 @@ const redoAction = () => {
 
 // Simulates code injected into Redux's native bindActionCreators function
 
-function reduxifybindActionCreatorsLogic(actionCreators, dispatch) {
-  let reduxifyObj = {};
+function seeduxbindActionCreatorsLogic(actionCreators, dispatch) {
+  let seeduxObj = {};
   let coerceToStr = '';
     for (let k in actionCreators) {
-      reduxifyObj[k] = actionCreators[k] + coerceToStr;
+      seeduxObj[k] = actionCreators[k] + coerceToStr;
     }
-  return reduxifyObj;
+  return seeduxObj;
 }
 
-const testActionCreators = reduxifybindActionCreatorsLogic({addTodo, setVisibilityFilter, toggleTodo, undoAction, redoAction});
+const testActionCreators = seeduxbindActionCreatorsLogic({addTodo, setVisibilityFilter, toggleTodo, undoAction, redoAction});
 
 const answerActionCreators = {
   'name': 'Action Creators',

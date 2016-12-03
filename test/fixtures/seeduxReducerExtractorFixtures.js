@@ -81,18 +81,18 @@ const stack2 = (state = [], action) => {
 
 // Simulates code injected into Redux's native combineReducers function
 
-function reduxifyCombineReducersLogic(reducers) {
-  let reduxifyObj = {};
+function seeduxCombineReducersLogic(reducers) {
+  let seeduxObj = {};
   let coerceToStr = '';
     for (let k in reducers) {
-      reduxifyObj[k] = reducers[k] + coerceToStr;
+      seeduxObj[k] = reducers[k] + coerceToStr;
     }
-  return reduxifyObj;
+  return seeduxObj;
 }
 
-const testReducers = reduxifyCombineReducersLogic({ visibilityFilter, todos });
-const testReducers2 = reduxifyCombineReducersLogic({ counter, stack });
-const testReducers3 = reduxifyCombineReducersLogic({ counter2, stack2 });
+const testReducers = seeduxCombineReducersLogic({ visibilityFilter, todos });
+const testReducers2 = seeduxCombineReducersLogic({ counter, stack });
+const testReducers3 = seeduxCombineReducersLogic({ counter2, stack2 });
 
 const answerReducers = {
   'name': 'Reducers',
