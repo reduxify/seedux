@@ -1,49 +1,51 @@
-// Content Script for seedux
-// Acts as an intermediary between our code in the app being examined
-// and our extension.
+/* global document chrome */
+/**
+ * Content script gets injected into Redux application to communicate with seedux and background.js
+*/
 
 
-// query tabs so we can send the current tab ID along to the background
-// chrome.tabs.query({active: true}, function(tab) {
-// 	chrome.extension.sendMessage({type: 'addTabId', id: tab.id}, function(response) {
-// 	});
-// })
-
-// Listen for custom DOM event dispatched by our code within the logger middlware
-document.addEventListener('actionDispatched', function(e){
-  // send message to background script with new historyEntry object
-	// which was sent via e.detail property
+ /**
+ * Listens for custom DOM event dispatched by our middleware and sends a message obj
+ * to the background script of seeDux with a new historyEntry and a type of 'addToLog'.
+ */
+document.addEventListener('actionDispatched', (e) => {
 	// console.log('I heard an action! Sending to background...', e.detail);
-	const msg = {};
-	msg.historyEntry = e.detail;
-	msg.type = 'addToLog';
-	chrome.extension.sendMessage(msg, function(response) {});
+  const msg = {};
+  msg.historyEntry = e.detail;
+  msg.type = 'addToLog';
+  chrome.extension.sendMessage(msg);
 }, false);
 
-// Listen for custom DOM event dispatched by our code within combineReducers
-document.addEventListener('codeParsed', function(e){
-  // send message to background script with parsed code object
-	// which was sent via e.detail property
+ /**
+ * Listens for custom DOM event dispatched from the combineReducers function.
+ * Sends a message object to the background script of seeDux with parsed-code
+ * and a type of 'storeCode'.
+ */
+document.addEventListener('codeParsed', (e) => {
 	// console.log('Code Parsing event heard! Sending to background...', e.detail);
   const msg = {};
   msg.codeObj = e.detail;
   msg.type = 'storeCode';
-  chrome.extension.sendMessage(msg, function(response) {});
+  chrome.extension.sendMessage(msg);
 }, false);
 
-// listen for messages from the background script (forwarded from our tool)
-// and forward them to our middlware via the DOM
-chrome.runtime.onMessage.addListener((msg, sender, response) => {
-	console.log('Got a message! ', msg);
-	var evt = document.createEvent('Event');
-	evt.initEvent(msg.type, true, true);
-	console.log('CONTENT_SCRIPT: Dispatching event: ', evt);
-	document.dispatchEvent(evt);
+ /**
+ * Listens for messages and forwarded from our extension by background.js,
+ * and forwards them on to our middleware.
+ */
+chrome.runtime.onMessage.addListener((msg) => {
+	// console.log('Got a message! ', msg);
+  const evt = document.createEvent('Event');
+  evt.initEvent(msg.type, true, true);
+  // console.log('CONTENT_SCRIPT: Dispatching event: ', evt);
+  document.dispatchEvent(evt);
 });
 
-// Once we're injected, hit up the extractor for parsing information
-// by creating and emitting a custom event.
-var evt = document.createEvent('Event');
-evt.initEvent('scriptLoaded', true, true);
-console.log('CONTENT_SCRIPT: Dispatching event: ', evt);
-document.dispatchEvent(evt);
+ /**
+ * dispatches a custom event 'scriptLoaded' which is heard by our extractor,
+ * prompting it to send its code-parsing data now that we are ready.
+ */
+const scriptLoadedEvt = document.createEvent('Event');
+scriptLoadedEvt.initEvent('scriptLoaded', true, true);
+// console.log('CONTENT_SCRIPT: Dispatching event: ', evt);
+document.dispatchEvent(scriptLoadedEvt);
