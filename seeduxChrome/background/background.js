@@ -1,5 +1,5 @@
 /**
- * Listens for events in the seedux lifecycle. Triggered when a message is sent from the content script or from the application. Will either: (a) log a story entry, (b) retrieve the current log, (c) clear the log's history, (d) undo an action, (e) redo an action, or (f) store the application's tab ID, which is used at a later point to implement the undo and redo messages.
+ * Listens for events in the seedux life-cycle. Triggered when a message is sent from the content script or from the application. Will either: (a) log a story entry, (b) retrieve the current log, (c) clear the log's history, (d) undo an action, (e) redo an action, or (f) store the application's tab ID, which is used at a later point to implement the undo and redo messages.
  *
  * @param {Object} msg is an object sent by the calling script. Contains multiple type properties.
  *
