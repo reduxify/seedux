@@ -95,8 +95,8 @@ class App extends React.Component {
         <h1>[seedux]</h1>
           <div style={{float: 'top'}}>
           <D3Viz data={this.state.ui} chartType={this.state.chartType}/>
-          <D3Viz data={this.state.actionCreators} chartType={this.state.chartType}/>
-          <D3Viz data={this.state.reducers} chartType={this.state.chartType}/>
+          <D3Viz data={this.state.actionCreators} chartType={this.state.chartType} searchTerm={this.state.history[this.state.history.length - 1].modifiedAction}/>
+          <D3Viz data={this.state.reducers} chartType={this.state.chartType} searchTerm={this.state.history[this.state.history.length - 1].modifiedAction}/>
         </div>
         <select value={this.state.value} onChange={this.handleSelectChange.bind(this)}>
           <option value="comfyTree">ComfyTree</option>
