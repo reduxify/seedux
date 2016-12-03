@@ -1,6 +1,6 @@
 const chai = require('chai');
 const expect = require('chai').expect;
-const { testUI, testUI2, answerUI } = require('./fixtures/seeduxUIExtractorFixtures');
+const { testUI, testUI2, TestTodoList, TestTodoList2, answerUI } = require('./fixtures/seeduxUIExtractorFixtures');
 const { seedux, Node } = require('./../lib/seedux/src/seeduxExtractor');
 const output = seedux.uiExtractor(testUI);
 const output2 = seedux.uiExtractor(testUI2);
@@ -19,10 +19,12 @@ describe('seedux.uiExtractor', () => {
 
 
   it('should return a properly structured D3 hierarchical tree output for a given input which has a propNames property', () => {
+    expect(TestTodoList.propTypes).to.exist;
     expect(output).to.deep.equal(answerUI);
   })
 
   it('should return a properly structured D3 hierarchical tree output for a given input without the propNames property', () => {
+    expect(TestTodoList2.propTypes).to.not.exist;
     expect(output2).to.deep.equal(answerUI);
   })
 
