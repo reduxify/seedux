@@ -1,19 +1,21 @@
 {
   "name": "seedux",
-  "version": "1.0.0",
+  "version": "0.0.4",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "mocha ./test/*",
     "build:extension": "webpack -w",
     "build:library": "webpack -w --config npm-webpack.config.js",
+    "build:both": "webpack -w | webpack -w --config npm-webpack.config.js",
     "build:production:extension": "webpack",
     "build:production:library": "NODE_ENV=development webpack --config npm-webpack.config.js",
+    "build:production:both": "webpack && NODE_ENV=development webpack --config npm-webpack.config.js",
     "dev": "webpack-dev-server --hot --inline -w"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "babel-core": "^6.18.2",
     "babel-loader": "^6.2.8",
