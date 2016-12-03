@@ -2,7 +2,6 @@
 var webpack = require('webpack');
 
 module.exports = {
-  devtool: 'cheap-module-source-map',
   entry: [
     './lib/index.js'
   ],
@@ -18,8 +17,9 @@ module.exports = {
   },
   output: {
     path: __dirname,
-    publicPath: '/',
-    filename: 'index.js'
+    library: 'seedux',
+    libraryTarget: 'umd',
+    filename: 'lib-bundle.js'
   },
   "babel": {
     "presets": ["es2015"]
