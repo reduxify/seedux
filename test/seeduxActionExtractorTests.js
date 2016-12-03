@@ -1,13 +1,13 @@
 const chai = require('chai');
 const expect = require('chai').expect;
-const { testActionCreators, answerActionCreators } = require('./fixtures/reduxifyActionExtractorFixtures');
-const { reduxify, Node } = require('./../lib/reduxify/src/reduxifyExtractor');
-const output = reduxify.actionCreatorsExtractor(testActionCreators);
+const { testActionCreators, answerActionCreators } = require('./fixtures/seeduxActionExtractorFixtures');
+const { seedux, Node } = require('./../lib/seedux/src/seeduxExtractor');
+const output = seedux.actionCreatorsExtractor(testActionCreators);
 
-describe('reduxify.actionCreatorsExtractor', () => {
+describe('seedux.actionCreatorsExtractor', () => {
 
   it('should be a function', () => {
-    expect(reduxify.actionCreatorsExtractor).to.be.a.function;
+    expect(seedux.actionCreatorsExtractor).to.be.a.function;
   })
 
   it('should return an object-typed instance of Node named "Action Creators"', () => {
