@@ -1,3 +1,4 @@
 node_modules
-dist
-reduxifyChrome/dist
+npm-dist
+lib-bundle.js
+seeduxChrome/dist
