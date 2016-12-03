@@ -1,6 +1,5 @@
-![Seedux Logo]
 <div align='center'>
-(http://i63.tinypic.com/11j9e83.png)
+  <img src='http://i63.tinypic.com/11j9e83.png' alt='Seedux Logo'>
 </div>
 
 # Description
