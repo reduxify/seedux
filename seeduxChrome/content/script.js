@@ -1,18 +1,12 @@
-// Content Script for seedux
-// Acts as an intermediary between our code in the app being examined
-// and our extension.
+/**
+ * Intermediary script between seeDux and React-Redux application.
+*/
 
 
-// query tabs so we can send the current tab ID along to the background
-// chrome.tabs.query({active: true}, function(tab) {
-// 	chrome.extension.sendMessage({type: 'addTabId', id: tab.id}, function(response) {
-// 	});
-// })
-
-// Listen for custom DOM event dispatched by our code within the logger middlware
+ /**
+ * Listens for  custom DOM event 'actionDispatched' and sends a message to the background script of seeDux with a new historyEntry object which is attached to the e.detail property.
+ */
 document.addEventListener('actionDispatched', function(e){
-  // send message to background script with new historyEntry object
-	// which was sent via e.detail property
 	// console.log('I heard an action! Sending to background...', e.detail);
 	const msg = {};
 	msg.historyEntry = e.detail;
@@ -20,10 +14,10 @@ document.addEventListener('actionDispatched', function(e){
 	chrome.extension.sendMessage(msg, function(response) {});
 }, false);
 
-// Listen for custom DOM event dispatched by our code within combineReducers
+ /**
+ * Listens for  custom DOM event 'codeParsed' which is dispatched from combineReducers function and sends a message to the background script of seeDux with a parsed-code object which is attached to the e.detail property.
+ */
 document.addEventListener('codeParsed', function(e){
-  // send message to background script with parsed code object
-	// which was sent via e.detail property
 	// console.log('Code Parsing event heard! Sending to background...', e.detail);
   const msg = {};
   msg.codeObj = e.detail;
@@ -31,19 +25,21 @@ document.addEventListener('codeParsed', function(e){
   chrome.extension.sendMessage(msg, function(response) {});
 }, false);
 
-// listen for messages from the background script (forwarded from our tool)
-// and forward them to our middlware via the DOM
+ /**
+ * Listens for any messages received from Seedux's background script and sent to seedux middleware via the DOM.
+ */
 chrome.runtime.onMessage.addListener((msg, sender, response) => {
-	console.log('Got a message! ', msg);
+	// console.log('Got a message! ', msg);
 	var evt = document.createEvent('Event');
 	evt.initEvent(msg.type, true, true);
-	console.log('CONTENT_SCRIPT: Dispatching event: ', evt);
+	// console.log('CONTENT_SCRIPT: Dispatching event: ', evt);
 	document.dispatchEvent(evt);
 });
 
-// Once we're injected, hit up the extractor for parsing information
-// by creating and emitting a custom event.
+ /**
+ * Creates a custom event whose value is initialized and then dispatched to the seedux Extractor in order to parse information.
+ */
 var evt = document.createEvent('Event');
 evt.initEvent('scriptLoaded', true, true);
-console.log('CONTENT_SCRIPT: Dispatching event: ', evt);
+// console.log('CONTENT_SCRIPT: Dispatching event: ', evt);
 document.dispatchEvent(evt);
