@@ -1,13 +1,14 @@
 const chai = require('chai');
 const expect = require('chai').expect;
-const { testUI, answerUI } = require('./fixtures/reduxifyUIExtractorFixtures');
-const { reduxify, Node } = require('./../lib/reduxify/src/reduxifyExtractor');
-const output = reduxify.uiExtractor(testUI);
+const { testUI, testUI2, answerUI } = require('./fixtures/seeduxUIExtractorFixtures');
+const { seedux, Node } = require('./../lib/seedux/src/seeduxExtractor');
+const output = seedux.uiExtractor(testUI);
+const output2 = seedux.uiExtractor(testUI2);
 
-describe('reduxify.uiExtractor', () => {
+describe('seedux.uiExtractor', () => {
 
   it('should be a function', () => {
-    expect(reduxify.uiExtractor).to.be.a.function;
+    expect(seedux.uiExtractor).to.be.a.function;
   })
 
   it('should return an object-typed instance of Node named "Containers"', () => {
@@ -17,8 +18,12 @@ describe('reduxify.uiExtractor', () => {
   })
 
 
-  it('should return a properly structured D3 hierarchical tree output for a given input', () => {
+  it('should return a properly structured D3 hierarchical tree output for a given input which has a propNames property', () => {
     expect(output).to.deep.equal(answerUI);
+  })
+
+  it('should return a properly structured D3 hierarchical tree output for a given input without the propNames property', () => {
+    expect(output2).to.deep.equal(answerUI);
   })
 
 });
