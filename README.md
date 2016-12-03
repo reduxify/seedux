@@ -1,3 +1,6 @@
+![Seedux Logo]
+(http://i63.tinypic.com/11j9e83.png)
+
 # [ seedux ]
 A Chrome developer tool that provides a new tab that actively logs and visualizes the Redux data flow, enabling easier, faster debugging of any React-Redux implementation. 
 
