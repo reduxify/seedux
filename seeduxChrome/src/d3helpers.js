@@ -182,9 +182,11 @@ function buildBasicTree(element, data, config, searchTerm) {
     .style('fill', function(d) {
       if (searchTerm) {
         if (d.data.children) {
-          if (d.data.children.includes(searchTerm)) {
-            return 'yellow';
-          }
+          d.data.children.forEach(node => {
+            if (node.name === searchTerm) {
+              return 'yellow';
+            }
+          })
         }
         else if (d.data.name === searchTerm) {
           return 'yellow';
