@@ -1,8 +1,7 @@
 import React from 'react'
-import DiffList from './DiffList.jsx'
+import DiffList from './DiffList'
 import JSONTree from 'react-json-tree'
-import Collapsible from 'react-collapsible';
-import ActionTitle from './ActionTitle.jsx'
+import Collapsible from './Collapsible';
 
 const LogEntry = ({ entry, index, futury, present, restore }) => {
   const { diffs, modifiedAction, newState } = entry;
@@ -29,10 +28,10 @@ const LogEntry = ({ entry, index, futury, present, restore }) => {
 
   const payload = Object.assign({}, modifiedAction);
   delete payload.type;
-  const actionComponent = <ActionTitle string={`Action # ${index} : ${modifiedAction.type}`} buttonHandler={() => restore(index)} />;
   const entryClass = futury ? 'log-entry-future' : 'log-entry-history';
   return (
-    <Collapsible trigger={actionComponent} open={present} className={entryClass}>
+    <Collapsible open={present} className={entryClass}
+      titleString={`Action # ${index} : ${modifiedAction.type}`} buttonHandler={() => restore(index)}>
       <div className='log-payload-container'>
         <span className='log-action-label'>payloads: </span>
         <JSONTree data={payload} theme={theme} shouldExpandNode={() => false}/>
