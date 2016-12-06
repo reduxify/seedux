@@ -2,9 +2,9 @@ import React from 'react'
 import DiffList from './DiffList.jsx'
 import JSONTree from 'react-json-tree'
 import Collapsible from 'react-collapsible';
-import Action from './Action.jsx'
+import ActionTitle from './ActionTitle.jsx'
 
-const LogEntry = ({ entry, index, futury, present }) => {
+const LogEntry = ({ entry, index, futury, present, restore }) => {
   const { diffs, modifiedAction, newState } = entry;
   const theme = {
     scheme: "Ocean",
@@ -27,15 +27,12 @@ const LogEntry = ({ entry, index, futury, present }) => {
     base0F: "#ab7967",
   };
 
-  // const payload = Object.keys(modifiedAction).reduce((actionKey, index) => {
-  //   if (actionKey !== 'type') return (<span key={index} className='log-action-payload'>{actionKey}: {modifiedAction[actionKey]}</span>)
-  // });
   const payload = Object.assign({}, modifiedAction);
   delete payload.type;
-  const actionString = `Action # ${index} : ${modifiedAction.type}`;
+  const actionComponent = <ActionTitle string={`Action # ${index} : ${modifiedAction.type}`} buttonHandler={() => restore(index)} />;
   const entryClass = futury ? 'log-entry-future' : 'log-entry-history';
   return (
-    <Collapsible trigger={actionString} open={present} className={entryClass}>
+    <Collapsible trigger={actionComponent} open={present} className={entryClass}>
       <p>
         <span className='log-action-label'>payloads: </span>
         <JSONTree data={payload} theme={theme} shouldExpandNode={() => false}/>

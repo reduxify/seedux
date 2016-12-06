@@ -18,7 +18,7 @@ class App extends React.Component {
     };
     // send a msg to the background script to ask for the current Log
     chrome.extension.sendMessage({type: 'populateLog'}, (response) => {
-      console.log('Initial Log Population: ', response.history);
+      console.log('Initial Log Population: ', response.history, response.future);
       this.setState({
         ui: response.codeObj.ui || {},
         actionCreators: response.codeObj.actionCreators || {},
@@ -85,18 +85,45 @@ class App extends React.Component {
       <ParsingError failureType={name} /> :
       <D3Viz data={data} chartType={this.state.chartType} searchTerm={this.state.history[this.state.history.length - 1].modifiedAction} />
   }
+  restore(direction, index) {
+    // this is the 'brains' of the entire restore-state process; it determines what the newHistory
+    // and newFuture should be, and sends them to the background script for storage.  The background script passes
+    // just the 'new' i.e. restored state on to the content script -> seeduxLogger listener -> combineReducers listener route,
+    // where it is returned as the app's next state, completing the restoration.
+    let newHistory, newFuture;
+    if (direction === 'past' && index >= 0) {
+      newHistory = this.state.history.slice(0, index + 1);
+      newFuture = this.state.history.slice(index + 1).concat(this.state.future);
+    } else if (direction === 'future' && this.state.future.length) {
+      newFuture = this.state.future.slice(index + 1);
+      newHistory = this.state.history.concat(this.state.future.slice(0, index + 1));
+    }
+    if (newHistory && newFuture) chrome.extension.sendMessage({type: 'restoreFromTool', newHistory, newFuture }, (response) => {
+      console.log('Restoring to index: ', index, ' from ', direction);
+      console.log('new history: ', newHistory, ' new Future: ', newFuture);
+      this.setState({
+        history: newHistory,
+        future: newFuture,
+      });
+    });
+  }
   render() {
     // retrieve latest diffs from our history
     let diffs = [];
     if (this.state.history.length) {
       diffs = this.state.history[this.state.history.length - 1].diffs;
     }
+    // curry our restore function to provide invididual button functionality
+    const restoreFromHistory = (index) => this.restore('past', index);
+    const restoreFromFuture = (index) => this.restore('future', index);
+    const undo = () => this.restore('past', this.state.history.length - 2);
+    const redo = () => this.restore('future', 0);
     // map over history and future arrays to assemble their respective LogEntry components
     const historyEntries = this.state.history.map((historyEntry, index) => {
-      return (<LogEntry key={index} index={index} entry={historyEntry} futury={false} present={index === this.state.history.length - 1} />)
+      return (<LogEntry key={index} index={index} entry={historyEntry} futury={false} present={index === this.state.history.length - 1} restore={restoreFromHistory} />)
     });
     const futureEntries = this.state.future.map((futureEntry, index) => {
-      return (<LogEntry key={index} index={index} entry={futureEntry} futury={true} present={false}/>)
+      return (<LogEntry key={index} index={index} entry={futureEntry} futury={true} present={false} restore={restoreFromFuture}/>)
     });
     return (
       <div>
@@ -112,8 +139,8 @@ class App extends React.Component {
           <option value="list">list</option>
         </select>
         <button onClick={() => this.resetLog()}>Reset Log</button>
-        <button onClick={() => this.undo()}>Undo</button>
-        <button onClick={() => this.redo()}>Redo</button>
+        <button onClick={() => undo()}>Undo</button>
+        <button onClick={() => redo()}>Redo</button>
         <div style={{float: 'top'}}>
 
           {historyEntries}

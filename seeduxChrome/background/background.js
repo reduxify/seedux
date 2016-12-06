@@ -20,7 +20,7 @@ let future = [];
 let tabId = 0;
 
 chrome.runtime.onMessage.addListener((msg, sender, response) => {
-  // console.log('Background got MSG: ', msg);
+  console.log('Background got MSG: ', msg);
   // forwarded from middleware by content script on each new app event
   if (msg.type === 'addToLog') {
     // console.log('Got New Entry! History: ', history);
@@ -48,6 +48,14 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
     // console.log('Got a Redo! Sending msg along to tab: ', tabId);
     history.push(future.shift());
     chrome.tabs.sendMessage(tabId, { type: 'seeduxRedo' });
+  }
+  if (msg.type === 'restoreFromTool') {
+    console.log('Got a Restore! Sending msg along to tab: ', tabId);
+    console.log(msg.newHistory, msg.newFuture);
+    history = msg.newHistory;
+    future = msg.newFuture;
+    const restoreState = history[history.length - 1].newState;
+    chrome.tabs.sendMessage(tabId, { type: 'seeduxRestore', restoreState });
   }
   // sent by content.js with new parsed code information
   if (msg.type === 'storeCode') {
