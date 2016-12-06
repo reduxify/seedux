@@ -1,8 +1,10 @@
 const chai = require('chai');
 const expect = require('chai').expect;
-const { testActionCreators, answerActionCreators } = require('./fixtures/seeduxActionExtractorFixtures');
+const { testActionCreators, testActionCreators2, testActionCreators3, answerActionCreators, answerActionCreators2, answerActionCreators3 } = require('./fixtures/seeduxActionExtractorFixtures');
 const { actionCreatorsExtractor, Node } = require('./../lib/seedux/src/seeduxExtractor');
 const output = actionCreatorsExtractor(testActionCreators);
+const output2 = actionCreatorsExtractor(testActionCreators2);
+const output3 = actionCreatorsExtractor(testActionCreators3);
 
 describe('actionCreatorsExtractor', () => {
 
@@ -17,8 +19,16 @@ describe('actionCreatorsExtractor', () => {
   })
 
 
-  it('should return a properly structured D3 hierarchical tree output for a given input', () => {
+  it('should return a properly structured D3 hierarchical tree output for a given input where type is a string', () => {
     expect(output).to.deep.equal(answerActionCreators);
+  })
+
+  it('should return a properly structured D3 hierarchical tree output for a given input where type is a variable', () => {
+    expect(output2).to.deep.equal(answerActionCreators2);
+  })
+
+  it('should return a properly structured D3 hierarchical tree output for a given input where type is a property', () => {
+    expect(output3).to.deep.equal(answerActionCreators3);
   })
 
 });

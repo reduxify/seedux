@@ -101,7 +101,7 @@ BrowserifyTestTodoList1.propTypes = {
 // TODO: Handle nested propTypes
 // Simulates code injected into React-Redux's native Connect function
 
-function seeduxConnectLogic(WrappedComponent) {
+function seeduxReactReduxConnectLogic(WrappedComponent) {
   const UI = WrappedComponent.name;
 	if (WrappedComponent.propTypes) {
 		const props = Object.keys(WrappedComponent.propTypes);
@@ -114,10 +114,10 @@ function seeduxConnectLogic(WrappedComponent) {
 	}
 }
 
-const webpackTestUI1 = seeduxConnectLogic(WebpackTestTodoList1);
-const webpackTestUI2 = seeduxConnectLogic(WebpackTestTodoList2);
-const browserifyTestUI1 = seeduxConnectLogic(BrowserifyTestTodoList1);
-const browserifyTestUI2 = seeduxConnectLogic(BrowserifyTestTodoList2);
+const webpackTestUI1 = seeduxReactReduxConnectLogic(WebpackTestTodoList1);
+const webpackTestUI2 = seeduxReactReduxConnectLogic(WebpackTestTodoList2);
+const browserifyTestUI1 = seeduxReactReduxConnectLogic(BrowserifyTestTodoList1);
+const browserifyTestUI2 = seeduxReactReduxConnectLogic(BrowserifyTestTodoList2);
 
 const answerUI = {
   'name': 'Containers',
