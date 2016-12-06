@@ -1,15 +1,15 @@
 const chai = require('chai');
 const expect = require('chai').expect;
 const { testReducers, testReducers2, testReducers3, answerReducers, answerReducers2, answerReducers3 } = require('./fixtures/seeduxReducerExtractorFixtures');
-const { seedux, Node } = require('./../lib/seedux/src/seeduxExtractor');
-const output = seedux.reducersExtractor(testReducers);
-const output2 = seedux.reducersExtractor(testReducers2);
-const output3 = seedux.reducersExtractor(testReducers3);
+const { reducersExtractor, Node } = require('./../lib/seedux/src/seeduxExtractor');
+const output = reducersExtractor(testReducers);
+const output2 = reducersExtractor(testReducers2);
+const output3 = reducersExtractor(testReducers3);
 
-describe('seedux.reducersExtractor', () => {
+describe('reducersExtractor', () => {
 
   it('should be a function', () => {
-    expect(seedux.reducersExtractor).to.be.a.function;
+    expect(reducersExtractor).to.be.a.function;
   })
 
   it('should return an object-typed instance of Node named "Reducers"', () => {
