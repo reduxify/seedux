@@ -54,26 +54,6 @@ class App extends React.Component {
       });
     });
   }
-  undo() {
-    // send a message to the content script to emit an undo DOM event
-    chrome.extension.sendMessage({type: 'undoFromTool'}, (response) => {
-      console.log('Undo Sent.');
-      this.setState({
-        history: this.state.history.slice(0, -1),
-        future: this.state.history.slice(-1).concat(this.state.future),
-      });
-    });
-  }
-  redo() {
-    // send a message to the content script to emit a redo DOM event
-    chrome.extension.sendMessage({type: 'redoFromTool'}, (response) => {
-      console.log('Redo Sent.');
-      this.setState({
-        history: this.state.history.concat(this.state.future.slice(0, 1)),
-        future: this.state.future.slice(1),
-      });
-    });
-  }
   handleSelectChange(event) {
     this.setState({chartType: event.target.value})
   }

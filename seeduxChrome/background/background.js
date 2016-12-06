@@ -37,18 +37,7 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
     future = [];
     response({ history, future });
   }
-  // sent by extension to initiate an undo; forwarded to content.js via chrome.tabs
-  if (msg.type === 'undoFromTool' && history.length) {
-    // console.log('Got an Undo! Sending msg along to tab: ', tabId);
-    future.unshift(history.pop());
-    chrome.tabs.sendMessage(tabId, { type: 'seeduxUndo' });
-  }
-  // sent by extension to initiate a redo; forwarded to content.js via chrome.tabs
-  if (msg.type === 'redoFromTool' && future.length) {
-    // console.log('Got a Redo! Sending msg along to tab: ', tabId);
-    history.push(future.shift());
-    chrome.tabs.sendMessage(tabId, { type: 'seeduxRedo' });
-  }
+  // sent by extension to initiate a restoreState; forwarded to content.js via chrome.tabs
   if (msg.type === 'restoreFromTool') {
     console.log('Got a Restore! Sending msg along to tab: ', tabId);
     console.log(msg.newHistory, msg.newFuture);

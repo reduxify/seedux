@@ -47,5 +47,5 @@ chrome.runtime.onMessage.addListener((msg) => {
  */
 const scriptLoadedEvt = document.createEvent('Event');
 scriptLoadedEvt.initEvent('scriptLoaded', true, true);
-// console.log('CONTENT_SCRIPT: Dispatching event: ', evt);
+console.log('CONTENT_SCRIPT: Dispatching event: ', scriptLoadedEvt);
 document.dispatchEvent(scriptLoadedEvt);
