@@ -63,7 +63,7 @@ class App extends React.Component {
     // friendly message.
     return (!data.children || !data.children.length) ?
       <ParsingError failureType={name} /> :
-      <D3Viz data={data} chartType={this.state.chartType} searchTerm={this.state.history[this.state.history.length - 1].modifiedAction} />
+      <D3Viz data={data} chartType={this.state.chartType} searchTerm = { this.state.history.length ? this.state.history[this.state.history.length - 1].modifiedAction.type : null } />
   }
   restore(direction, index) {
     // this is the 'brains' of the entire restore-state process; it determines what the newHistory
