@@ -1,5 +1,4 @@
 import React from 'react';
-import Rewind from './components/Rewind.jsx';
 import LogEntry from './components/LogEntry.jsx';
 import Graph from './components/Graph.jsx';
 import D3Viz from './components/D3Viz';
@@ -110,7 +109,7 @@ class App extends React.Component {
     return (
       <div>
         <h1>[seedux]</h1>
-          <div style={{float: 'bottom'}}>
+          <div className='chart-container'>
           {this.createViz(this.state.ui, 'UI Props')}
           {this.createViz(this.state.actionCreators, 'Action Creators')}
           {this.createViz(this.state.reducers, 'Reducers')}
@@ -123,10 +122,9 @@ class App extends React.Component {
         <button onClick={() => this.resetLog()}>Reset Log</button>
         <button onClick={() => undo()}>Undo</button>
         <button onClick={() => redo()}>Redo</button>
-        <div style={{float: 'top'}}>
-
+        <div className='log-container'>
           {historyEntries}
-          <hr style={{color: 'red'}}/>
+          <hr />
           {futureEntries}
         </div>
       </div>

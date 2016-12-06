@@ -33,10 +33,10 @@ const LogEntry = ({ entry, index, futury, present, restore }) => {
   const entryClass = futury ? 'log-entry-future' : 'log-entry-history';
   return (
     <Collapsible trigger={actionComponent} open={present} className={entryClass}>
-      <p>
+      <div className='log-payload-container'>
         <span className='log-action-label'>payloads: </span>
         <JSONTree data={payload} theme={theme} shouldExpandNode={() => false}/>
-      </p>
+      </div>
       <span className='log-action-label'>store diffs: </span>
       <DiffList diffs={diffs} />
       <span className='log-action-label'>new complete store: </span>
