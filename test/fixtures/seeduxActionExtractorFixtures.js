@@ -120,6 +120,49 @@ const redoAction3 = () => {
   }
 }
 
+const constants = {
+  ADD_TODO: 'ADD_TODO',
+  SET_VISIBILITY_FILTER: 'SET_VISIBILITY_FILTER',
+  TOGGLE_TODO: 'TOGGLE_TODO',
+  UNDO: 'UNDO',
+  REDO: 'REDO'
+}
+
+const addTodo4 = (text) => {
+  return {
+    type: constants.ADD_TODO,
+    id: nextTodoId++,
+    text
+  }
+}
+
+const setVisibilityFilter4 = (filter) => {
+  return {
+    type: constants.SET_VISIBILITY_FILTER,
+    filter
+  }
+}
+
+const toggleTodo4 = (id) => {
+  return {
+    type: constants.TOGGLE_TODO,
+    id
+  }
+}
+
+const undoAction4 = () => {
+  return {
+    type: constants.UNDO
+  }
+}
+
+const redoAction4 = () => {
+  return {
+    type: constants.REDO
+  }
+}
+
+
 // Simulates code injected into Redux's native bindActionCreators function
 
 function seeduxbindActionCreatorsLogic(actionCreators, dispatch) {
@@ -134,6 +177,7 @@ function seeduxbindActionCreatorsLogic(actionCreators, dispatch) {
 const testActionCreators = seeduxbindActionCreatorsLogic({addTodo, setVisibilityFilter, toggleTodo, undoAction, redoAction});
 const testActionCreators2 = seeduxbindActionCreatorsLogic({addTodo2, setVisibilityFilter2, toggleTodo2, undoAction2, redoAction2});
 const testActionCreators3 = seeduxbindActionCreatorsLogic({addTodo3, setVisibilityFilter3, toggleTodo3, undoAction3, redoAction3});
+const testActionCreators4 = seeduxbindActionCreatorsLogic({addTodo4, setVisibilityFilter4, toggleTodo4, undoAction4, redoAction4});
 
 const answerActionCreators = {
   'name': 'Action Creators',
@@ -273,4 +317,50 @@ const answerActionCreators3 = {
   ]
 }
 
-module.exports = { testActionCreators, testActionCreators2, testActionCreators3, answerActionCreators, answerActionCreators2, answerActionCreators3 };
+const answerActionCreators4 = {
+  'name': 'Action Creators',
+  'children': [
+    {
+      'name': 'addTodo4',
+      'children': [
+        {
+          'name': 'ADD_TODO'
+        }
+      ]
+    },
+    {
+      'name': 'setVisibilityFilter4',
+      'children': [
+        {
+          'name': 'SET_VISIBILITY_FILTER'
+        }
+      ]
+    },
+    {
+      'name': 'toggleTodo4',
+      'children': [
+        {
+          'name': 'TOGGLE_TODO'
+        }
+      ]
+    },
+    {
+      'name': 'undoAction4',
+      'children': [
+        {
+          'name': 'UNDO'
+        }
+      ]
+    },
+    {
+      'name': 'redoAction4',
+      'children': [
+        {
+          'name': 'REDO'
+        }
+      ]
+    }
+  ]
+}
+
+module.exports = { testActionCreators, testActionCreators2, testActionCreators3, testActionCreators4, answerActionCreators, answerActionCreators2, answerActionCreators3, answerActionCreators4 };
