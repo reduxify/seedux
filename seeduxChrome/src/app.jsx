@@ -3,6 +3,7 @@ import Graph from './components/Graph.jsx';
 import D3Viz from './components/D3Viz';
 import ParsingError from './components/ParsingError';
 import Log from './components/Log';
+import * as fileSaver from 'file-saver';
 
 class App extends React.Component {
   constructor(props) {
@@ -99,6 +100,15 @@ class App extends React.Component {
       });
     });
   }
+  exportLog(){
+    // const dataURI = `data:application/octet-stream;charset=utf-u,${encodeURIComponent(JSON.stringify(this.state))}`;
+    // const saveWindow = window.open(dataURI, 'Export Seedux Log');
+    const now = new Date();
+    const formattedDate = now.getMonth()+'-'+now.getDate()+'-'+now.getYear()+' '+(now.getHours()+1)+'_'+now.getMinutes();
+    console.log('right now is ', formattedDate);
+    const blob = new Blob([JSON.stringify(this.state)], {type: "text/plain;charset=utf-8"});
+    fileSaver.saveAs(blob, `seeduxLog-${formattedDate}.json`);
+  }
   render() {
     // retrieve latest diffs from our history
     let diffs = [];
@@ -124,6 +134,7 @@ class App extends React.Component {
           <option value="list">list</option>
         </select>
         <button onClick={() => this.resetLog()}>Reset Log</button>
+        <button onClick={() => this.exportLog()}>Export Log</button>
         <button onClick={() => this.stashLog()}>Stash Log</button>
         <button onClick={() => this.unStashLog()}>Unstash Log</button>
         <button onClick={undo}>Undo</button>
