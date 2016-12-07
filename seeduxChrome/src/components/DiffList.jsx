@@ -11,6 +11,7 @@ const DiffList = ({ diffs }) => {
 }
   return (
     <table>
+      <tbody>
       <tr>
       <td className='col1'>
         Path
@@ -23,6 +24,7 @@ const DiffList = ({ diffs }) => {
       </td>
     </tr>
       {diffElements}
+    </tbody>
   </table>
   )
 }

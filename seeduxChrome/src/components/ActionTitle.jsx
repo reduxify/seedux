@@ -1,9 +1,11 @@
 import React from 'react'
 
-const ActionTitle = ({string, buttonHandler }) => {
+const ActionTitle = ({titleString, buttonHandler, clickHandler }) => {
   return (
     <div>
-      <h2>{string}</h2>
+      <span onClick={clickHandler}>
+        <h2>{titleString}</h2>
+      </span>
       <button onClick={() => buttonHandler()}>Restore</button>
     </div>
   )

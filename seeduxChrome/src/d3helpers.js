@@ -50,7 +50,7 @@ exports.transformVizNode = function transformVizNode(element, data, type = 'cozy
     buildBasicTree(element, data, config.comfyTree, searchTerm);
   } else if (type === 'cozyTree') {
     buildBasicTree(element, data, config.cozyTree, searchTerm)
-  } 
+  }
   // else if (type === 'list') {
   //   buildBasicList(element, data, config.list, searchTerm);
   // }
@@ -154,7 +154,6 @@ function buildBasicTree(element, data, config, searchTerm) {
       return 'node' + (d.children ? 'node-internal' : 'node-leaf');
     })
     .attr('transform', function(d) {
-      console.log(d.y);
       return 'translate(' + d.y + ',' + (d.x) + ')';
     });
 

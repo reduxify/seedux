@@ -1,9 +1,8 @@
 import React from 'react';
-import Rewind from './components/Rewind.jsx';
-import LogEntry from './components/LogEntry.jsx';
 import Graph from './components/Graph.jsx';
 import D3Viz from './components/D3Viz';
 import ParsingError from './components/ParsingError';
+import Log from './components/Log';
 
 class App extends React.Component {
   constructor(props) {
@@ -67,6 +66,17 @@ class App extends React.Component {
         chartType={this.state.chartType}
         searchTerm = { this.state.history.length ? this.state.history[this.state.history.length - 1].modifiedAction.type : null } />
   }
+  stashLog() {
+    localStorage.setItem('seeduxLog', JSON.stringify(this.state));
+    console.log('Extension State Stashed.');
+  }
+  unStashLog() {
+    if (localStorage.getItem('seeduxLog')) {
+      const newState = Object.assign({}, JSON.parse(localStorage.getItem('seeduxLog')));
+      console.log('Re-loading Extension State: ', newState);
+      this.setState(newState);
+    }
+  }
   restore(direction, index) {
     // this is the 'brains' of the entire restore-state process; it determines what the newHistory
     // and newFuture should be, and sends them to the background script for storage.  The background script passes
@@ -100,17 +110,10 @@ class App extends React.Component {
     const restoreFromFuture = (index) => this.restore('future', index);
     const undo = () => this.restore('past', this.state.history.length - 2);
     const redo = () => this.restore('future', 0);
-    // map over history and future arrays to assemble their respective LogEntry components
-    const historyEntries = this.state.history.map((historyEntry, index) => {
-      return (<LogEntry key={index} index={index} entry={historyEntry} futury={false} present={index === this.state.history.length - 1} restore={restoreFromHistory} />)
-    });
-    const futureEntries = this.state.future.map((futureEntry, index) => {
-      return (<LogEntry key={index} index={index} entry={futureEntry} futury={true} present={false} restore={restoreFromFuture}/>)
-    });
     return (
       <div>
         <h1>[seedux]</h1>
-          <div style={{float: 'bottom'}}>
+          <div className='chart-container'>
           {this.createViz(this.state.ui, 'UI Props')}
           {this.createViz(this.state.actionCreators, 'Action Creators')}
           {this.createViz(this.state.reducers, 'Reducers')}
@@ -121,14 +124,11 @@ class App extends React.Component {
           <option value="list">list</option>
         </select>
         <button onClick={() => this.resetLog()}>Reset Log</button>
-        <button onClick={() => undo()}>Undo</button>
-        <button onClick={() => redo()}>Redo</button>
-        <div style={{float: 'top'}}>
-
-          {historyEntries}
-          <hr style={{color: 'red'}}/>
-          {futureEntries}
-        </div>
+        <button onClick={() => this.stashLog()}>Stash Log</button>
+        <button onClick={() => this.unStashLog()}>Unstash Log</button>
+        <button onClick={undo}>Undo</button>
+        <button onClick={redo}>Redo</button>
+        <Log history={this.state.history} future={this.state.future} restoreFromHistory={restoreFromHistory} restoreFromFuture={restoreFromFuture} />
       </div>
     )
   }
