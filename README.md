@@ -7,17 +7,40 @@ A Chrome developer tool that provides a new tab that actively logs and visualize
 
 # Instructions
 
-## How to Install: Fork and Clone
+## How to Install: NPM Module (recommended)
 
-To use seeduxChrome, fork and clone our Git repository to an easily accessible file path on your computer.
+Seedux can be easily installed as a developer dependency with npm using your favorite terminal.
 
-Import and use dispatchLogger, combineReducers, bindActionCreators, and connect from seedux to ensure the full suite of lexical parsing, logging, and visualization of your Redux data flow occurs.
-
-### Import Provider, CreateStore, and the Seedux dispatchLogger middleware from Seedux in your app's index:
-
-    import { createStore, dispatchLogger, Provider } from 'seedux'; 
+    <npm install seedux --save-dev>
     
-    const store = createStore(combinedReducer, [object], applyMiddleware(dispatchLogger));
+## How to Install: Fork and Clone (developer version)
+  To use Seedux development version, fork and clone our Git repository to an easily accessible file path on your computer and run the build:
+  
+```
+   cd seedux_repo_path
+   npm run build:both
+```
+
+## Integrating Seedux with your redux application:
+
+To use, import createStore, combineReducers, bindActionCreators, and connect from Seedux, rather than Redux. Also import dispatchLogger from Seedux and apply it as middleware when invoking createStore.
+
+The following import examples are for the npm package. Replace <'seedux'> with your Seedux repo filepath to use the development version.
+
+### Import dispatchLogger from Seedux and replace Redux's <a href='http://redux.js.org/docs/api/createStore.html'>createStore</a> function with Seedux's version. Invoke createStore as normal with applyMiddleware(dispatchLogger) as the third argument.
+
+```
+    import React from 'react';
+    import { render } from 'react-dom';
+    import { Provider } from 'react-redux';
+    import { applyMiddleware } from 'redux';
+    import { createStore, dispatchLogger } from 'seedux';
+    import App from './components/App';
+    
+    const preloadedState = {};
+    
+    const store = createStore(combinedReducer, preloadedState, applyMiddleware(dispatchLogger));
+    store.dispatch({type: 'SEEDUX_INIT'});
     
     render(
       <Provider store = { store }>
@@ -25,32 +48,48 @@ Import and use dispatchLogger, combineReducers, bindActionCreators, and connect 
       </Provider>,
       document.getElementById('app')
     );
+```
 
-### Replace Redux's combineReducers function with seedux's version:
+### Replace Redux's <a href='http://redux.js.org/docs/api/combineReducers.html'>combineReducers</a> function with Seedux's version and invoke it with arguments as normal:
 
+```
     // import { combineReducers } from 'redux';
     import { combineReducers } from 'seedux';
+    import reducer1 from './reducer1';
+    import reducer2 from './reducer2';
+    
+    const combinedReducer = combineReducers({
+      reducer1: reducer1,
+      reducer2: reducer2
+    })
+```
 
-### Replace Redux's bindActionCreators function with seedux's version:
+### Replace Redux's <a href='http://redux.js.org/docs/api/bindActionCreators.html'>bindActionCreators</a> function with Seedux's version and invoke it with arguments as normal:
 
+```
     // import { bindActionCreators } from 'redux';
     import { bindActionCreators } from 'seedux';
-
-### Replace React-Redux's connect function with seedux's version:
-
-    // import { connect } from 'react-redux';
-    import { connect } from 'seedux';;
+    import * as allActionCreators from './actions';
     
-### How to use:
+    const boundActionCreators = bindActionCreators(allActionCreators, dispatch);
+```
 
-Navigate to chrome://extensions, click 'load as an unpacked extension' and select *your node_modules * + '/seedux/extension'
+### Replace React-Redux's <a href='https://github.com/reactjs/react-redux/blob/master/docs/api.md#connectmapstatetoprops-mapdispatchtoprops-mergeprops-options'>connect</a> function with Seedux's version and invoke it with arguments as normal:
+
+```
+    // import { connect } from 'react-redux';
+    import { connect } from 'seedux';
+    import { myComponent } from './components/myComponent';
+    
+    const container = connect()(myComponent);
+```
+
+### How to Use:
+
+Navigate to chrome://extensions, click 'load as an unpacked extension' and select seedux_repo_path + 'seedux/seeduxChrome'
 
 Open your project using localhost and your port of choice in the Chrome browser. Click on the seeduxChrome extension icon (it's a duck!) in your toolbar to launch the developer tool!
-    
-## How to Install: NPM Module
 
-npm install seedux
+## Features: 
 
-## How to Install: Chrome Extensions Store
-
-Coming soon!
+Full feature list coming soon.
