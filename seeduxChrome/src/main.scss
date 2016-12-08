@@ -13,7 +13,12 @@ body {
   color: $primColor;
   background-color: $bgColor;
 }
-
+h1 {
+  display: inline;
+}
+.flashMessage {
+  margin: 0 1em;
+}
 .diff-json-container {
   @extend .well;
   vertical-align: top;

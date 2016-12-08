@@ -37,6 +37,11 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
     future = [];
     response({ history, future });
   }
+  // sent by extension with an action to dispatch
+  if (msg.type === 'dispatchAction') {
+    console.log('Got an action to dispatch! Sending msg along to tab: ', tabId);
+    chrome.tabs.sendMessage(tabId, msg)
+  }
   // sent by extension to initiate a restoreState; forwarded to content.js via chrome.tabs
   if (msg.type === 'restoreFromTool') {
     console.log('Got a Restore! Sending msg along to tab: ', tabId);
@@ -63,7 +68,8 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
     }
     // console.log('Got New CodeObj: ', msg.codeObj);
     // console.log('Aggregated CodeObj:', codeObj);
-    // store the app's tab ID for use later in passing UNDO/REDO messages
+    // store the app's tab ID for use later in passing
+    // messages from extension -> content script
     tabId = sender.tab.id;
   }
 });

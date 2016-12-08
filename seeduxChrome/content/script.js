@@ -34,9 +34,9 @@ document.addEventListener('codeParsed', (e) => {
  * and forwards them on to our middleware.
  */
 chrome.runtime.onMessage.addListener((msg) => {
-	console.log('Got a message! ', msg);
+	console.log('Got a message! Will forward to library code', msg);
   const evt = document.createEvent('CustomEvent');
-  evt.initCustomEvent(msg.type, true, true, msg.restoreState);
+  evt.initCustomEvent(msg.type, true, true, msg.action);
   console.log('CONTENT_SCRIPT: Dispatching event: ', evt);
   document.dispatchEvent(evt);
 });

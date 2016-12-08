@@ -2,8 +2,15 @@ import React from 'react';
 import Graph from './components/Graph.jsx';
 import D3Viz from './components/D3Viz';
 import ParsingError from './components/ParsingError';
+import ActionCreator from './components/ActionCreator';
 import Log from './components/Log';
+import Flash from './components/Flash';
 import * as fileSaver from 'file-saver';
+import getGreetings from './greetings';
+
+function getPaddedMinutes(dateObj) {
+  return dateObj.getMinutes() < 10 ? `0${dateObj.getMinutes()}` : dateObj.getMinutes();
+}
 
 class App extends React.Component {
   constructor(props) {
@@ -12,9 +19,11 @@ class App extends React.Component {
       history: [],
       future: [],
       actionCreators: {},
+      actionTypes: [],
       reducers: {},
       ui: {},
       chartType: 'comfyTree',
+      flashMessage: getGreetings(),
     };
     // send a msg to the background script to ask for the current Log
     chrome.extension.sendMessage({type: 'populateLog'}, (response) => {
@@ -23,6 +32,7 @@ class App extends React.Component {
         ui: response.codeObj.ui || {},
         actionCreators: response.codeObj.actionCreators || {},
         reducers: response.codeObj.reducers || {},
+        actionTypes: response.codeObj.actionTypes || [],
         history: response.history,
         future: response.future,
       });
@@ -100,14 +110,34 @@ class App extends React.Component {
       });
     });
   }
-  exportLog(){
+  importLog(evt) {
+    const file = evt.target.files[0];
+    console.log('Got File: ', file);
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (readEvt) => {
+      const readResult = JSON.parse(readEvt.target.result);
+      const filename = 'seedux log';
+      console.log('Read Log File: ', readResult);
+      if (Object.keys(readResult).includes('chartType')) {
+        const flashMessage = `Loaded ${filename}.`;
+        this.setState({...readResult, flashMessage});
+      }
+      else this.flashMessage('Invalid Log File.');
+    }
+    reader.readAsText(file);
+  }
+  flashMessage(flashMessage) {
+    this.setState(flashMessage);
+  }
+  exportLog() {
     // const dataURI = `data:application/octet-stream;charset=utf-u,${encodeURIComponent(JSON.stringify(this.state))}`;
     // const saveWindow = window.open(dataURI, 'Export Seedux Log');
     const now = new Date();
-    const formattedDate = now.getMonth()+'-'+now.getDate()+'-'+now.getYear()+' '+(now.getHours()+1)+'_'+now.getMinutes();
+    const formattedDate = `${now.getMonth()}-${now.getDate()}-${now.getYear().toString().slice(1)} ${now.getHours()}-${getPaddedMinutes(now)}`;
     console.log('right now is ', formattedDate);
-    const blob = new Blob([JSON.stringify(this.state)], {type: "text/plain;charset=utf-8"});
-    fileSaver.saveAs(blob, `seeduxLog-${formattedDate}.json`);
+    const blob = new Blob([JSON.stringify(this.state, null, 2)], {type: "text/plain;charset=utf-8"});
+    fileSaver.saveAs(blob, `seeduxLog ${formattedDate}.json`);
   }
   render() {
     // retrieve latest diffs from our history
@@ -122,7 +152,7 @@ class App extends React.Component {
     const redo = () => this.restore('future', 0);
     return (
       <div>
-        <h1>[seedux]</h1>
+        <Flash text={this.state.flashMessage} />
           <div className='chart-container'>
           {this.createViz(this.state.ui, 'UI Props')}
           {this.createViz(this.state.actionCreators, 'Action Creators')}
@@ -135,10 +165,12 @@ class App extends React.Component {
         </select>
         <button onClick={() => this.resetLog()}>Reset Log</button>
         <button onClick={() => this.exportLog()}>Export Log</button>
+        <input type="file" id="file" name="file" onChange={this.importLog.bind(this)} />
         <button onClick={() => this.stashLog()}>Stash Log</button>
         <button onClick={() => this.unStashLog()}>Unstash Log</button>
         <button onClick={undo}>Undo</button>
         <button onClick={redo}>Redo</button>
+        <ActionCreator actionTypes={this.state.actionTypes}/>
         <Log history={this.state.history} future={this.state.future} restoreFromHistory={restoreFromHistory} restoreFromFuture={restoreFromFuture} />
       </div>
     )
