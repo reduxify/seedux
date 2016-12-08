@@ -1,50 +1,4 @@
 {
-  "_args": [
-    [
-      {
-        "raw": "seedux",
-        "scope": null,
-        "escapedName": "seedux",
-        "name": "seedux",
-        "rawSpec": "",
-        "spec": "latest",
-        "type": "tag"
-      },
-      "/home/ahmad/code/not_mine/redux/examples/shopping-cart"
-    ]
-  ],
-  "_from": "seedux@latest",
-  "_id": "seedux@0.0.3",
-  "_inCache": true,
-  "_location": "/seedux",
-  "_nodeVersion": "6.9.1",
-  "_npmOperationalInternal": {
-    "host": "packages-18-east.internal.npmjs.com",
-    "tmp": "tmp/seedux-0.0.3.tgz_1480741349949_0.3669977111276239"
-  },
-  "_npmUser": {
-    "name": "bartlett705",
-    "email": "ahmad@codemosey.net"
-  },
-  "_npmVersion": "3.10.8",
-  "_phantomChildren": {},
-  "_requested": {
-    "raw": "seedux",
-    "scope": null,
-    "escapedName": "seedux",
-    "name": "seedux",
-    "rawSpec": "",
-    "spec": "latest",
-    "type": "tag"
-  },
-  "_requiredBy": [
-    "#USER"
-  ],
-  "_resolved": "https://registry.npmjs.org/seedux/-/seedux-0.0.3.tgz",
-  "_shasum": "b870941d6a486740f2f74daf66114e8d90044637",
-  "_shrinkwrap": null,
-  "_spec": "seedux",
-  "_where": "/home/ahmad/code/not_mine/redux/examples/shopping-cart",
   "authors": [
     "Michael Lampe <mlampesd@gmail.com> (https://github.com/mlampedx)",
     "Stephenie Reimer (https://github.com/srei)",
@@ -77,5 +31,5 @@
   "optionalDependencies": {},
   "readme": "ERROR: No README data found!",
   "scripts": {},
-  "version": "0.0.3"
+  "version": "0.0.4"
 }
