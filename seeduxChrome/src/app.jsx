@@ -161,6 +161,7 @@ class App extends React.Component {
     console.log('right now is ', formattedDate);
     const blob = new Blob([JSON.stringify(this.state, null, 2)], {type: "text/plain;charset=utf-8"});
     fileSaver.saveAs(blob, `seeduxLog ${formattedDate}.json`);
+  }
   toggleSettings(e) {
     e.preventDefault();
     let changedSetting = e.target.id;
@@ -188,16 +189,11 @@ class App extends React.Component {
 
     return (
       <div>
-<<<<<<< HEAD
         <Flash text={this.state.flashMessage} />
-          <div className='chart-container'>
-=======
         <span>
-          <h1>[seedux]</h1>
           <SettingsMenu toggleSettings = {this.toggleSettings.bind(this)} settings = {this.state.settings}/>
         </span>
         <div className='chart-container'>
->>>>>>> 59090cd9123e4c0784f65779be08f6bc815c3a1c
           {this.createViz(this.state.ui, 'UI Props')}
           {this.createViz(this.state.actionCreators, 'Action Creators')}
           {this.createViz(this.state.reducers, 'Reducers')}
@@ -206,26 +202,17 @@ class App extends React.Component {
           <option value="comfyTree">ComfyTree</option>
           <option value="cozyTree">CozyTree</option>
         </select>
-<<<<<<< HEAD
-        <button onClick={() => this.resetLog()}>Reset Log</button>
-        <button onClick={() => this.exportLog()}>Export Log</button>
-        <input type="file" id="file" name="file" onChange={this.importLog.bind(this)} />
-        <button onClick={() => this.stashLog()}>Stash Log</button>
-        <button onClick={() => this.unStashLog()}>Unstash Log</button>
-        <button onClick={undo}>Undo</button>
-        <button onClick={redo}>Redo</button>
-        <ActionCreator actionTypes={this.state.actionTypes}/>
-        <Log history={this.state.history} future={this.state.future} restoreFromHistory={restoreFromHistory} restoreFromFuture={restoreFromFuture} />
-=======
         <div style = { transactionLogSetting }>
           <button onClick={() => this.resetLog()}>Reset Log</button>
+          <button onClick={() => this.exportLog()}>Export Log</button>
+          <input type="file" id="file" name="file" onChange={this.importLog.bind(this)} />
           <button onClick={() => this.stashLog()}>Stash Log</button>
           <button onClick={() => this.unStashLog()}>Unstash Log</button>
           <button onClick={undo}>Undo</button>
           <button onClick={redo}>Redo</button>
+          <ActionCreator actionTypes={this.state.actionTypes}/>
           <Log history={this.state.history} future={this.state.future} restoreFromHistory={restoreFromHistory} restoreFromFuture={restoreFromFuture} />
         </div>
->>>>>>> 59090cd9123e4c0784f65779be08f6bc815c3a1c
       </div>
     )
   }
