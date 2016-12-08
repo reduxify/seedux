@@ -36,6 +36,7 @@ The following import examples are for the npm package. Replace <'seedux'> with y
     import { Provider } from 'react-redux';
     import { applyMiddleware } from 'redux';
     import { createStore, dispatchLogger } from 'seedux';
+    import { combinedReducer } from './reducers';
     import App from './components/App';
     
     const preloadedState = {};
@@ -63,6 +64,8 @@ The following import examples are for the npm package. Replace <'seedux'> with y
       reducer1: reducer1,
       reducer2: reducer2
     })
+    
+    export default combinedReducer;
 ```
 
 ### Replace Redux's <a href='http://redux.js.org/docs/api/bindActionCreators.html'>bindActionCreators</a> function with Seedux's version and invoke it with arguments as normal:
