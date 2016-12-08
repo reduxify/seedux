@@ -18,11 +18,6 @@ ul {
   padding-left: 0;
 }
 
-li {
-  list-style-type: none;
-  text-align: center;
-}
-
 .diff-json-container {
   @extend .well;
   vertical-align: top;
@@ -72,6 +67,11 @@ button, select {
 
 .disabledSetting {
   background-color: red;
+}
+
+.menu-lines {
+  list-style-type: none;
+  text-align: center;
 }
 
 .settings-menu {

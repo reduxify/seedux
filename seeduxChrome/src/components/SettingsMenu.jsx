@@ -12,10 +12,10 @@ const SettingsMenu = ({ toggleSettings, settings }) => {
     <div className = 'settings-menu'>
       <Collapsible titleString = 'Settings'>
         <ul>
-          <li><button className = { containersVizClass } onClick = { (e) => toggleSettings(e) } id = 'containersViz'> Containers Visualization </button></li>
-          <li><button className = { actionCreatorsVizClass } onClick = { (e) => toggleSettings(e) } id = 'actionCreatorsViz'> Action Creators Visualization </button></li>
-          <li><button className = { reducersVizClass } onClick = { (e) => toggleSettings(e) } id = 'reducersViz'> Reducers Visualization </button></li>
-          <li><button className = { transactionLogClass } onClick = { (e) => toggleSettings(e) } id = 'transactionLog'> Store Transaction Log </button></li>
+          <li className = 'menu-line'><button className = { containersVizClass } onClick = { (e) => toggleSettings(e) } id = 'containersViz'> Containers Visualization </button></li>
+          <li className = 'menu-line'><button className = { actionCreatorsVizClass } onClick = { (e) => toggleSettings(e) } id = 'actionCreatorsViz'> Action Creators Visualization </button></li>
+          <li className = 'menu-line'><button className = { reducersVizClass } onClick = { (e) => toggleSettings(e) } id = 'reducersViz'> Reducers Visualization </button></li>
+          <li className = 'menu-line'><button className = { transactionLogClass } onClick = { (e) => toggleSettings(e) } id = 'transactionLog'> Store Transaction Log </button></li>
         </ul>
       </Collapsible>
     </div>
