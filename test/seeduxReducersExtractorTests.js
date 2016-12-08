@@ -1,10 +1,13 @@
 const chai = require('chai');
 const expect = require('chai').expect;
-const { testReducers, testReducers2, testReducers3, answerReducers, answerReducers2, answerReducers3 } = require('./fixtures/seeduxReducerExtractorFixtures');
+const { testReducers, testReducers2, testReducers3, testReducers4, testReducers5, testReducers6, answerReducers, answerReducers2, answerReducers3, answerReducers4, answerReducers5, answerReducers6 } = require('./fixtures/seeduxReducerExtractorFixtures');
 const { reducersExtractor, Node } = require('./../lib/seedux/src/seeduxExtractor');
 const output = reducersExtractor(testReducers);
 const output2 = reducersExtractor(testReducers2);
 const output3 = reducersExtractor(testReducers3);
+const output4 = reducersExtractor(testReducers4);
+const output5 = reducersExtractor(testReducers5);
+const output6 = reducersExtractor(testReducers6);
 
 describe('reducersExtractor', () => {
 
@@ -23,12 +26,24 @@ describe('reducersExtractor', () => {
     expect(output).to.deep.equal(answerReducers);
   })
 
+  it('should return a properly structured D3 hierarchical tree output for a given input that uses switch statements to screen for types that are properties on an object', () => {
+    expect(output4).to.deep.equal(answerReducers4);
+  })
+
   it('should return a properly structured D3 hierarchical tree output for a given input that uses ternary statements', () => {
     expect(output2).to.deep.equal(answerReducers2);
   })
 
+  it('should return a properly structured D3 hierarchical tree output for a given input that uses ternary statements to screen for types that are properties on an object', () => {
+    expect(output5).to.deep.equal(answerReducers5);
+  })
+
   it('should return a properly structured D3 hierarchical tree output for a given input that uses conditional statements', () => {
     expect(output3).to.deep.equal(answerReducers3);
+  })
+
+  it('should return a properly structured D3 hierarchical tree output for a given input that uses conditional statements to screen for types that are properties on an object', () => {
+    expect(output6).to.deep.equal(answerReducers6);
   })
 
 });

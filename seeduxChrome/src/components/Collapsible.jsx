@@ -1,3 +1,6 @@
+import ActionTitle from './ActionTitle';
+import SettingsTitle from './SettingsTitle';
+
 // The MIT License (MIT)
 //
 // Copyright (c) 2016 Glenn Flanagan
@@ -21,11 +24,10 @@
 // SOFTWARE.
 
 import React from 'react';
-import ActionTitle from './ActionTitle'
 
 var Collapsible = React.createClass({
 
-  //Set validation for prop types
+  //Set validation for prop typesTrigger
   propTypes: {
     transitionTime: React.PropTypes.number,
     easing: React.PropTypes.string,
@@ -224,9 +226,12 @@ var Collapsible = React.createClass({
       if(!this.state.hasBeenOpened)
           children = null;
 
+    const actionTitle = <ActionTitle clickHandler={this.handleTriggerClick} titleString={this.props.titleString} buttonHandler={this.props.buttonHandler} />
+    const settingsTitle = <SettingsTitle clickHandler={this.handleTriggerClick} titleString={this.props.titleString} />
+
     return(
       <div className={this.props.classParentString}>
-        <ActionTitle clickHandler={this.handleTriggerClick} titleString={this.props.titleString} buttonHandler={this.props.buttonHandler} />
+        {this.props.titleString.includes('Action') ? actionTitle: settingsTitle}
         <div className={this.props.classParentString + "__contentOuter" } ref="outer" style={dropdownStyle}>
           <div className={this.props.classParentString + "__contentInner"} ref="inner">
             {children}

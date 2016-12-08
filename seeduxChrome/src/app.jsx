@@ -3,11 +3,18 @@ import Graph from './components/Graph.jsx';
 import D3Viz from './components/D3Viz';
 import ParsingError from './components/ParsingError';
 import Log from './components/Log';
+import SettingsMenu from './components/SettingsMenu';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      settings: {
+        containersViz: true,
+        actionCreatorsViz: true,
+        reducersViz: true,
+        transactionLog: true
+      },
       history: [],
       future: [],
       actionCreators: {},
@@ -58,8 +65,24 @@ class App extends React.Component {
   }
   createViz(data, name) {
     console.log('createVizdata: ', data);
+
+    // Providing mapping object to allow for constant time look-up of setting booleans in state using headNode names
+
+    const mapNodeNamesToSettings = {
+      'Containers': 'containersViz',
+      'Reducers': 'reducersViz',
+      'Action Creators': 'actionCreatorsViz'
+    }
+
+    // If given setting boolean in state is false, return rather than displaying visualization or an error message
+
+    if (!this.state.settings[mapNodeNamesToSettings[data.name]]) {
+      return
+    }
+
     // check if our code parsing data has come through.  if not, render a
     // friendly message.
+
     return (!data.children || !data.children.length) ?
       <ParsingError failureType={name} /> :
       <D3Viz data={data}
@@ -99,6 +122,15 @@ class App extends React.Component {
       });
     });
   }
+  toggleSettings(e) {
+    e.preventDefault();
+    let changedSetting = e.target.id;
+    let newSettingStatus = !this.state.settings[changedSetting];
+    let newSettings = Object.assign({}, this.state.settings, { [changedSetting]: newSettingStatus } );
+    this.setState({
+      settings: newSettings
+    });
+  }
   render() {
     // retrieve latest diffs from our history
     let diffs = [];
@@ -110,25 +142,34 @@ class App extends React.Component {
     const restoreFromFuture = (index) => this.restore('future', index);
     const undo = () => this.restore('past', this.state.history.length - 2);
     const redo = () => this.restore('future', 0);
+
+    // Check state for settings booleans to determine whether to render visualization select element or/and transaction log elements and component
+    const vizSelectSetting = this.state.settings.containersViz || this.state.settings.actionCreatorsViz || this.state.settings.reducersViz ? { display: 'inline' } : { display: 'none' };
+    const transactionLogSetting = this.state.settings.transactionLog ? { display: 'inline' } : { display: 'none'};
+
     return (
       <div>
-        <h1>[seedux]</h1>
-          <div className='chart-container'>
+        <span>
+          <h1>[seedux]</h1>
+          <SettingsMenu toggleSettings = {this.toggleSettings.bind(this)} settings = {this.state.settings}/>
+        </span>
+        <div className='chart-container'>
           {this.createViz(this.state.ui, 'UI Props')}
           {this.createViz(this.state.actionCreators, 'Action Creators')}
           {this.createViz(this.state.reducers, 'Reducers')}
         </div>
-        <select value={this.state.value} onChange={this.handleSelectChange.bind(this)}>
+        <select value={this.state.value} onChange={this.handleSelectChange.bind(this)} style = { vizSelectSetting }>
           <option value="comfyTree">ComfyTree</option>
           <option value="cozyTree">CozyTree</option>
-          <option value="list">list</option>
         </select>
-        <button onClick={() => this.resetLog()}>Reset Log</button>
-        <button onClick={() => this.stashLog()}>Stash Log</button>
-        <button onClick={() => this.unStashLog()}>Unstash Log</button>
-        <button onClick={undo}>Undo</button>
-        <button onClick={redo}>Redo</button>
-        <Log history={this.state.history} future={this.state.future} restoreFromHistory={restoreFromHistory} restoreFromFuture={restoreFromFuture} />
+        <div style = { transactionLogSetting }>
+          <button onClick={() => this.resetLog()}>Reset Log</button>
+          <button onClick={() => this.stashLog()}>Stash Log</button>
+          <button onClick={() => this.unStashLog()}>Unstash Log</button>
+          <button onClick={undo}>Undo</button>
+          <button onClick={redo}>Redo</button>
+          <Log history={this.state.history} future={this.state.future} restoreFromHistory={restoreFromHistory} restoreFromFuture={restoreFromFuture} />
+        </div>
       </div>
     )
   }
