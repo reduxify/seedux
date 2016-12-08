@@ -4,3 +4,4 @@ lib-bundle.js
 index.js
 seeduxChrome/dist
 yarn.lock
+npm-debug.log
