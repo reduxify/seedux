@@ -116,6 +116,6 @@ The following import examples are for the npm package. Replace <'seedux'> with y
 
 ### How to Use:
 
-Navigate to chrome://extensions, click 'load as an unpacked extension' and select `seedux_repo_path + 'seedux/seeduxChrome'`
+Navigate to chrome://extensions, click 'load as an unpacked extension' and select `seedux_repo_path + 'seedux/extension'`
 
 Open your project using localhost and your port of choice in the Chrome browser. Click on the seeduxChrome extension icon (it's a duck!) in your toolbar to launch the developer tool!
