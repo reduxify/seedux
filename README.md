@@ -11,8 +11,10 @@ A Chrome developer tool that provides a new tab that actively logs and visualize
 
 Seedux can be easily installed as a developer dependency with npm using your favorite terminal.
 
+```
     <npm install seedux --save-dev>
     
+```
 ## How to Install: Fork and Clone (developer version)
   To use Seedux development version, fork and clone our Git repository to an easily accessible file path on your computer and run the build:
   
