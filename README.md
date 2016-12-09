@@ -97,8 +97,8 @@ The following import examples are for the npm package. Replace <'seedux'> with y
 ### Replace Redux's <a href='http://redux.js.org/docs/api/bindActionCreators.html'>bindActionCreators</a> function with Seedux's version and invoke it with arguments as normal:
 
 ```
-    // import { bindActionCreators } from 'redux';
-    import { bindActionCreators } from 'seedux';
+    // import { bindActionCreators, dispatch } from 'redux';
+    import { bindActionCreators, dispatch } from 'seedux';
     import * as allActionCreators from './actions';
 
     const boundActionCreators = bindActionCreators(allActionCreators, dispatch);
