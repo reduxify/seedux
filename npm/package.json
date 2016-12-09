@@ -1,5 +1,5 @@
 {
-  "authors": [
+ "authors": [
     "Michael Lampe <mlampesd@gmail.com> (https://github.com/mlampedx)",
     "Stephenie Reimer (https://github.com/srei)",
     "Ahmad Kanawi <ahmad@codemosey.net> (https://github.com/bartlett705)"
@@ -8,10 +8,6 @@
   "description": "Chrome dev tool for react-redux with persistent store log, redux data flow visualization, and store time travel capability.",
   "devDependencies": {},
   "directories": {},
-  "dist": {
-    "shasum": "b870941d6a486740f2f74daf66114e8d90044637",
-    "tarball": "https://registry.npmjs.org/seedux/-/seedux-0.0.3.tgz"
-  },
   "keywords": [
     "react",
     "react-redux",
@@ -29,7 +25,7 @@
   ],
   "name": "seedux",
   "optionalDependencies": {},
-  "readme": "ERROR: No README data found!",
+  "readmeFilename": "README.md",
   "scripts": {},
   "version": "0.0.4"
 }

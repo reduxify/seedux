@@ -26,6 +26,6 @@ npm run build:production:library
 echo 'Copying library...'
 cp lib-bundle.js npm-dist/index.js
 echo 'Copying package.json and README.md...'
-cp npm/*.* npm-dist
+cp npm/package.json npm-dist
 cp README.md npm-dist
 echo "Done-Zo! cd npm-dist and npm publish, if you're ready."
