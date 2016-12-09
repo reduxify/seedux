@@ -12,7 +12,17 @@ import getGreetings from './greetings';
 function getPaddedMinutes(dateObj) {
   return dateObj.getMinutes() < 10 ? `0${dateObj.getMinutes()}` : dateObj.getMinutes();
 }
-
+function makeStashableLog({ history, future, actionCreators, actionTypes, reducers, ui }, format) {
+  const separator = format ? 2 : null;
+  return JSON.stringify({
+    history,
+    future,
+    actionCreators,
+    actionTypes,
+    reducers,
+    ui
+  }, null, separator);
+}
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -40,6 +50,7 @@ class App extends React.Component {
       flashMessage: getGreetings(),
     };
     // send a msg to the background script to ask for the current Log
+    // and set the freezeLog state.
     chrome.extension.sendMessage(
       {
         type: 'populateLog',
@@ -114,7 +125,7 @@ class App extends React.Component {
         searchTerm = { this.state.history.length ? this.state.history[this.state.history.length - 1].modifiedAction.type : null } />
   }
   stashLog() {
-    localStorage.setItem('seeduxLog', JSON.stringify(this.state));
+    localStorage.setItem('seeduxLog', makeStashableLog(this.state, false));
     console.log('Extension State Stashed.');
   }
   unStashLog() {
@@ -153,7 +164,7 @@ class App extends React.Component {
     const reader = new FileReader();
     reader.onload = (readEvt) => {
       const readResult = JSON.parse(readEvt.target.result);
-      const filename = 'seedux log';
+      const filename = file.name;
       console.log('Read Log File: ', readResult);
       if (Object.keys(readResult).includes('chartType')) {
         const flashMessage = `Loaded ${filename}.`;
@@ -172,7 +183,7 @@ class App extends React.Component {
     const now = new Date();
     const formattedDate = `${now.getMonth()}-${now.getDate()}-${now.getYear().toString().slice(1)} ${now.getHours()}-${getPaddedMinutes(now)}`;
     console.log('right now is ', formattedDate);
-    const blob = new Blob([JSON.stringify(this.state, null, 2)], {type: "text/plain;charset=utf-8"});
+    const blob = new Blob([makeStashableLog(this.state, true)], {type: "text/plain;charset=utf-8"});
     fileSaver.saveAs(blob, `seeduxLog ${formattedDate}.json`);
   }
   toggleSettings(e) {
@@ -224,7 +235,7 @@ class App extends React.Component {
         <div style = { transactionLogSetting }>
           <button onClick={() => this.resetLog()}>Reset Log</button>
           <button onClick={() => this.exportLog()}>Export Log</button>
-          <input type="file" id="file" name="file" onChange={this.importLog.bind(this)} />
+          <input type="file" id="file" className="custom-file-input" onChange={this.importLog.bind(this)} />
           <button onClick={() => this.stashLog()}>Stash Log</button>
           <button onClick={() => this.unStashLog()}>Unstash Log</button>
           <button onClick={undo}>Undo</button>
