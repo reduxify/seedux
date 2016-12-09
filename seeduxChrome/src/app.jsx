@@ -16,13 +16,20 @@ function getPaddedMinutes(dateObj) {
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      settings: {
+    // dig around in LocalStorage to get saved settings
+    const storedSettings = JSON.parse(localStorage.getItem('seeduxSettings'));
+    console.log('Dug up settings: ', storedSettings);
+    const settings = storedSettings ? storedSettings
+      : {
         containersViz: true,
         actionCreatorsViz: true,
         reducersViz: true,
-        transactionLog: true
-      },
+        transactionLog: true,
+        logFrozen: false,
+      };
+
+    this.state = {
+      settings,
       history: [],
       future: [],
       actionCreators: {},
@@ -33,22 +40,28 @@ class App extends React.Component {
       flashMessage: getGreetings(),
     };
     // send a msg to the background script to ask for the current Log
-    chrome.extension.sendMessage({type: 'populateLog'}, (response) => {
-      console.log('Initial Log Population: ', response.history, response.future);
-      this.setState({
-        ui: response.codeObj.ui || {},
-        actionCreators: response.codeObj.actionCreators || {},
-        reducers: response.codeObj.reducers || {},
-        actionTypes: response.codeObj.actionTypes || [],
-        history: response.history,
-        future: response.future,
-      });
+    chrome.extension.sendMessage(
+      {
+        type: 'populateLog',
+        settings: {
+          freezeLog: this.state.freezeLog,
+        },
+      }, (response) => {
+        console.log('Initial Log Population: ', response.history, response.future);
+        this.setState({
+          ui: response.codeObj.ui || {},
+          actionCreators: response.codeObj.actionCreators || {},
+          reducers: response.codeObj.reducers || {},
+          actionTypes: response.codeObj.actionTypes || [],
+          history: response.history,
+          future: response.future,
+        });
     });
 
     // add a listener for new log Entries from the content script
     chrome.runtime.onMessage.addListener((msg, sender, response) => {
       // msg from content script with new history entry
-      if (msg.type === 'addToLog') {
+      if (msg.type === 'addToLog' && !this.state.settings.logFrozen) {
         // add to our local copy of the log and update State,
         // discarding any existing future
         const newHistory = this.state.history;
@@ -166,6 +179,12 @@ class App extends React.Component {
     e.preventDefault();
     let changedSetting = e.target.id;
     let newSettingStatus = !this.state.settings[changedSetting];
+    // in the case that logFrozen is toggled, we must notify the background script as well
+    if (e.target.id === 'logFrozen') {
+      chrome.extension.sendMessage({type: 'freezeLog'}, (response) => {
+        console.log('Log Frozen.');
+      });
+    }
     let newSettings = Object.assign({}, this.state.settings, { [changedSetting]: newSettingStatus } );
     this.setState({
       settings: newSettings
@@ -177,7 +196,7 @@ class App extends React.Component {
     if (this.state.history.length) {
       diffs = this.state.history[this.state.history.length - 1].diffs;
     }
-    // curry our restore function to provide invididual button functionality
+    // (partially) apply our restore function to provide invididual button functionality
     const restoreFromHistory = (index) => this.restore('past', index);
     const restoreFromFuture = (index) => this.restore('future', index);
     const undo = () => this.restore('past', this.state.history.length - 2);

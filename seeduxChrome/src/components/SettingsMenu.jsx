@@ -1,21 +1,27 @@
 import React, {PropTypes} from 'react';
 import Collapsible from './Collapsible';
 
+function getSettingsClass(setting) {
+  return setting ? 'activeSetting' : 'disabledSetting';
+}
+
+function saveSettings(settings) {
+  console.log('Saving settings: ', settings);
+  localStorage.setItem('seeduxSettings', JSON.stringify(settings));
+}
+
 const SettingsMenu = ({ toggleSettings, settings }) => {
-  let containersVizClass, actionCreatorsVizClass, reducersVizClass, transactionLogClass;
-  settings.containersViz ? containersVizClass = 'activeSetting' : containersVizClass = 'disabledSetting';
-  settings.actionCreatorsViz ? actionCreatorsVizClass = 'activeSetting' : actionCreatorsVizClass = 'disabledSetting';
-  settings.reducersViz ? reducersVizClass = 'activeSetting' : reducersVizClass = 'disabledSetting';
-  settings.transactionLog ? transactionLogClass = 'activeSetting' : transactionLogClass = 'disabledSetting';
-  
+
   return (
     <div className = 'settings-menu'>
       <Collapsible titleString = 'Settings'>
         <ul>
-          <li className = 'menu-line'><button className = { containersVizClass } onClick = { (e) => toggleSettings(e) } id = 'containersViz'> Containers Visualization </button></li>
-          <li className = 'menu-line'><button className = { actionCreatorsVizClass } onClick = { (e) => toggleSettings(e) } id = 'actionCreatorsViz'> Action Creators Visualization </button></li>
-          <li className = 'menu-line'><button className = { reducersVizClass } onClick = { (e) => toggleSettings(e) } id = 'reducersViz'> Reducers Visualization </button></li>
-          <li className = 'menu-line'><button className = { transactionLogClass } onClick = { (e) => toggleSettings(e) } id = 'transactionLog'> Store Transaction Log </button></li>
+          <li className = 'menu-line'><button className = { getSettingsClass(settings.containersViz) } onClick = { toggleSettings } id = 'containersViz'> Containers Visualization </button></li>
+          <li className = 'menu-line'><button className = { getSettingsClass(settings.actionCreatorsViz) } onClick = { toggleSettings } id = 'actionCreatorsViz'> Action Creators Visualization </button></li>
+          <li className = 'menu-line'><button className = { getSettingsClass(settings.reducersViz) } onClick = { toggleSettings } id = 'reducersViz'> Reducers Visualization </button></li>
+          <li className = 'menu-line'><button className = { getSettingsClass(settings.transactionLog) } onClick = { toggleSettings } id = 'transactionLog'> Store Transaction Log </button></li>
+          <li className = 'menu-line'><button className = { getSettingsClass(settings.logFrozen) } onClick = { toggleSettings } id = 'logFrozen'> Freeze Log </button></li>
+          <li className = 'menu-line'><button className = 'btn-save-settings' onClick = { () => saveSettings(settings) }> Save Settings as Default </button></li>
         </ul>
       </Collapsible>
     </div>

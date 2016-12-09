@@ -18,17 +18,19 @@ let codeObj = {
 };
 let future = [];
 let tabId = 0;
+let freezeLog = false;
 
 chrome.runtime.onMessage.addListener((msg, sender, response) => {
   console.log('Background got MSG: ', msg);
   // forwarded from middleware by content script on each new app event
-  if (msg.type === 'addToLog') {
+  if (msg.type === 'addToLog' && !freezeLog) {
     // console.log('Got New Entry! History: ', history);
     history.push(msg.historyEntry);
     future = [];
   }
   // sent by extension to ask for initial log and codeObj data
   if (msg.type === 'populateLog') {
+    freezeLog = msg.settings.freezeLog;
     response({ future, history, codeObj });
   }
   // sent by extension to reset the log
@@ -41,6 +43,10 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
   if (msg.type === 'dispatchAction') {
     console.log('Got an action to dispatch! Sending msg along to tab: ', tabId);
     chrome.tabs.sendMessage(tabId, msg)
+  }
+  // sent by extension to freeze the Log
+  if (msg.type === 'freezeLog') {
+    freezeLog = !freezeLog;
   }
   // sent by extension to initiate a restoreState; forwarded to content.js via chrome.tabs
   if (msg.type === 'restoreFromTool') {
