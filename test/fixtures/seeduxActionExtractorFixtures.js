@@ -166,10 +166,13 @@ const redoAction4 = () => {
 // Simulates code injected into Redux's native bindActionCreators function
 
 function seeduxbindActionCreatorsLogic(actionCreators, dispatch) {
+  var keys = Object.keys(actionCreators);
   let seeduxObj = {};
-  let coerceToStr = '';
-    for (let k in actionCreators) {
-      seeduxObj[k] = actionCreators[k] + coerceToStr;
+
+    if (keys) {
+      keys.forEach(ac => {
+        if (actionCreators[ac]) { seeduxObj[ac] = actionCreators[ac].toString(); };
+      });
     }
   return seeduxObj;
 }
