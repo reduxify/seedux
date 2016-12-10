@@ -5,7 +5,7 @@ const { uiExtractor, Node } = require('./../lib/seedux/src/seeduxExtractor');
 // const output = uiExtractor(testUI);
 // const output2 = uiExtractor(testUI2);
 
-xdescribe('ngUIExtractor', () => {
+xdescribe('uiExtractor (Angular)', () => {
 
   it('should be a function', () => {
     expect(uiExtractor).to.be.a.function;
