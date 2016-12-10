@@ -2,7 +2,7 @@ const { React, PropTypes } = require('react');
 const _react = {};
 _react.PropTypes = PropTypes;
 
-	var WebpackTestTodoList1 = function WebpackTestTodoList1(_ref) {
+	var WebpackTestTodoList = function WebpackTestTodoList(_ref) {
 	  var _ref$todos = _ref.todos,
 	      todos = _ref$todos === undefined ? [] : _ref$todos,
 	      onTodoClick = _ref.onTodoClick;
@@ -21,37 +21,23 @@ _react.PropTypes = PropTypes;
 	  );
 	};
 
-	WebpackTestTodoList1.propTypes = {
-	  todos: PropTypes.arrayOf(PropTypes.shape({
-	    id: PropTypes.number.isRequired,
-	    completed: PropTypes.bool.isRequired,
-	    text: PropTypes.string.isRequired
-	  }).isRequired).isRequired,
-	  onTodoClick: PropTypes.func.isRequired
-	};
+const mapStateToPropsTestTodoList = (state) => {
+  return {
+    todos: getVisibleTodos(state.todos, state.visibilityFilter)
+  }
+}
 
-	var WebpackTestTodoList2 = function WebpackTestTodoList2(_ref) {
-	  var _ref$todos = _ref.todos,
-	      todos = _ref$todos === undefined ? [] : _ref$todos,
-	      onTodoClick = _ref.onTodoClick;
-	  return React.createElement(
-	    'ul',
-	    null,
-	    todos.map(function (todo) {
-	      return React.createElement(Todo, _extends({
-	        key: todo.id
-	      }, todo, {
-	        onClick: function onClick() {
-	          return onTodoClick(todo.id);
-	        }
-	      }));
-	    })
-	  );
-	};
+const mapDispatchToPropsTestTodoList = (dispatch) => {
+  return {
+    onTodoClick: (id) => {
+      dispatch(toggleTodo(id));
+    }
+  }
+}
 
 // Browserified TodoList:
 
-	var BrowserifyTestTodoList1 = function BrowserifyTestTodoList1(_ref) {
+	var BrowserifyTestTodoList = function BrowserifyTestTodoList(_ref) {
   var _ref$todos = _ref.todos,
       todos = _ref$todos === undefined ? [] : _ref$todos,
       onTodoClick = _ref.onTodoClick;
@@ -70,60 +56,56 @@ _react.PropTypes = PropTypes;
   );
 };
 
-BrowserifyTestTodoList1.propTypes = {
-  todos: _react.PropTypes.arrayOf(_react.PropTypes.shape({
-    id: _react.PropTypes.number.isRequired,
-    completed: _react.PropTypes.bool.isRequired,
-    text: _react.PropTypes.string.isRequired
-  }).isRequired).isRequired,
-  onTodoClick: _react.PropTypes.func.isRequired
-};
-
-	var BrowserifyTestTodoList2 = function BrowserifyTestTodoList2(_ref) {
-  var _ref$todos = _ref.todos,
-      todos = _ref$todos === undefined ? [] : _ref$todos,
-      onTodoClick = _ref.onTodoClick;
-  return _react2.default.createElement(
-    'ul',
-    null,
-    todos.map(function (todo) {
-      return _react2.default.createElement(_Todo2.default, _extends({
-        key: todo.id
-      }, todo, {
-        onClick: function onClick() {
-          return onTodoClick(todo.id);
-        }
-      }));
-    })
-  );
-};
-
-// TODO: Handle nested propTypes
 // Simulates code injected into React-Redux's native Connect function
 
-function seeduxReactReduxConnectLogic(WrappedComponent) {
-  const UI = WrappedComponent.name;
-	if (WrappedComponent.propTypes) {
-		const props = Object.keys(WrappedComponent.propTypes);
-    return [UI, props];
+function seeduxReactReduxConnectLogic(mapStateToProps, mapDispatchToProps) {
+  let mappedStateString, mappedDispatchString;
+	if (!mapStateToProps && !mapDispatchToProps) { 
+		mappedStateString = 'function defaultMapStateToProps(state){return{};}'; 
+		mappedDispatchString = 'function defaultMapDispatchToProps(dispatch){return{dispatch:dispatch};}';
 	}
-	else { 
-		const coerceToString = '';
-		const stringifiedUIDefinition = WrappedComponent + coerceToString;
-		return {[UI]: stringifiedUIDefinition};
+
+  else if (mapStateToProps && !mapDispatchToProps) {
+		mappedStateString = mapStateToProps.toString();
+		mappedDispatchString = 'function defaultMapDispatchToProps(dispatch){return{dispatch:dispatch};}';
+	}
+
+	else if (!mapStateToProps && mapDispatchToProps) {
+		mappedStateString = 'function defaultMapStateToProps(state){return{};}';
+		mappedDispatchString = mapStateToProps.toString();
+	}
+
+	else if (mapStateToProps === 'test' && mapDispatchToProps) {
+    mappedStateString = 'function defaultMapStateToProps(state){return{};}'; 
+		mappedDispatchString = mapDispatchToProps.toString();
+	}
+
+	else {
+		mappedStateString = mapStateToProps;
+		mappedDispatchString = mapDispatchToProps;
+	}
+
+  let mappedPropsString = `${mappedStateString}${mappedDispatchString}`;
+
+  return function wrapWithConnect(WrappedComponent) {
+
+  const UI = WrappedComponent.name; 
+	console.log('Initial obj for extractor passed...', {[UI]: mappedPropsString})
+  return {[UI]: mappedPropsString};
 	}
 }
 
-const webpackTestUI1 = seeduxReactReduxConnectLogic(WebpackTestTodoList1);
-const webpackTestUI2 = seeduxReactReduxConnectLogic(WebpackTestTodoList2);
-const browserifyTestUI1 = seeduxReactReduxConnectLogic(BrowserifyTestTodoList1);
-const browserifyTestUI2 = seeduxReactReduxConnectLogic(BrowserifyTestTodoList2);
+const webpackTestUI1 = seeduxReactReduxConnectLogic(mapStateToPropsTestTodoList, mapDispatchToPropsTestTodoList)(WebpackTestTodoList);
+const webpackTestUI2 = seeduxReactReduxConnectLogic()(WebpackTestTodoList);
+const webpackTestUI3 = seeduxReactReduxConnectLogic(mapStateToPropsTestTodoList)(WebpackTestTodoList)
+const webpackTestUI4 = seeduxReactReduxConnectLogic('test', mapDispatchToPropsTestTodoList)(WebpackTestTodoList)
+const browserifyTestUI1 = seeduxReactReduxConnectLogic(mapStateToPropsTestTodoList, mapDispatchToPropsTestTodoList)(BrowserifyTestTodoList);
 
-const answerUI = {
+const answerUI1 = {
   'name': 'Containers',
   'children': [
 		{
-      'name': 'WebpackTestTodoList1',
+      'name': 'WebpackTestTodoList',
       'children': [
         {
           'name': 'todos'
@@ -132,31 +114,52 @@ const answerUI = {
 					'name': 'onTodoClick'
 				}
       ]
-    },
-    {
-      'name': 'WebpackTestTodoList2',
+    }
+  ]
+}
+
+const answerUI2 = {
+  'name': 'Containers',
+  'children': [
+		{
+      'name': 'WebpackTestTodoList',
+		}
+	]
+}
+
+const answerUI3 = {
+  'name': 'Containers',
+  'children': [
+		{
+      'name': 'WebpackTestTodoList',
       'children': [
         {
           'name': 'todos'
-        },
+        }
+      ]
+    }
+  ]
+}
+
+const answerUI4 = {
+  'name': 'Containers',
+  'children': [
+		{
+      'name': 'WebpackTestTodoList',
+      'children': [
 				{
 					'name': 'onTodoClick'
 				}
       ]
-    },
+    }
+  ]
+}
+
+const answerUI5 = {
+  'name': 'Containers',
+  'children': [
 		{
-			'name': 'BrowserifyTestTodoList1',
-			'children': [
-				{
-					'name': 'todos'
-				},
-				{
-					'name': 'onTodoClick'
-				}
-			]
-		},
-		{
-			'name': 'BrowserifyTestTodoList2',
+			'name': 'BrowserifyTestTodoList',
 			'children': [
 				{
 					'name': 'todos'
@@ -166,7 +169,7 @@ const answerUI = {
 				}
 			]
 		}
-  ]
+	]
 }
 
-module.exports = { webpackTestUI1, webpackTestUI2, browserifyTestUI1, browserifyTestUI2, WebpackTestTodoList1, WebpackTestTodoList2, BrowserifyTestTodoList1, BrowserifyTestTodoList2, answerUI };
+module.exports = { webpackTestUI1, webpackTestUI2, webpackTestUI3, webpackTestUI4, browserifyTestUI1, WebpackTestTodoList, BrowserifyTestTodoList, answerUI1, answerUI2, answerUI2, answerUI3, answerUI4, answerUI5 };
