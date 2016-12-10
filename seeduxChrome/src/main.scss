@@ -58,17 +58,17 @@ ul {
 .Collapsible {
   border: 1px solid $primColor;
 }
-button, select {
-  background-color: $primColor;
+button, select, .custom-file-input::-webkit-file-upload-button {
+  cursor: pointer;
+  background: $primColor;
   color: white;
   border: none;
   border-radius: 5px;
   padding: 0.25em 0.5em;
   margin: 0.5em;
 }
-
-.activeSetting {
-  background-color: green;
+button:active, .custom-file-input::-webkit-file-upload-button:active, .activeSetting {
+  background: green;
 }
 
 .disabledSetting {
@@ -86,7 +86,14 @@ button, select {
   width: 12%;
   z-index: 1;
 }
-
 .settings-title {
   text-align: center;
+  cursor: pointer;
+}
+.custom-file-input::-webkit-file-upload-button {
+  outline: none;
+  -webkit-user-select: none;
+}
+.custom-file-input::-webkit-file-upload-button::after {
+  opacity: 0;
 }
