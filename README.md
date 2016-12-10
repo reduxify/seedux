@@ -51,6 +51,10 @@ Seedux can be easily installed as a developer dependency with npm using your fav
   seeduxInit(store);
 ```
 
+- Navigate to chrome://extensions, click 'load as an unpacked extension' and select `seedux_repo_path + 'seedux/seeduxChrome'`
+- Open your redux app in the browser. 
+- Click on the seeduxChrome extension icon (it's a duck) to launch the dev tool!
+
 ## Complete Example Integration
 
 The following import examples are for the npm package. Replace <'seedux'> with your Seedux repo filepath to use the development version.
@@ -97,8 +101,8 @@ The following import examples are for the npm package. Replace <'seedux'> with y
 ### Replace Redux's <a href='http://redux.js.org/docs/api/bindActionCreators.html'>bindActionCreators</a> function with Seedux's version and invoke it with arguments as normal:
 
 ```
-    // import { bindActionCreators, dispatch } from 'redux';
-    import { bindActionCreators, dispatch } from 'seedux';
+    // import { bindActionCreators } from 'redux';
+    import { bindActionCreators } from 'seedux';
     import * as allActionCreators from './actions';
 
     const boundActionCreators = bindActionCreators(allActionCreators, dispatch);
@@ -113,9 +117,3 @@ The following import examples are for the npm package. Replace <'seedux'> with y
 
     const container = connect()(myComponent);
 ```
-
-### How to Use:
-
-Navigate to chrome://extensions, click 'load as an unpacked extension' and select `seedux_repo_path + 'seedux/extension'`
-
-Open your project using localhost and your port of choice in the Chrome browser. Click on the seeduxChrome extension icon (it's a duck!) in your toolbar to launch the developer tool!
