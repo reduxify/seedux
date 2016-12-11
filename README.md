@@ -14,7 +14,7 @@ A Chrome developer tool that provides a new tab that actively logs and visualize
 - Ability to dispatch actions with custom payloads
 - Import/Export and Stash/Unstash complete store logs from disk or localStorage, respectively.
 
-## How to Install
+# How to Install
 
 ### NPM Module (recommended)
 
