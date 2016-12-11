@@ -72,8 +72,11 @@ seeduxInit(store);
 ```
 
 Navigate to chrome://extensions
+
 Click 'load as an unpacked extension' and select ```seedux_repo_path + 'seedux/seeduxChrome'```
+
 Open your redux app in the browser. 
+
 Click on the seeduxChrome extension icon to launch the dev tool!
 
 ## Complete Example Integration
