@@ -19,6 +19,7 @@ let codeObj = {
 let future = [];
 let tabId = 0;
 let freezeLog = false;
+let d3LookUpTable = {};
 
 chrome.runtime.onMessage.addListener((msg, sender, response) => {
   console.log('Background got MSG: ', msg);
@@ -72,6 +73,9 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
       Object.assign(codeObj, msg.codeObj);
       codeObj.count++;
     }
+
+    d3LookUpTable = populateLookUpTable(codeObj);
+
     // console.log('Got New CodeObj: ', msg.codeObj);
     // console.log('Aggregated CodeObj:', codeObj);
     // store the app's tab ID for use later in passing

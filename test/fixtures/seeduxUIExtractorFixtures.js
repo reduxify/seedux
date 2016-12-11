@@ -85,12 +85,11 @@ function seeduxReactReduxConnectLogic(mapStateToProps, mapDispatchToProps) {
 		mappedDispatchString = mapDispatchToProps;
 	}
 
-  let mappedPropsString = `${mappedStateString}${mappedDispatchString}`;
+  let mappedPropsString = `${mappedStateString}|${mappedDispatchString}`;
 
   return function wrapWithConnect(WrappedComponent) {
 
   const UI = WrappedComponent.name; 
-	console.log('Initial obj for extractor passed...', {[UI]: mappedPropsString})
   return {[UI]: mappedPropsString};
 	}
 }
