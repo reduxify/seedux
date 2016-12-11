@@ -37,7 +37,7 @@ To use Seedux development version, fork and clone our Git repository to an easil
 
 ## Getting Started:
 
-- import `createStore`, `combineReducers`, `bindActionCreators`, and `connect` from Seedux, rather than Redux.
+Import `createStore`, `combineReducers`, `bindActionCreators`, and `connect` from Seedux, rather than Redux.
 
 ```javascript
 // import { createStore } from 'redux';
@@ -60,8 +60,8 @@ import { bindActionCreators } from 'seedux';
 import { connect } from 'seedux';
 ```
 
-- import `dispatchLogger` from Seedux and apply it as middleware when invoking createStore.
-- import and call seeduxInit, and pass it your newly created store.
+Import `dispatchLogger` from Seedux and apply it as middleware when invoking createStore.
+Import and call seeduxInit, and pass it your newly created store.
 
 ```javascript
   import { dispatchLogger } from 'seedux';
@@ -70,9 +70,9 @@ import { connect } from 'seedux';
   seeduxInit(store);
 ```
 
-- Navigate to chrome://extensions, click 'load as an unpacked extension' and select ```seedux_repo_path + 'seedux/seeduxChrome'```
-- Open your redux app in the browser. 
-- Click on the seeduxChrome extension icon to launch the dev tool!
+Navigate to chrome://extensions, click 'load as an unpacked extension' and select ```seedux_repo_path + 'seedux/seeduxChrome'```
+Open your redux app in the browser. 
+Click on the seeduxChrome extension icon to launch the dev tool!
 
 ## Complete Example Integration
 
