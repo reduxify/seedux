@@ -21,7 +21,7 @@ A Chrome developer tool that provides a new tab that actively logs and visualize
 Seedux can be easily installed as a developer dependency with npm using your favorite terminal.
 
 ```javascript
-    npm install seedux --save-dev
+npm install seedux --save-dev
 ```
 
 ### Developer Version
@@ -31,8 +31,8 @@ Fork and Clone (developer version)
 To use Seedux development version, fork and clone our Git repository to an easily accessible file path on your computer and run the build:
 
 ```javascript
-   cd seedux_repo_path
-   npm run build:both
+cd seedux_repo_path
+npm run build:both
 ```
 
 ## Getting Started:
@@ -45,8 +45,8 @@ import { createStore } from 'seedux';
 ```
 
 ```javascript
-  // import { combineReducers } from 'redux';
-  import { combineReducers } from 'seedux';
+// import { combineReducers } from 'redux';
+import { combineReducers } from 'seedux';
 
 ```
 
@@ -61,13 +61,14 @@ import { connect } from 'seedux';
 ```
 
 Import `dispatchLogger` from Seedux and apply it as middleware when invoking createStore.
-Import and call seeduxInit, and pass it your newly created store.
+
+Import and call `seeduxInit`. Pass `seeduxInit` your newly created store.
 
 ```javascript
-  import { dispatchLogger } from 'seedux';
+import { dispatchLogger, seeduxInit } from 'seedux';
 
-  const store = createStore(combinedReducer, preloadedState, applyMiddleware(dispatchLogger));
-  seeduxInit(store);
+const store = createStore(combinedReducer, preloadedState, applyMiddleware(dispatchLogger));
+seeduxInit(store);
 ```
 
 - Navigate to chrome://extensions
