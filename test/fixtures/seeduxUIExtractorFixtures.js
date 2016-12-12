@@ -90,6 +90,7 @@ function seeduxReactReduxConnectLogic(mapStateToProps, mapDispatchToProps) {
   return function wrapWithConnect(WrappedComponent) {
 
   const UI = WrappedComponent.name; 
+  // console.log('obj passed to extractor', {[UI]: mappedPropsString})
   return {[UI]: mappedPropsString};
 	}
 }

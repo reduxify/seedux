@@ -2,14 +2,12 @@ const chai = require('chai');
 const expect = require('chai').expect;
 const { webpackTestUI1, webpackTestUI2, webpackTestUI3, webpackTestUI4, browserifyTestUI1,  WebpackTestTodoList1, WebpackTestTodoList2, BrowserifyTestTodoList1, answerUI1, answerUI2, answerUI3, answerUI4, answerUI5 } = require('./fixtures/seeduxUIExtractorFixtures');
 const { uiExtractor } = require('./../lib/seedux/src/seeduxExtractor');
-// const { Node } = require('./../lib/seedux/src/seeduxAssembler');
-const assemblerUtils = require('./../lib/seedux/src/seeduxAssembler');
-const { resetUIHeadNode } = require('./../lib/seedux/src/seeduxLookUp');
+const { Node, resetUIHeadNode } = require('./../lib/seedux/src/seeduxAssembler');
 
 describe('uiExtractor (React)', () => {
 
 afterEach(() => {
-  assemblerUtils.resetUIHeadNode();
+  resetUIHeadNode();
 });
 
   it('should be a function', () => {
@@ -54,21 +52,21 @@ afterEach(() => {
 describe('"Containers" node', () => {
 
 afterEach(() => {
-  assemblerUtils.resetUIHeadNode();
+  resetUIHeadNode();
 })
 
   it('should have an array-typed property named children composed of object-typed Node(s)', () => {
     const webpackTestOutput1 = uiExtractor(webpackTestUI1);
     expect(webpackTestOutput1.children).to.be.an('array');
     expect(webpackTestOutput1.children[0]).to.be.an('object');
-    expect(webpackTestOutput1.children[0].constructor).to.deep.equal(assemblerUtils.Node);
+    expect(webpackTestOutput1.children[0].constructor).to.deep.equal(Node);
   })
 
   it('should have child nodes that each possess an array-typed property named children composed of object-typed Node(s)', () => {
     const webpackTestOutput1 = uiExtractor(webpackTestUI1);
     expect(webpackTestOutput1.children[0].children).to.be.an('array');
     expect(webpackTestOutput1.children[0].children[0]).to.be.an('object');
-    expect(webpackTestOutput1.children[0].children[0].constructor).to.deep.equal(assemblerUtils.Node);
+    expect(webpackTestOutput1.children[0].children[0].constructor).to.deep.equal(Node);
   })
 
 });

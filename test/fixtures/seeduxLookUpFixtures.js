@@ -69,8 +69,13 @@ const testReducers = {
   ]
 }
 
-const testActionTypes1 = ['ADD_TODO', 'SET_VISIBILITY_FILTER', 'TOGGLE_TODO', 'UNDO', 'REDO'];
-const testActionTypes2 = ['SET_VISIBILITY_FILTER', 'ADD_TODO', 'TOGGLE_TODO'];
+// testActionTypes1 corresponds with testReducers
+
+const testActionTypes1 = ['SET_VISIBILITY_FILTER', 'ADD_TODO', 'TOGGLE_TODO'];
+
+// testActionTypes2 corresponds with testActionCreators
+
+const testActionTypes2 = ['ADD_TODO', 'SET_VISIBILITY_FILTER', 'TOGGLE_TODO', 'UNDO', 'REDO'];
 
 const testUI = {
   'name': 'Containers',
@@ -92,7 +97,7 @@ const testUI = {
 const testUIResources = { 
   WebpackTestTodoList: 
   { 
-    todos: [ 'todos' ], 
+    todos: [ 'todos', 'visibilityFilter' ], 
     onTodoClick: [ 'toggleTodo' ] 
   } 
 };
@@ -111,6 +116,10 @@ const answerReducers = {
   'TOGGLE_TODO': ['todos', 'Reducers']
 }
 
-// const answerUI;
+const answerUI = {
+  'TOGGLE_TODO': ['onTodoClick', 'WebpackTestTodoList', 'Containers'],
+  'todos': ['todos', 'WebpackTestTodoList', 'Containers'],
+  'visibilityFilter': ['todos', 'WebpackTestTodoList', 'Containers']
+}
 
 module.exports = { testActionCreators, testReducers, testUI, testUIResources, testActionTypes1, testActionTypes2, answerActionCreators, answerReducers };
