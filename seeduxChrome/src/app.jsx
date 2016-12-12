@@ -100,7 +100,7 @@ class App extends React.Component {
       ...this.state.settings,
       chartType: event.target.value,
     }
-    this.setState({newSettings});
+    this.setState({settings: newSettings});
   }
   assembleVizData() {
     const assembledData = {
