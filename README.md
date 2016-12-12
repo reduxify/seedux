@@ -37,7 +37,7 @@ npm run build:both
 
 ## Getting Started:
 
-Import `createStore`, `combineReducers`, `bindActionCreators`, and `connect` from Seedux, rather than Redux.
+Import `createStore`, `combineReducers`, `bindActionCreators`, and `connect` from Seedux, rather than Redux. The examples below assume you are working with the npm module. If you are working from the git repo, replace 'seedux' with your repo path!
 
 ```javascript
 // import { createStore } from 'redux';
