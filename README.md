@@ -24,16 +24,16 @@ Seedux can be easily installed as a developer dependency with npm using your fav
 npm install seedux --save-dev
 ```
 
-### Developer Version
+### Development Version
 
-Fork and Clone (developer version)
-
-To use Seedux development version, fork and clone our Git repository to an easily accessible file path on your computer and run the build:
+For a codebase suitable for modification, clone our git repository to an easily accessible file path on your computer and run the build:
 
 ```javascript
 cd seedux_repo_path
 npm run build:both
 ```
+
+In the examples below, replace 'seedux' with your repo path!
 
 ## Getting Started:
 
