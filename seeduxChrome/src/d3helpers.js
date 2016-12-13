@@ -1,4 +1,4 @@
-import { select, tree, hierarchy, append } from 'd3';
+import { select, tree, hierarchy, append, layout } from 'd3';
 
 // default chart size and spacing constants
 const config = {};
@@ -13,6 +13,20 @@ config.cozyTree = {
   // generations.  Smaller is 'more compact'.
   BREADTH_SPACING_FACTOR: 0.5,
   NODE_RADIUS: 5,
+  LINK_WEIGHT: 2,
+};
+
+config.fancyTree = {
+  CHART_WIDTH: 1000,
+  CHART_HEIGHT: 500,
+  // multiplier between 0 and 1 that determines horizontal spacing of tree
+  // generations.  Smaller is 'more compact'.
+  DEPTH_SPACING_FACTOR: 0.25,
+  // multiplier between 0 and 1 that determines vertical spacing of tree
+  // generations.  Smaller is 'more compact'.
+  BREADTH_SPACING_FACTOR: 0.4,
+  NODE_RADIUS: 7,
+  LINK_WEIGHT: 5,
 };
 
 config.comfyTree = {
@@ -24,7 +38,8 @@ config.comfyTree = {
   // multiplier between 0 and 1 that determines vertical spacing of tree
   // generations.  Smaller is 'more compact'.
   BREADTH_SPACING_FACTOR: 1,
-  NODE_RADIUS: 15,
+  NODE_RADIUS: 10,
+  LINK_WEIGHT: 3,
 
 };
 
@@ -51,8 +66,8 @@ exports.transformVizNode = function transformVizNode(element, data, type = 'cozy
   } else if (type === 'cozyTree') {
     buildBasicTree(element, data, config.cozyTree, searchTerm)
   }
-  else if (type === 'list') {
-    buildBasicList(element, data, config.list, searchTerm);
+  else if (type === 'fancyTree') {
+    buildFancyTree(element, data, config.fancyTree, searchTerm);
   }
 };
 function buildBasicList(element, data, config, searchTerm) {
@@ -63,7 +78,7 @@ function buildBasicList(element, data, config, searchTerm) {
   .append('g')
   .attr('transform', 'translate(20,0)');
 
-  var layout = d3.layout.indent()
+  var layout = layout.indent()
   .children(function(d) { return d.children; })
   .nodeSize([10, 15])
   .separation(function(node, previousNode) { return node.parent === previousNode.parent || node.parent === previousNode ? 1 : 2; });
@@ -85,13 +100,14 @@ function buildBasicList(element, data, config, searchTerm) {
 }
 
 function buildBasicTree(element, data, config, searchTerm) {
-  const { CHART_WIDTH, CHART_HEIGHT, DEPTH_SPACING_FACTOR, BREADTH_SPACING_FACTOR, NODE_RADIUS } = config;
+  const { CHART_WIDTH, CHART_HEIGHT, DEPTH_SPACING_FACTOR, BREADTH_SPACING_FACTOR, NODE_RADIUS, LINK_WEIGHT } = config;
   let svg = select(element)
   .append('svg')
   .attr('width', CHART_WIDTH)
   .attr('height', CHART_HEIGHT)
   .append('g')
   .attr('transform', 'translate(20,0)');
+
   let ourCluster = tree()
     .size([CHART_HEIGHT * BREADTH_SPACING_FACTOR, CHART_WIDTH * DEPTH_SPACING_FACTOR])
     .separation(function(a, b) {
@@ -102,6 +118,20 @@ function buildBasicTree(element, data, config, searchTerm) {
   let nodeHierarchy = hierarchy(data);
   // let nodeHierarchy = data;
   ourCluster(nodeHierarchy);
+
+  //creating links
+  let link = svg.selectAll('.node')
+  .data(nodeHierarchy.descendants()
+  .slice(1))
+  .enter()
+  .append('path')
+  .attr('class', 'link')
+  .attr('d', function(d) {
+    return `M ${d.y} ${d.x}
+    Q ${(d.parent.y)} ${(d.x + d.parent.x) / 2}
+    ${d.parent.y} ${d.parent.x}`;
+  })
+  .attr('stroke-width', LINK_WEIGHT)
 
   // entering the nodes --> finally appending to DOM
   let nodeEnter = svg.selectAll('.node')
@@ -114,25 +144,6 @@ function buildBasicTree(element, data, config, searchTerm) {
     .attr('transform', function(d) {
       return 'translate(' + d.y + ',' + (d.x) + ')';
     });
-
-  //creating links
-
-  let link = svg.selectAll('.node')
-    .data(nodeHierarchy.descendants()
-      .slice(1))
-    .enter()
-    .append('path')
-    .attr('class', 'link')
-    .attr('d', function(d) {
-      return `M ${d.y} ${d.x}
-        Q ${(d.parent.y)} ${(d.x + d.parent.x) / 2}
-          ${d.parent.y} ${d.parent.x}`;
-    })
-    .attr('stroke-width', '1')
-    .attr('stroke', 'darkblue')
-    .attr('fill', 'none');
-
-  // console.log(link)
 
   nodeEnter.append('circle')
     .attr('r', NODE_RADIUS)
@@ -166,4 +177,96 @@ function buildBasicTree(element, data, config, searchTerm) {
     })
     .style('fill', 'darkblue');
 }
+
+function project(x, y) {
+  var angle = (x - 90) / 180 * Math.PI, radius = y;
+  return [radius * Math.cos(angle), radius * Math.sin(angle)];
+}
+
+function buildFancyTree(element, data, config, searchTerm) {
+  const { CHART_WIDTH, CHART_HEIGHT, DEPTH_SPACING_FACTOR, BREADTH_SPACING_FACTOR, NODE_RADIUS, LINK_WEIGHT } = config;
+  let svg = select(element)
+  .append('svg')
+  .attr('width', CHART_WIDTH)
+  .attr('height', CHART_HEIGHT)
+  .append('g')
+  .attr('transform', `translate(${CHART_WIDTH / 2}, ${CHART_HEIGHT / 2})`);
+
+  const ourTree = tree()
+    .size([360, CHART_WIDTH / 5])
+    .separation((a, b) => {
+      return (a.parent === b.parent ? 2 : 3) / a.depth;
+    });
+  // passes hierarchiacal data into tree to create the root node
+
+  const nodeHierarchy = hierarchy(data);
+
+  ourTree(nodeHierarchy);
+
+
+  //creating links
+
+  let link = svg.selectAll('.node')
+    .data(nodeHierarchy.descendants()
+      .slice(1))
+    .enter()
+    .append('path')
+    .attr('class', 'link')
+    .style('stroke-width', LINK_WEIGHT)
+    .attr("d", function(d) {
+        return "M" + project(d.x, d.y)
+            + "C" + project(d.x, (d.y + d.parent.y) / 2)
+            + " " + project(d.parent.x, (d.y + d.parent.y) / 2)
+            + " " + project(d.parent.x, d.parent.y);
+    });
+
+    // entering the nodes --> finally appending to DOM
+    let nodeEnter = svg.selectAll('.node')
+    .data(nodeHierarchy.descendants())
+    .enter()
+    .append('g')
+    .attr('class', function(d) {
+      return 'node' + (d.children ? 'node-internal' : 'node-leaf');
+    })
+    .attr('transform', function(d) {
+      return 'translate(' + project(d.x, d.y) + ')';
+    });
+
+  nodeEnter.append('circle')
+    .attr('r', NODE_RADIUS)
+    .style('fill', function(d) {
+      let color = 'lightsteelblue';
+      if (searchTerm) {
+        if (d.data.children) {
+          d.data.children.forEach(node => {
+            if (node.name === searchTerm) {
+              color = 'yellow';
+            }
+            else if (node.children) {
+              node.children.forEach(childNode => {
+                if (childNode.name === searchTerm) {
+                  color = 'yellow';
+                }
+              })
+            }
+          })
+        }
+        else if (d.data.name === searchTerm) {
+          color = 'yellow';
+        }
+      }
+      return color;
+    });
+
+  nodeEnter.append('text')
+    .text(function(d) {
+      return d.data.name;
+    })
+    // .attr("transform", function(d) {
+    //   if (!d.children) return "rotate(" + (d.x < 180 ? d.x - 90 : d.x + 90) + ")";
+    //   return null;
+    //   })
+    .style('fill', 'darkblue');
+}
+
 module.exports = exports;
