@@ -97,3 +97,11 @@ button:active, .custom-file-input::-webkit-file-upload-button:active, .activeSet
 .custom-file-input::-webkit-file-upload-button::after {
   opacity: 0;
 }
+.link {
+  stroke: #ffff00;
+  fill: none;
+  z-index: 5;
+}
+g {
+  z-index: 0;
+}

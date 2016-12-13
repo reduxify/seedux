@@ -20,7 +20,7 @@ function makeStashableLog({ history, future, actionCreators, actionTypes, reduce
     actionCreators,
     actionTypes,
     reducers,
-    ui
+    ui,
   }, null, separator);
 }
 class App extends React.Component {
@@ -36,6 +36,7 @@ class App extends React.Component {
         reducersViz: true,
         transactionLog: true,
         logFrozen: false,
+        chartType: 'fancyTree',
       };
 
     this.state = {
@@ -90,7 +91,7 @@ class App extends React.Component {
   resetLog() {
     // send a message to the background script to reset its history
     chrome.extension.sendMessage({type: 'resetLog'}, (response) => {
-      console.log('Log Reset.');
+      // console.log('Log Reset.');
       this.setState({
         future: [],
         history: [],
@@ -98,9 +99,27 @@ class App extends React.Component {
     });
   }
   handleSelectChange(event) {
-    this.setState({chartType: event.target.value})
+    const newSettings =  {
+      ...this.state.settings,
+      chartType: event.target.value,
+    }
+    this.setState({settings: newSettings});
+  }
+  assembleVizData() {
+    const assembledData = {
+      name: 'APP',
+      children: [
+
+      ],
+    };
+    if (this.state.settings.containersViz) assembledData.children.push(this.state.ui);
+    if (this.state.settings.reducersViz) assembledData.children.push(this.state.reducers);
+    if (this.state.settings.actionCreatorsViz) assembledData.children.push(this.state.actionCreators);
+    return assembledData;
   }
   createViz(data, name) {
+    // DEPRECATED: this is still here in case we want to use the logic to render an appropriate error message in the
+    // case that incomplete code parsing data has been returned from our extractor functions.
     console.log('createVizdata: ', data);
 
     // Providing mapping object to allow for constant time look-up of setting booleans in state using headNode names
@@ -119,16 +138,15 @@ class App extends React.Component {
 
     // check if our code parsing data has come through.  if not, render a
     // friendly message.
-
     return (!data.children || !data.children.length) ?
       <ParsingError failureType={name} /> :
       <D3Viz data={data}
-        chartType={this.state.chartType}
+        chartType={this.state.settings.chartType}
         searchTerm = { this.state.history.length ? this.state.history[this.state.history.length - 1].modifiedAction.type : null } />
   }
   stashLog() {
     localStorage.setItem('seeduxLog', makeStashableLog(this.state, false));
-    console.log('Extension State Stashed.');
+    console.log('Extension Settings Stashed.');
   }
   unStashLog() {
     if (localStorage.getItem('seeduxLog')) {
@@ -167,7 +185,6 @@ class App extends React.Component {
     reader.onload = (readEvt) => {
       const readResult = JSON.parse(readEvt.target.result);
       const filename = file.name;
-      console.log('Read Log File: ', readResult);
       if (Object.keys(readResult).includes('chartType')) {
         const flashMessage = `Loaded ${filename}.`;
         this.setState({...readResult, flashMessage});
@@ -180,22 +197,19 @@ class App extends React.Component {
     this.setState(flashMessage);
   }
   exportLog() {
-    // const dataURI = `data:application/octet-stream;charset=utf-u,${encodeURIComponent(JSON.stringify(this.state))}`;
-    // const saveWindow = window.open(dataURI, 'Export Seedux Log');
     const now = new Date();
     const formattedDate = `${now.getMonth()}-${now.getDate()}-${now.getYear().toString().slice(1)} ${now.getHours()}-${getPaddedMinutes(now)}`;
-    console.log('right now is ', formattedDate);
     const blob = new Blob([makeStashableLog(this.state, true)], {type: "text/plain;charset=utf-8"});
     fileSaver.saveAs(blob, `seeduxLog ${formattedDate}.json`);
   }
   toggleSettings(e) {
+    // handle clicks in the settings menu by toggling the associated boolean stored in state.settings
     e.preventDefault();
     let changedSetting = e.target.id;
     let newSettingStatus = !this.state.settings[changedSetting];
     // in the case that logFrozen is toggled, we must notify the background script as well
     if (e.target.id === 'logFrozen') {
       chrome.extension.sendMessage({type: 'freezeLog'}, (response) => {
-        console.log('Log Frozen.');
       });
     }
     let newSettings = Object.assign({}, this.state.settings, { [changedSetting]: newSettingStatus } );
@@ -209,16 +223,15 @@ class App extends React.Component {
     if (this.state.history.length) {
       diffs = this.state.history[this.state.history.length - 1].diffs;
     }
-    // (partially) apply our restore function to provide invididual button functionality
+    // (partially) apply our restore function to provide invididual button functionality to be passed as props
     const restoreFromHistory = (index) => this.restore('past', index);
     const restoreFromFuture = (index) => this.restore('future', index);
     const undo = () => this.restore('past', this.state.history.length - 2);
     const redo = () => this.restore('future', 0);
 
-    // Check state for settings booleans to determine whether to render visualization select element or/and transaction log elements and component
+    // Check state for settings booleans to determine whether to render visualization select element or/and transaction log elements and component via inline style
     const vizSelectSetting = this.state.settings.containersViz || this.state.settings.actionCreatorsViz || this.state.settings.reducersViz ? { display: 'inline' } : { display: 'none' };
     const transactionLogSetting = this.state.settings.transactionLog ? { display: 'inline' } : { display: 'none'};
-
     return (
       <div>
         <Flash text={this.state.flashMessage} />
@@ -226,14 +239,12 @@ class App extends React.Component {
           <SettingsMenu toggleSettings = {this.toggleSettings.bind(this)} settings = {this.state.settings}/>
         </span>
         <div className='chart-container'>
-          {this.createViz(this.state.ui, 'UI Props')}
-          {this.createViz(this.state.actionCreators, 'Action Creators')}
-          {this.createViz(this.state.reducers, 'Reducers')}
+          <D3Viz data={this.assembleVizData()} style = { vizSelectSetting} chartType={this.state.settings.chartType} searchTerm = { this.state.history.length ? this.state.history[this.state.history.length - 1].modifiedAction.type : null }/>
         </div>
-        <select value={this.state.value} onChange={this.handleSelectChange.bind(this)} style = { vizSelectSetting }>
+        <select value={this.state.settings.chartType} onChange={this.handleSelectChange.bind(this)} style = { vizSelectSetting }>
+          <option value="fancyTree">Fancy Tree</option>
           <option value="comfyTree">Comfy Tree</option>
           <option value="cozyTree">Cozy Tree</option>
-          <option value="basicList">Basic List</option>
         </select>
         <div style = { transactionLogSetting }>
           <button onClick={() => this.resetLog()}>Reset Log</button>
