@@ -32,7 +32,7 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
   // sent by extension to ask for initial log and codeObj data
   if (msg.type === 'populateLog') {
     freezeLog = msg.settings.freezeLog;
-    response({ future, history, codeObj });
+    response({ future, history, codeObj, d3LookUpTable });
   }
   // sent by extension to reset the log
   if (msg.type === 'resetLog') {
@@ -68,13 +68,13 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
     // memory on a 'third' (ie the new App's first) codeObj message.
     if (codeObj.count === 2) {
       codeObj = Object.assign({}, msg.codeObj);
+      d3LookUpTable = populateLookUpTable(codeObj);
       codeObj.count = 1;
     } else {
       Object.assign(codeObj, msg.codeObj);
       codeObj.count++;
     }
 
-    d3LookUpTable = populateLookUpTable(codeObj);
 
     // console.log('Got New CodeObj: ', msg.codeObj);
     // console.log('Aggregated CodeObj:', codeObj);

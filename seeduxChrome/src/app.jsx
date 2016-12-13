@@ -46,6 +46,7 @@ class App extends React.Component {
       actionTypes: [],
       reducers: {},
       ui: {},
+      d3LookUpTable: {},
       chartType: 'comfyTree',
       flashMessage: getGreetings(),
     };
@@ -66,6 +67,7 @@ class App extends React.Component {
           actionTypes: response.codeObj.actionTypes || [],
           history: response.history,
           future: response.future,
+          d3LookUpTable: response.d3LookUpTable
         });
     });
 
