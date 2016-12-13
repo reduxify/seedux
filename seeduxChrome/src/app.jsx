@@ -142,7 +142,11 @@ class App extends React.Component {
       <ParsingError failureType={name} /> :
       <D3Viz data={data}
         chartType={this.state.settings.chartType}
-        searchTerm = { this.state.history.length ? this.state.history[this.state.history.length - 1].modifiedAction.type : null } />
+        d3LookUpTable = { this.state.d3LookUpTable }
+
+        // Add additional search term(s) of state keys with changed values
+
+        searchTerms = { this.state.history.length ? this.state.history[this.state.history.length - 1].modifiedAction.type : null } />
   }
   stashLog() {
     localStorage.setItem('seeduxLog', makeStashableLog(this.state, false));
@@ -239,7 +243,7 @@ class App extends React.Component {
           <SettingsMenu toggleSettings = {this.toggleSettings.bind(this)} settings = {this.state.settings}/>
         </span>
         <div className='chart-container'>
-          <D3Viz data={this.assembleVizData()} style = { vizSelectSetting} chartType={this.state.settings.chartType} searchTerm = { this.state.history.length ? this.state.history[this.state.history.length - 1].modifiedAction.type : null }/>
+          <D3Viz data={this.assembleVizData()} style = { vizSelectSetting} chartType={this.state.settings.chartType} d3LookUpTable = { this.state.d3LookUpTable }  searchTerm = { this.state.history.length ? this.state.history[this.state.history.length - 1].modifiedAction.type : null }/>
         </div>
         <select value={this.state.settings.chartType} onChange={this.handleSelectChange.bind(this)} style = { vizSelectSetting }>
           <option value="fancyTree">Fancy Tree</option>

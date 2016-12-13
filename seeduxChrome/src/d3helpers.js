@@ -60,17 +60,17 @@ const exports = {};
 
 // takes in DOM element to be transformed into DefaultCluster,
 // && data that the DefaultCluster visualizes
-exports.transformVizNode = function transformVizNode(element, data, type = 'cozyTree', searchTerm = null) {
+exports.transformVizNode = function transformVizNode(element, data, type = 'cozyTree', d3LookUpTable, searchTerms = null) {
   if (type === 'comfyTree') {
-    buildBasicTree(element, data, config.comfyTree, searchTerm);
+    buildBasicTree(element, data, config.comfyTree, d3LookUpTable, searchTerms);
   } else if (type === 'cozyTree') {
-    buildBasicTree(element, data, config.cozyTree, searchTerm)
+    buildBasicTree(element, data, config.cozyTree, d3LookUpTable, searchTerms)
   }
   else if (type === 'fancyTree') {
-    buildFancyTree(element, data, config.fancyTree, searchTerm);
+    buildFancyTree(element, data, config.fancyTree, d3LookUpTable, searchTerms);
   }
 };
-function buildBasicList(element, data, config, searchTerm) {
+function buildBasicList(element, data, config, d3LookUpTable, searchTerms) {
   let svg = select(element)
   .append('svg')
   .attr('width', CHART_WIDTH)
@@ -99,7 +99,7 @@ function buildBasicList(element, data, config, searchTerm) {
         .text(function(d) { return id(d); });
 }
 
-function buildBasicTree(element, data, config, searchTerm) {
+function buildBasicTree(element, data, config, searchTerms) {
   const { CHART_WIDTH, CHART_HEIGHT, DEPTH_SPACING_FACTOR, BREADTH_SPACING_FACTOR, NODE_RADIUS, LINK_WEIGHT } = config;
   let svg = select(element)
   .append('svg')
@@ -149,22 +149,8 @@ function buildBasicTree(element, data, config, searchTerm) {
     .attr('r', NODE_RADIUS)
     .style('fill', function(d) {
       let color = 'lightsteelblue';
-      if (searchTerm) {
-        if (d.data.children) {
-          d.data.children.forEach(node => {
-            if (node.name === searchTerm) {
-              color = 'yellow';
-            }
-            else if (node.children) {
-              node.children.forEach(childNode => {
-                if (childNode.name === searchTerm) {
-                  color = 'yellow';
-                }
-              })
-            }
-          })
-        }
-        else if (d.data.name === searchTerm) {
+      if (searchTerms) {
+        if (d3LookUpTable[searchTerms].includes(d.data.name)) {
           color = 'yellow';
         }
       }
@@ -183,7 +169,7 @@ function project(x, y) {
   return [radius * Math.cos(angle), radius * Math.sin(angle)];
 }
 
-function buildFancyTree(element, data, config, searchTerm) {
+function buildFancyTree(element, data, config, d3LookUpTable, searchTerms) {
   const { CHART_WIDTH, CHART_HEIGHT, DEPTH_SPACING_FACTOR, BREADTH_SPACING_FACTOR, NODE_RADIUS, LINK_WEIGHT } = config;
   let svg = select(element)
   .append('svg')
@@ -236,22 +222,8 @@ function buildFancyTree(element, data, config, searchTerm) {
     .attr('r', NODE_RADIUS)
     .style('fill', function(d) {
       let color = 'lightsteelblue';
-      if (searchTerm) {
-        if (d.data.children) {
-          d.data.children.forEach(node => {
-            if (node.name === searchTerm) {
-              color = 'yellow';
-            }
-            else if (node.children) {
-              node.children.forEach(childNode => {
-                if (childNode.name === searchTerm) {
-                  color = 'yellow';
-                }
-              })
-            }
-          })
-        }
-        else if (d.data.name === searchTerm) {
+      if (searchTerms) {
+        if (d3LookUpTable[searchTerms].includes(d.data.name)) {
           color = 'yellow';
         }
       }
