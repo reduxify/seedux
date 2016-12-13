@@ -14,46 +14,68 @@ A Chrome developer tool that provides a new tab that actively logs and visualize
 - Ability to dispatch actions with custom payloads
 - Import/Export and Stash/Unstash complete store logs from disk or localStorage, respectively.
 
-# Instructions
+# How to Install
 
-## How to Install: NPM Module (recommended)
+### NPM Module (recommended)
 
 Seedux can be easily installed as a developer dependency with npm using your favorite terminal.
 
+```javascript
+npm install seedux --save-dev
 ```
-    npm install seedux --save-dev
-```
-## How to Install: Fork and Clone (developer version)
-  To use Seedux development version, fork and clone our Git repository to an easily accessible file path on your computer and run the build:
 
-```
-   cd seedux_repo_path
-   npm run build:both
+### Development Version
+
+For a codebase suitable for modification, clone our git repository to an easily accessible file path on your computer and run the build:
+
+```javascript
+cd seedux_repo_path
+npm run build:both
 ```
 
 ## Getting Started:
 
-- import `createStore`, `combineReducers`, `bindActionCreators`, and `connect` from Seedux, rather than Redux.
+Import `createStore`, `combineReducers`, `bindActionCreators`, and `connect` from Seedux, rather than Redux. The examples below assume you are working with the npm module. If you are working from the git repo, replace 'seedux' with your repo path!
 
-```
-  // import { combineReducers } from 'redux';
-  import { combineReducers } from 'seedux';
-
-```
-
-- import `dispatchLogger` from Seedux and apply it as middleware when invoking createStore.
-- import and call seeduxInit, and pass it your newly created store.
-
-```
-  import { createStore, dispatchLogger } from 'seedux';
-
-  const store = createStore(combinedReducer, preloadedState, applyMiddleware(dispatchLogger));
-  seeduxInit(store);
+```javascript
+// import { createStore } from 'redux';
+import { createStore } from 'seedux';
 ```
 
-- Navigate to chrome://extensions, click 'load as an unpacked extension' and select `seedux_repo_path + 'seedux/seeduxChrome'`
-- Open your redux app in the browser. 
-- Click on the seeduxChrome extension icon (it's a duck) to launch the dev tool!
+```javascript
+// import { combineReducers } from 'redux';
+import { combineReducers } from 'seedux';
+
+```
+
+```javascript
+// import { bindActionCreators } from 'redux';
+import { bindActionCreators } from 'seedux';
+```
+
+```javascript
+// import { connect } from 'react-redux';
+import { connect } from 'seedux';
+```
+
+Import `dispatchLogger` from Seedux and apply it as middleware when invoking createStore.
+
+Import and call `seeduxInit`. Pass `seeduxInit` your newly created store.
+
+```javascript
+import { dispatchLogger, seeduxInit } from 'seedux';
+
+const store = createStore(combinedReducer, preloadedState, applyMiddleware(dispatchLogger));
+seeduxInit(store);
+```
+
+Navigate to chrome://extensions
+
+Click 'load as an unpacked extension' and select ```seedux_repo_path + 'seedux/seeduxChrome'```
+
+Open your redux app in the browser. 
+
+Click on the seeduxChrome extension icon to launch the dev tool!
 
 ## Complete Example Integration
 

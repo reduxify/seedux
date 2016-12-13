@@ -231,8 +231,9 @@ class App extends React.Component {
           {this.createViz(this.state.reducers, 'Reducers')}
         </div>
         <select value={this.state.value} onChange={this.handleSelectChange.bind(this)} style = { vizSelectSetting }>
-          <option value="comfyTree">ComfyTree</option>
-          <option value="cozyTree">CozyTree</option>
+          <option value="comfyTree">Comfy Tree</option>
+          <option value="cozyTree">Cozy Tree</option>
+          <option value="basicList">Basic List</option>
         </select>
         <div style = { transactionLogSetting }>
           <button onClick={() => this.resetLog()}>Reset Log</button>
