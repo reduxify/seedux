@@ -1,6 +1,6 @@
 const chai = require('chai');
 const expect = require('chai').expect;
-const { testActionCreators, testReducers, testUI, testUIResources, testActionTypes1, testActionTypes2, answerActionCreators, answerReducers, answerUI } = require('./fixtures/seeduxLookUpFixtures');
+const { testActionCreators, testReducers, testUI, testUIResources, testActionMap, testActionTypes1, testActionTypes2, answerActionCreators, answerReducers, answerUI } = require('./fixtures/seeduxLookUpFixtures');
 const { addReducersToTable, addActionCreatorsToTable, addUIToTable, resetTable } = require('./../lib/seedux/src/seeduxLookUp');
 
 describe('addReducersToTable', () => {
@@ -58,12 +58,12 @@ afterEach(() => {
   })
 
   it('should return a d3Table object', () => {
-    const uiOutput = addUIToTable(testUI, testUIResources);
+    const uiOutput = addUIToTable(testUI, testUIResources, testActionMap);
     expect(uiOutput).to.be.an('object');
   })
 
   it('should return a properly structured d3Table', () => {
-    const uiOutput = addUIToTable(testUI, testUIResources);
+    const uiOutput = addUIToTable(testUI, testUIResources, testActionMap);
     expect(uiOutput).to.deep.equal(answerUI);
   })
 

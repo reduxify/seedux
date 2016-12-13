@@ -90,13 +90,12 @@ function seeduxReactReduxConnectLogic(mapStateToProps, mapDispatchToProps) {
   return function wrapWithConnect(WrappedComponent) {
 
   const UI = WrappedComponent.name; 
-  // console.log('obj passed to extractor', {[UI]: mappedPropsString})
   return {[UI]: mappedPropsString};
 	}
 }
 
 const webpackTestUI1 = seeduxReactReduxConnectLogic(mapStateToPropsTestTodoList, mapDispatchToPropsTestTodoList)(WebpackTestTodoList);
-const webpackTestUI2 = seeduxReactReduxConnectLogic()(WebpackTestTodoList);
+const webpackTestUI2 = seeduxReactReduxConnectLogic(false, false)(WebpackTestTodoList);
 const webpackTestUI3 = seeduxReactReduxConnectLogic(mapStateToPropsTestTodoList)(WebpackTestTodoList)
 const webpackTestUI4 = seeduxReactReduxConnectLogic('test', mapDispatchToPropsTestTodoList)(WebpackTestTodoList)
 const browserifyTestUI1 = seeduxReactReduxConnectLogic(mapStateToPropsTestTodoList, mapDispatchToPropsTestTodoList)(BrowserifyTestTodoList);

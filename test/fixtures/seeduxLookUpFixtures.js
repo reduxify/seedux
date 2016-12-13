@@ -102,6 +102,10 @@ const testUIResources = {
   } 
 };
 
+const testActionMap = { 
+  toggleTodo: 'TOGGLE_TODO'
+}
+
 const answerActionCreators = {
   'ADD_TODO': ['addTodo', 'Action Creators'],
   'SET_VISIBILITY_FILTER': ['setVisibilityFilter', 'Action Creators'],
@@ -122,4 +126,4 @@ const answerUI = {
   'visibilityFilter': ['todos', 'WebpackTestTodoList', 'Containers']
 }
 
-module.exports = { testActionCreators, testReducers, testUI, testUIResources, testActionTypes1, testActionTypes2, answerActionCreators, answerReducers };
+module.exports = { testActionCreators, testReducers, testUI, testUIResources, testActionMap, testActionTypes1, testActionTypes2, answerActionCreators, answerReducers, answerUI };
