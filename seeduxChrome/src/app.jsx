@@ -248,7 +248,6 @@ class App extends React.Component {
         }
       });
     }
-    console.log('generateSearchTerms', searchTerms)
     return searchTerms;
   }
   render() {

@@ -228,7 +228,6 @@ function buildFancyTree(element, data, config, d3Table, searchTerms = false) {
     .style('fill', function(d) {
       let color = 'lightsteelblue';
       if (searchTerms.length) {
-      console.log('searchTerms', searchTerms)
         searchTerms.forEach(term => {
           if (d3Table[term]) {
             if (d3Table[term].includes(d.data.name)) {
