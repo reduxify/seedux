@@ -27,8 +27,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     // dig around in LocalStorage to get saved settings
-    // const storedSettings = JSON.parse(localStorage.getItem('seeduxSettings'));
-    let storedSettings;
+    const storedSettings = JSON.parse(localStorage.getItem('seeduxSettings'));
     console.log('Dug up settings: ', storedSettings);
     const settings = storedSettings ? storedSettings
       : {
@@ -38,7 +37,7 @@ class App extends React.Component {
         transactionLog: true,
         logFrozen: false,
         chartType: 'fancyTree',
-        zoomLevel: 1.5,
+        zoomLevel: 1,
       };
 
     this.state = {
