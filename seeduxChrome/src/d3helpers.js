@@ -60,17 +60,17 @@ const exports = {};
 
 // takes in DOM element to be transformed into DefaultCluster,
 // && data that the DefaultCluster visualizes
-exports.transformVizNode = function transformVizNode(element, data, type = 'cozyTree', d3LookUpTable, searchTerms = null) {
+exports.transformVizNode = function transformVizNode(element, data, type = 'cozyTree', d3Table, searchTerms = null) {
   if (type === 'comfyTree') {
-    buildBasicTree(element, data, config.comfyTree, d3LookUpTable, searchTerms);
+    buildBasicTree(element, data, config.comfyTree, d3Table, searchTerms);
   } else if (type === 'cozyTree') {
-    buildBasicTree(element, data, config.cozyTree, d3LookUpTable, searchTerms)
+    buildBasicTree(element, data, config.cozyTree, d3Table, searchTerms)
   }
   else if (type === 'fancyTree') {
-    buildFancyTree(element, data, config.fancyTree, d3LookUpTable, searchTerms);
+    buildFancyTree(element, data, config.fancyTree, d3Table, searchTerms);
   }
 };
-function buildBasicList(element, data, config, d3LookUpTable, searchTerms) {
+function buildBasicList(element, data, config, d3Table, searchTerms) {
   let svg = select(element)
   .append('svg')
   .attr('width', CHART_WIDTH)
@@ -99,7 +99,7 @@ function buildBasicList(element, data, config, d3LookUpTable, searchTerms) {
         .text(function(d) { return id(d); });
 }
 
-function buildBasicTree(element, data, config, searchTerms) {
+function buildBasicTree(element, data, config, d3Table, searchTerms = false) {
   const { CHART_WIDTH, CHART_HEIGHT, DEPTH_SPACING_FACTOR, BREADTH_SPACING_FACTOR, NODE_RADIUS, LINK_WEIGHT } = config;
   let svg = select(element)
   .append('svg')
@@ -150,9 +150,11 @@ function buildBasicTree(element, data, config, searchTerms) {
     .style('fill', function(d) {
       let color = 'lightsteelblue';
       if (searchTerms) {
-        if (d3LookUpTable[searchTerms].includes(d.data.name)) {
-          color = 'yellow';
-        }
+        searchTerms.forEach(term => {
+          if (d3Table[term].includes(d.data.name)) {
+            color = 'yellow';
+          }
+        })
       }
       return color;
     });
@@ -169,7 +171,8 @@ function project(x, y) {
   return [radius * Math.cos(angle), radius * Math.sin(angle)];
 }
 
-function buildFancyTree(element, data, config, d3LookUpTable, searchTerms) {
+function buildFancyTree(element, data, config, d3Table, searchTerms = false) {
+          console.log('d3Table', d3Table)
   const { CHART_WIDTH, CHART_HEIGHT, DEPTH_SPACING_FACTOR, BREADTH_SPACING_FACTOR, NODE_RADIUS, LINK_WEIGHT } = config;
   let svg = select(element)
   .append('svg')
@@ -222,10 +225,15 @@ function buildFancyTree(element, data, config, d3LookUpTable, searchTerms) {
     .attr('r', NODE_RADIUS)
     .style('fill', function(d) {
       let color = 'lightsteelblue';
-      if (searchTerms) {
-        if (d3LookUpTable[searchTerms].includes(d.data.name)) {
-          color = 'yellow';
-        }
+      if (searchTerms.length) {
+      console.log('searchTerms', searchTerms)
+        searchTerms.forEach(term => {
+          if (d3Table[term]) {
+            if (d3Table[term].includes(d.data.name)) {
+              color = 'yellow';
+            }
+          }
+        })
       }
       return color;
     });

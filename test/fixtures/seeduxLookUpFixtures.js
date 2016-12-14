@@ -126,4 +126,23 @@ const answerUI = {
   'visibilityFilter': ['todos', 'WebpackTestTodoList', 'Containers']
 }
 
-module.exports = { testActionCreators, testReducers, testUI, testUIResources, testActionMap, testActionTypes1, testActionTypes2, answerActionCreators, answerReducers, answerUI };
+const testCodeObj = {
+  actionCreators: testActionCreators,
+  actionTypes: testActionTypes2,
+  reducers: testReducers,
+  ui: testUI,
+  uiResources: testUIResources,
+  actionMap: testActionMap
+}
+
+const answerTable = {
+  'ADD_TODO': ['addTodo', 'Action Creators', 'todos', 'Reducers', 'APP'],
+  'SET_VISIBILITY_FILTER': ['setVisibilityFilter', 'Action Creators', 'visibilityFilter', 'Reducers', 'APP'],
+  'TOGGLE_TODO': ['toggleTodo', 'Action Creators', 'todos', 'Reducers', 'onTodoClick', 'WebpackTestTodoList', 'Containers', 'APP'],
+  'UNDO': ['undoAction', 'Action Creators', 'APP'],
+  'REDO': ['redoAction', 'Action Creators', 'APP'],
+  'todos': ['todos', 'WebpackTestTodoList', 'Containers', 'APP'],
+  'visibilityFilter': ['todos', 'WebpackTestTodoList', 'Containers', 'APP']
+}
+
+module.exports = { testActionCreators, testReducers, testUI, testUIResources, testActionMap, testActionTypes1, testActionTypes2, answerActionCreators, answerReducers, answerUI, answerTable, testCodeObj };

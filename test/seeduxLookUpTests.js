@@ -1,29 +1,29 @@
 const chai = require('chai');
 const expect = require('chai').expect;
-const { testActionCreators, testReducers, testUI, testUIResources, testActionMap, testActionTypes1, testActionTypes2, answerActionCreators, answerReducers, answerUI } = require('./fixtures/seeduxLookUpFixtures');
+const { testActionCreators, testReducers, testUI, testUIResources, testActionMap, testActionTypes1, testActionTypes2, answerActionCreators, answerReducers, answerUI, answerTable, testCodeObj } = require('./fixtures/seeduxLookUpFixtures');
 const { populateTable, addReducersToTable, addActionCreatorsToTable, addUIToTable, resetTable } = require('./../lib/seedux/src/seeduxLookUp');
 
-// describe('populateTable', () => {
+describe('populateTable', () => {
 
-// afterEach(() => {
-//   resetTable();
-// });
+afterEach(() => {
+  resetTable();
+});
 
-//   it('should be a function', () => {
-//     expect(populateTable).to.be.a('function');
-//   })
+  it('should be a function', () => {
+    expect(populateTable).to.be.a('function');
+  })
 
-//   it('should return a d3Table object', () => {
-//     const populateTableOutput = populateTable(testCodeObj);
-//     expect(populateTableOutput).to.be.an('object');
-//   })
+  it('should return a d3Table object', () => {
+    const populateTableOutput = populateTable(testCodeObj);
+    expect(populateTableOutput).to.be.an('object');
+  })
 
-//   it('should return a properly structured d3Table', () => {
-//     const populateTableOutput = populateTable(testCodeObj);
-//     expect(populateTableOutput).to.deep.equal(answerTable);
-//   })
+  it('should return a properly structured d3Table', () => {
+    const populateTableOutput = populateTable(testCodeObj);
+    expect(populateTableOutput).to.deep.equal(answerTable);
+  })
 
-// });
+});
 
 describe('addReducersToTable', () => {
 
