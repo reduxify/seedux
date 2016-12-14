@@ -14,7 +14,7 @@ const SettingsMenu = ({ toggleSettings, settings }) => {
 
   return (
     <div className = 'settings-menu'>
-      <Collapsible titleString = 'Settings'>
+      <Collapsible titleString = '&#9776;'>
         <ul>
           <li className = 'menu-line'><button className = { getSettingsClass(settings.containersViz) } onClick = { toggleSettings } id = 'containersViz'> Containers Visualization </button></li>
           <li className = 'menu-line'><button className = { getSettingsClass(settings.actionCreatorsViz) } onClick = { toggleSettings } id = 'actionCreatorsViz'> Action Creators Visualization </button></li>

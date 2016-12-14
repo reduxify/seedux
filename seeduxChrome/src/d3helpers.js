@@ -16,8 +16,8 @@ function getConfig(type, zoomLevel) {
   };
 
   else if (type === 'fancyTree') return {
-  CHART_WIDTH: 1000 * zoomLevel,
-  CHART_HEIGHT: 1000 * zoomLevel,
+  CHART_WIDTH: Math.max(500, 1000 * zoomLevel),
+  CHART_HEIGHT: Math.max(500, 1000 * zoomLevel),
   // multiplier between 0 and 1 that determines horizontal spacing of tree
   // generations.  Smaller is 'more compact'.
   DEPTH_SPACING_FACTOR: 0.25,
@@ -29,8 +29,8 @@ function getConfig(type, zoomLevel) {
 };
 
 if (type === 'comfyTree') return {
-  CHART_WIDTH: 500,
-  CHART_HEIGHT: 1000,
+  CHART_WIDTH: Math.max(250, 500 * zoomLevel),
+  CHART_HEIGHT: Math.max(500, 1000 * zoomLevel),
   // multiplier between 0 and 1 that determines horizontal spacing of tree
   // generations.  Smaller is 'more compact'.
   DEPTH_SPACING_FACTOR: 0.7,
@@ -38,7 +38,7 @@ if (type === 'comfyTree') return {
   // generations.  Smaller is 'more compact'.
   BREADTH_SPACING_FACTOR: 1,
   NODE_RADIUS: 10,
-  LINK_WEIGHT: 3,
+  LINK_WEIGHT: 1,
 
 };
 
@@ -209,9 +209,9 @@ function buildFancyTree(element, data, config, d3Table, searchTerms = false) {
     .attr("d", function(d) {
       let radiusMultiplier = d.children ? 0.5 : 1
         return "M" + project(d.x, d.y, radiusMultiplier)
-            + "C" + project(d.x, (d.y + d.parent.y) / 2)
-            + " " + project(d.parent.x, (d.y + d.parent.y) / 2)
-            + " " + project(d.parent.x, d.parent.y, 0.5);
+            + "C" + project(d.x, (d.y + d.parent.y) / 2, radiusMultiplier)
+            + " " + project(d.parent.x, (d.y + d.parent.y) / 2, radiusMultiplier)
+            + " " + project(d.parent.x, d.parent.y, 0.5, radiusMultiplier);
     });
 
     // entering the nodes --> finally appending to DOM

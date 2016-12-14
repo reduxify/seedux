@@ -12,6 +12,8 @@ $primColor: darkblue;
 body {
   color: $primColor;
   background-color: $bgColor;
+  padding: 0;
+  margin: 0;
 }
 h1 {
   display: inline;
@@ -79,12 +81,21 @@ button:active, .custom-file-input::-webkit-file-upload-button:active, .activeSet
   list-style-type: none;
   text-align: center;
 }
-
-.settings-menu {
-  float: right;
+.banner {
+  padding: 1em;
+  height: 3em;
+  position: fixed;
+  width: 88%;
+  top: 0;
+  background-color: $bgColor * 0.8;
+}
+.settings-menu > div {
+  position: fixed;
+  min-height: 5em;
+  right: 0;
   text-align: center;
-  width: 12%;
   z-index: 1;
+  border: 0;
 }
 .settings-title {
   text-align: center;
@@ -93,9 +104,6 @@ button:active, .custom-file-input::-webkit-file-upload-button:active, .activeSet
 .custom-file-input::-webkit-file-upload-button {
   outline: none;
   -webkit-user-select: none;
-}
-.custom-file-input::-webkit-file-upload-button::after {
-  opacity: 0;
 }
 .link {
   stroke: #0a0a0a;
