@@ -34,6 +34,50 @@ const mapDispatchToPropsTestTodoList = (dispatch) => {
     }
   }
 }
+	var TestLink = function TestLink(_ref) {
+	  var active = _ref.active,
+	      children = _ref.children,
+	      _onClick = _ref.onClick;
+
+	  if (active) {
+	    return _react2.default.createElement(
+	      "span",
+	      null,
+	      children
+	    );
+	  }
+
+	  return _react2.default.createElement(
+	    "a",
+	    { href: "#",
+	      onClick: function onClick(e) {
+	        e.preventDefault();
+	        _onClick();
+	      }
+	    },
+	    children
+	  );
+	};
+
+	TestLink.propTypes = {
+	  active: _react.PropTypes.bool.isRequired,
+	  children: _react.PropTypes.node.isRequired,
+	  onClick: _react.PropTypes.func.isRequired
+	};
+
+function mapStateToPropsTestLink(state, ownProps) {
+	  return {
+	    active: ownProps.filter === state.visibilityFilter
+	  };
+	}
+
+function mapDispatchToPropsTestLink(dispatch, ownProps) {
+	  return {
+	    onClick: function onClick() {
+	      dispatch((0, _actions.setVisibilityFilter)(ownProps.filter));
+	    }
+	  };
+	}
 
 // Browserified TodoList:
 
@@ -85,20 +129,20 @@ function seeduxReactReduxConnectLogic(mapStateToProps, mapDispatchToProps) {
 		mappedDispatchString = mapDispatchToProps;
 	}
 
-  let mappedPropsString = `${mappedStateString}${mappedDispatchString}`;
+  let mappedPropsString = `${mappedStateString}|${mappedDispatchString}`;
 
   return function wrapWithConnect(WrappedComponent) {
 
   const UI = WrappedComponent.name; 
-	console.log('Initial obj for extractor passed...', {[UI]: mappedPropsString})
   return {[UI]: mappedPropsString};
 	}
 }
 
 const webpackTestUI1 = seeduxReactReduxConnectLogic(mapStateToPropsTestTodoList, mapDispatchToPropsTestTodoList)(WebpackTestTodoList);
-const webpackTestUI2 = seeduxReactReduxConnectLogic()(WebpackTestTodoList);
+const webpackTestUI2 = seeduxReactReduxConnectLogic(false, false)(WebpackTestTodoList);
 const webpackTestUI3 = seeduxReactReduxConnectLogic(mapStateToPropsTestTodoList)(WebpackTestTodoList)
 const webpackTestUI4 = seeduxReactReduxConnectLogic('test', mapDispatchToPropsTestTodoList)(WebpackTestTodoList)
+const webpackTestUI5 = seeduxReactReduxConnectLogic(mapStateToPropsTestLink, mapDispatchToPropsTestLink)(TestLink);
 const browserifyTestUI1 = seeduxReactReduxConnectLogic(mapStateToPropsTestTodoList, mapDispatchToPropsTestTodoList)(BrowserifyTestTodoList);
 
 const answerUI1 = {
@@ -159,6 +203,23 @@ const answerUI5 = {
   'name': 'Containers',
   'children': [
 		{
+			'name': 'TestLink',
+			'children': [
+				{
+					'name': 'active'
+				},
+				{
+					'name': 'onClick'
+				}
+			]
+		}
+	]
+}
+
+const answerUI6 = {
+  'name': 'Containers',
+  'children': [
+		{
 			'name': 'BrowserifyTestTodoList',
 			'children': [
 				{
@@ -172,4 +233,5 @@ const answerUI5 = {
 	]
 }
 
-module.exports = { webpackTestUI1, webpackTestUI2, webpackTestUI3, webpackTestUI4, browserifyTestUI1, WebpackTestTodoList, BrowserifyTestTodoList, answerUI1, answerUI2, answerUI2, answerUI3, answerUI4, answerUI5 };
+
+module.exports = { webpackTestUI1, webpackTestUI2, webpackTestUI3, webpackTestUI4, webpackTestUI5, browserifyTestUI1, WebpackTestTodoList, BrowserifyTestTodoList, answerUI1, answerUI2, answerUI2, answerUI3, answerUI4, answerUI5, answerUI6 };

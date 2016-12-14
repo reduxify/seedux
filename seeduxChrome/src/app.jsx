@@ -47,6 +47,8 @@ class App extends React.Component {
       actionTypes: [],
       reducers: {},
       ui: {},
+      d3Table: {},
+      chartType: 'comfyTree',
       flashMessage: getGreetings(),
     };
     // send a msg to the background script to ask for the current Log
@@ -66,6 +68,7 @@ class App extends React.Component {
           actionTypes: response.codeObj.actionTypes || [],
           history: response.history,
           future: response.future,
+          d3Table: response.d3Table
         });
     });
 
@@ -84,6 +87,7 @@ class App extends React.Component {
         });
       }
     });
+    this.generateSearchTerms.bind(this);
   }
   resetLog() {
     // send a message to the background script to reset its history
@@ -144,13 +148,30 @@ class App extends React.Component {
       return
     }
 
+    const searchTerms = [];
+    let actionType = this.state.history.length ? this.state.history[this.state.history.length - 1].modifiedAction.type : null;
+    if (actionType) { searchTerms.push(actionType); }
+    if (this.state.history[this.state.history.length - 1].diffs.length) {
+      this.state.history[this.state.history.length - 1].diffs.forEach(diff => {
+        if (diff.path) {
+          diff.path.forEach(p => {
+            searchTerms.push(p);
+          });
+        }
+      });
+    }
+
     // check if our code parsing data has come through.  if not, render a
     // friendly message.
     return (!data.children || !data.children.length) ?
       <ParsingError failureType={name} /> :
       <D3Viz data={data}
         chartType={this.state.settings.chartType}
-        searchTerm = { this.state.history.length ? this.state.history[this.state.history.length - 1].modifiedAction.type : null } />
+        d3Table = { this.state.d3Table }
+
+        // Add additional search term(s) of state keys with changed values
+
+        searchTerms = { searchTerms } />
   }
   stashLog() {
     localStorage.setItem('seeduxLog', makeStashableLog(this.state, false));
@@ -225,6 +246,21 @@ class App extends React.Component {
       settings: newSettings
     });
   }
+  generateSearchTerms() {
+    const searchTerms = [];
+    if (this.state.history.length) {
+      let actionType = this.state.history[this.state.history.length - 1].modifiedAction.type;
+      if (actionType !== '@@INIT') { searchTerms.push(actionType) }; 
+      this.state.history[this.state.history.length - 1].diffs.forEach(diff => {
+        if (diff.path) {
+          diff.path.forEach(p => {
+            searchTerms.push(p);
+          });
+        }
+      });
+    }
+    return searchTerms;
+  }
   render() {
     // retrieve latest diffs from our history
     let diffs = [];
@@ -247,7 +283,7 @@ class App extends React.Component {
           <SettingsMenu toggleSettings = {this.toggleSettings.bind(this)} settings = {this.state.settings}/>
         </span>
         <div className='chart-container'>
-          <D3Viz data={this.assembleVizData()} style = { vizSelectSetting} chartType={this.state.settings.chartType} zoomLevel = {this.state.settings.zoomLevel} searchTerm = { this.state.history.length ? this.state.history[this.state.history.length - 1].modifiedAction.type : null }/>
+          <D3Viz data={this.assembleVizData()} style = { vizSelectSetting} chartType={this.state.settings.chartType} zoomLevel = {this.state.settings.zoomLevel} d3Table = { this.state.d3Table }  searchTerms = { this.generateSearchTerms() }/>
         </div>
         <button onClick={() => this.handleZoomClick('in')}>+</button>
         <button onClick={() => this.handleZoomClick('out')}>-</button>

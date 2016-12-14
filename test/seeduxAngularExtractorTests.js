@@ -1,14 +1,15 @@
 const chai = require('chai');
 const expect = require('chai').expect;
 // const { testUI, testUI2, TestTodoList, TestTodoList2, answerUI } = require('./fixtures/seeduxUIExtractorFixtures');
-const { uiExtractor, Node } = require('./../lib/seedux/src/seeduxExtractor');
+const { uiExtractor } = require('./../lib/seedux/src/seeduxExtractor');
+const { Node } = require('./../lib/seedux/src/seeduxAssembler');
 // const output = uiExtractor(testUI);
 // const output2 = uiExtractor(testUI2);
 
 xdescribe('uiExtractor (Angular)', () => {
 
   it('should be a function', () => {
-    expect(uiExtractor).to.be.a.function;
+    expect(uiExtractor).to.be.a('function');
   })
 
   it('should return an object-typed instance of Node named "Controllers"', () => {

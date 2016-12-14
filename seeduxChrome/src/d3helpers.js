@@ -60,18 +60,19 @@ const exports = {};
 
 // takes in DOM element to be transformed into DefaultCluster,
 // && data that the DefaultCluster visualizes
-exports.transformVizNode = function transformVizNode(element, data, type = 'cozyTree', searchTerm = null, zoomLevel = 1) {
+
+exports.transformVizNode = function transformVizNode(element, data, type = 'cozyTree', zoomLevel = 1, d3Table, searchTerms = null) {
   console.log('zoomLevel: ', zoomLevel);
   if (type === 'comfyTree') {
-    buildBasicTree(element, data, getConfig(type, zoomLevel), searchTerm);
+    buildBasicTree(element, data, getConfig(type, zoomLevel), d3Table, searchTerms);
   } else if (type === 'cozyTree') {
-    buildBasicTree(element, data, getConfig(type, zoomLevel), searchTerm)
+    buildBasicTree(element, data, getConfig(type, zoomLevel), d3Table, searchTerms);
   }
   else if (type === 'fancyTree') {
-    buildFancyTree(element, data, getConfig(type, zoomLevel), searchTerm);
+    buildFancyTree(element, data, getConfig(type, zoomLevel), d3Table, searchTerms);
   }
 };
-function buildBasicList(element, data, config, searchTerm) {
+function buildBasicList(element, data, config, d3Table, searchTerms) {
   let svg = select(element)
   .append('svg')
   .attr('width', CHART_WIDTH)
@@ -100,7 +101,7 @@ function buildBasicList(element, data, config, searchTerm) {
         .text(function(d) { return id(d); });
 }
 
-function buildBasicTree(element, data, config, searchTerm) {
+function buildBasicTree(element, data, config, d3Table, searchTerms = false) {
   const { CHART_WIDTH, CHART_HEIGHT, DEPTH_SPACING_FACTOR, BREADTH_SPACING_FACTOR, NODE_RADIUS, LINK_WEIGHT } = config;
   let svg = select(element)
   .append('svg')
@@ -150,24 +151,14 @@ function buildBasicTree(element, data, config, searchTerm) {
     .attr('r', NODE_RADIUS)
     .style('fill', function(d) {
       let color = 'lightsteelblue';
-      if (searchTerm) {
-        if (d.data.children) {
-          d.data.children.forEach(node => {
-            if (node.name === searchTerm) {
+      if (searchTerms) {
+        searchTerms.forEach(term => {
+          if (d3Table[term]) {
+            if (d3Table[term].includes(d.data.name) || term === d.data.name) {
               color = 'yellow';
             }
-            else if (node.children) {
-              node.children.forEach(childNode => {
-                if (childNode.name === searchTerm) {
-                  color = 'yellow';
-                }
-              })
-            }
-          })
-        }
-        else if (d.data.name === searchTerm) {
-          color = 'yellow';
-        }
+          }
+        })
       }
       return color;
     });
@@ -184,7 +175,8 @@ function project(x, y, radiusMultiplier = 1) {
   return [radius * Math.cos(angle), radius * Math.sin(angle)];
 }
 
-function buildFancyTree(element, data, config, searchTerm) {
+function buildFancyTree(element, data, config, d3Table, searchTerms = false) {
+          console.log('d3Table', d3Table)
   const { CHART_WIDTH, CHART_HEIGHT, DEPTH_SPACING_FACTOR, BREADTH_SPACING_FACTOR, NODE_RADIUS, LINK_WEIGHT } = config;
   let svg = select(element)
   .append('svg')
@@ -239,24 +231,14 @@ function buildFancyTree(element, data, config, searchTerm) {
     .attr('r', NODE_RADIUS)
     .style('fill', function(d) {
       let color = 'lightsteelblue';
-      if (searchTerm) {
-        if (d.data.children) {
-          d.data.children.forEach(node => {
-            if (node.name === searchTerm) {
+      if (searchTerms.length) {
+        searchTerms.forEach(term => {
+          if (d3Table[term]) {
+            if (d3Table[term].includes(d.data.name) || term === d.data.name) {
               color = 'yellow';
             }
-            else if (node.children) {
-              node.children.forEach(childNode => {
-                if (childNode.name === searchTerm) {
-                  color = 'yellow';
-                }
-              })
-            }
-          })
-        }
-        else if (d.data.name === searchTerm) {
-          color = 'yellow';
-        }
+          }
+        })
       }
       return color;
     });
