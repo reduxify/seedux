@@ -151,8 +151,10 @@ function buildBasicTree(element, data, config, d3Table, searchTerms = false) {
       let color = 'lightsteelblue';
       if (searchTerms) {
         searchTerms.forEach(term => {
-          if (d3Table[term].includes(d.data.name)) {
-            color = 'yellow';
+          if (d3Table[term]) {
+            if (d3Table[term].includes(d.data.name)) {
+              color = 'yellow';
+            }
           }
         })
       }
