@@ -37,8 +37,8 @@ class App extends React.Component {
         transactionLog: true,
         logFrozen: false,
         chartType: 'fancyTree',
+        zoomLevel: 1,
       };
-
     this.state = {
       settings,
       history: [],
@@ -106,16 +106,27 @@ class App extends React.Component {
     }
     this.setState({settings: newSettings});
   }
+  handleZoomClick(direction) {
+    let newZoomLevel = this.state.settings.zoomLevel;
+    if (direction === 'in') {
+      newZoomLevel += 0.1;
+    }
+    else {
+      newZoomLevel -= 0.1;
+    }
+    this.setState({
+      settings: { ...this.state.settings, zoomLevel: newZoomLevel },
+    });
+  }
   assembleVizData() {
     const assembledData = {
       name: 'APP',
-      children: [
-
-      ],
+      children: [],
     };
-    if (this.state.settings.containersViz) assembledData.children.push(this.state.ui);
-    if (this.state.settings.reducersViz) assembledData.children.push(this.state.reducers);
-    if (this.state.settings.actionCreatorsViz) assembledData.children.push(this.state.actionCreators);
+    if (this.state.settings.containersViz && this.state.ui.name) assembledData.children.push(this.state.ui);
+    if (this.state.settings.reducersViz && this.state.reducers.name) assembledData.children.push(this.state.reducers);
+    if (this.state.settings.actionCreatorsViz && this.state.actionCreators.name) assembledData.children.push(this.state.actionCreators);
+    if (!assembledData.children.length) assembledData.children = null;
     return assembledData;
   }
   createViz(data, name) {
@@ -272,8 +283,10 @@ class App extends React.Component {
           <SettingsMenu toggleSettings = {this.toggleSettings.bind(this)} settings = {this.state.settings}/>
         </span>
         <div className='chart-container'>
-          <D3Viz data={this.assembleVizData()} style = { vizSelectSetting} chartType={this.state.settings.chartType} d3Table = { this.state.d3Table }  searchTerms = { this.generateSearchTerms() }/>
+          <D3Viz data={this.assembleVizData()} style = { vizSelectSetting} chartType={this.state.settings.chartType} zoomLevel = {this.state.settings.zoomLevel} d3Table = { this.state.d3Table }  searchTerms = { this.generateSearchTerms() }/>
         </div>
+        <button onClick={() => this.handleZoomClick('in')}>+</button>
+        <button onClick={() => this.handleZoomClick('out')}>-</button>
         <select value={this.state.settings.chartType} onChange={this.handleSelectChange.bind(this)} style = { vizSelectSetting }>
           <option value="fancyTree">Fancy Tree</option>
           <option value="comfyTree">Comfy Tree</option>
