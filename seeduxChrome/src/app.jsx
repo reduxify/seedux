@@ -39,7 +39,6 @@ class App extends React.Component {
         chartType: 'fancyTree',
         zoomLevel: 1,
       };
-
     this.state = {
       settings,
       history: [],
@@ -103,6 +102,18 @@ class App extends React.Component {
     }
     this.setState({settings: newSettings});
   }
+  handleZoomClick(direction) {
+    let newZoomLevel = this.state.settings.zoomLevel;
+    if (direction === 'in') {
+      newZoomLevel += 0.1;
+    }
+    else {
+      newZoomLevel -= 0.1;
+    }
+    this.setState({
+      settings: { ...this.state.settings, zoomLevel: newZoomLevel },
+    });
+  }
   assembleVizData() {
     const assembledData = {
       name: 'APP',
@@ -112,7 +123,6 @@ class App extends React.Component {
     if (this.state.settings.reducersViz && this.state.reducers.name) assembledData.children.push(this.state.reducers);
     if (this.state.settings.actionCreatorsViz && this.state.actionCreators.name) assembledData.children.push(this.state.actionCreators);
     if (!assembledData.children.length) assembledData.children = null;
-    console.log('assembledData: ', assembledData);
     return assembledData;
   }
   createViz(data, name) {
@@ -239,6 +249,8 @@ class App extends React.Component {
         <div className='chart-container'>
           <D3Viz data={this.assembleVizData()} style = { vizSelectSetting} chartType={this.state.settings.chartType} zoomLevel = {this.state.settings.zoomLevel} searchTerm = { this.state.history.length ? this.state.history[this.state.history.length - 1].modifiedAction.type : null }/>
         </div>
+        <button onClick={() => this.handleZoomClick('in')}>+</button>
+        <button onClick={() => this.handleZoomClick('out')}>-</button>
         <select value={this.state.settings.chartType} onChange={this.handleSelectChange.bind(this)} style = { vizSelectSetting }>
           <option value="fancyTree">Fancy Tree</option>
           <option value="comfyTree">Comfy Tree</option>
