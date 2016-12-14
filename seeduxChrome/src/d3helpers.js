@@ -167,7 +167,7 @@ function buildBasicTree(element, data, config, d3Table, searchTerms = false) {
     .text(function(d) {
       return d.data.name;
     })
-    .style('fill', 'darkblue');
+    //.style('fill', 'darkblue');
 }
 
 function project(x, y, radiusMultiplier = 1) {
@@ -204,7 +204,19 @@ function buildFancyTree(element, data, config, d3Table, searchTerms = false) {
       .slice(1))
     .enter()
     .append('path')
-    .attr('class', 'link')
+    .attr('class', function(d) {
+      let linkClass = 'link';
+      if (searchTerms) {
+        searchTerms.forEach(term => {
+          if (d3Table[term]) {
+            if (d3Table[term].includes(d.data.name) || term === d.data.name) {
+              linkClass = 'active-link';
+            }
+          }
+        })
+      }
+      return linkClass;
+    })
     .style('stroke-width', LINK_WEIGHT)
     .attr("d", function(d) {
       let radiusMultiplier = d.children ? 0.5 : 1
@@ -251,7 +263,7 @@ function buildFancyTree(element, data, config, d3Table, searchTerms = false) {
     //   if (!d.children) return "rotate(" + (d.x < 180 ? d.x - 90 : d.x + 90) + ")";
     //   return null;
     //   })
-    .style('fill', 'darkblue');
+    // .style('fill', 'darkblue');
 }
 
 module.exports = exports;

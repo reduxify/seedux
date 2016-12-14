@@ -1,5 +1,26 @@
-$bgColor: #f0f0f0;
-$primColor: darkblue;
+// Original theme!
+
+// $bgColor: #f0f0f0;
+// $primColor: darkblue;
+// $linkColor: #0a0a0a;
+
+// Night theme!
+
+$bgColor: #050A24;
+$primColor: #6E89FF;
+$linkColor: #214AFF;
+
+// Nature theme!
+
+// $bgColor: #1E561F;
+// $primColor: #77Bf4B;
+// $linkColor: #3E261C;
+
+// Ocean theme!
+
+// $bgColor: #024C3F;
+// $primColor: #04BF9D;
+// $linkColor: #05FFFF;
 
 .well {
   border-radius: 0.2em;
@@ -24,6 +45,11 @@ h1 {
 
 ul {
   padding-left: 0;
+}
+
+text {
+  fill: $primColor;
+  font-weight: bold;
 }
 
 .diff-json-container {
@@ -106,7 +132,11 @@ button:active, .custom-file-input::-webkit-file-upload-button:active, .activeSet
   -webkit-user-select: none;
 }
 .link {
-  stroke: #0a0a0a;
+  stroke: $linkColor;
+  fill: none;
+}
+.active-link {
+  stroke: yellow;
   fill: none;
 }
 .chart-container {
