@@ -1,7 +1,9 @@
 const chai = require('chai');
 const expect = require('chai').expect;
 const { testActionCreators, testActionCreators2, testActionCreators3, testActionCreators4, answerActionCreators, answerActionCreators2, answerActionCreators3, answerActionCreators4 } = require('./fixtures/seeduxActionExtractorFixtures');
-const { actionCreatorsExtractor, Node } = require('./../lib/seedux/src/seeduxExtractor');
+const { actionCreatorsExtractor } = require('./../lib/seedux/src/seeduxExtractor');
+// const { Node } = require('./../lib/seedux/src/seeduxAssembler');
+const assemblerUtils = require('./../lib/seedux/src/seeduxAssembler');
 const output = actionCreatorsExtractor(testActionCreators);
 const output2 = actionCreatorsExtractor(testActionCreators2);
 const output3 = actionCreatorsExtractor(testActionCreators3);
@@ -10,12 +12,12 @@ const output4 = actionCreatorsExtractor(testActionCreators4)
 describe('actionCreatorsExtractor', () => {
 
   it('should be a function', () => {
-    expect(actionCreatorsExtractor).to.be.a.function;
+    expect(actionCreatorsExtractor).to.be.a('function');
   })
 
   it('should return an object-typed instance of Node named "Action Creators"', () => {
     expect(output).to.be.an('object');
-    expect(output.constructor).to.deep.equal(Node);
+    expect(output.constructor).to.deep.equal(assemblerUtils.Node);
     expect(output.name).to.deep.equal('Action Creators');
   })
 
@@ -43,13 +45,13 @@ describe('"Action Creators" node', () => {
   it('should have an array-typed property named children composed of object-typed Node(s)', () => {
     expect(output.children).to.be.an('array');
     expect(output.children[0]).to.be.an('object');
-    expect(output.children[0].constructor).to.deep.equal(Node);
+    expect(output.children[0].constructor).to.deep.equal(assemblerUtils.Node);
   })
 
   it('should have child nodes that each possess an array-typed property named children composed of object-typed Node(s)', () => {
     expect(output.children[0].children).to.be.an('array');
     expect(output.children[0].children[0]).to.be.an('object');
-    expect(output.children[0].children[0].constructor).to.deep.equal(Node);
+    expect(output.children[0].children[0].constructor).to.deep.equal(assemblerUtils.Node);
   })
 
 });

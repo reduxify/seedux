@@ -4,14 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha ./test/*",
     "build:extension": "webpack -w --config extension-webpack.config.js",
     "build:library": "webpack -w --config library-webpack.config.js",
     "build:both": "webpack -w --config extension-webpack.config.js | webpack -w --config library-webpack.config.js",
     "build:production:extension": "webpack --config extension-webpack.config.js",
     "build:production:library": "NODE_ENV=development webpack --config npm-webpack.config.js",
     "build:production:both": "webpack --config extension-webpack.config.js && NODE_ENV=development webpack --config npm-webpack.config.js",
-    "dev": "webpack-dev-server --hot --inline -w"
+    "dev": "webpack-dev-server --hot --inline -w",
+    "test": "mocha ./test/*",
+    "test:extractor": "mocha ./test/seeduxActionExtractorTests.js ./test/seeduxReducersExtractorTests.js ./test/seeduxUIExtractorTests.js",
+    "test:lookup": "mocha ./test/seeduxLookUpTests.js"
   },
   "keywords": [],
   "author": "",
