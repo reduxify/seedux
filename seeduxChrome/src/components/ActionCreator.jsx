@@ -14,7 +14,7 @@ function dispatchAction(action) {
   });
 }
 const ActionCreator = ({ actionTypes }) => {
-  console.log('ActionCreator received actionTypes: ', actionTypes);
+  // console.log('ActionCreator received actionTypes: ', actionTypes);
   const selectOptions = actionTypes.map(actionType => {
     return <option value={actionType}>{actionType}</option>
   });

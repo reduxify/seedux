@@ -1,24 +1,23 @@
 import { select, tree, hierarchy, append, layout } from 'd3';
 
 // default chart size and spacing constants
-const config = {};
+function getConfig(type, zoomLevel) {
+  if (type === 'cozyTree') return {
+    CHART_WIDTH: 250,
+    CHART_HEIGHT: 200,
+    // multiplier between 0 and 1 that determines horizontal spacing of tree
+    // generations.  Smaller is 'more compact'.
+    DEPTH_SPACING_FACTOR: 0.7,
+    // multiplier between 0 and 1 that determines vertical spacing of tree
+    // generations.  Smaller is 'more compact'.
+    BREADTH_SPACING_FACTOR: 0.5,
+    NODE_RADIUS: 5,
+    LINK_WEIGHT: 2,
+  };
 
-config.cozyTree = {
-  CHART_WIDTH: 250,
-  CHART_HEIGHT: 200,
-  // multiplier between 0 and 1 that determines horizontal spacing of tree
-  // generations.  Smaller is 'more compact'.
-  DEPTH_SPACING_FACTOR: 0.7,
-  // multiplier between 0 and 1 that determines vertical spacing of tree
-  // generations.  Smaller is 'more compact'.
-  BREADTH_SPACING_FACTOR: 0.5,
-  NODE_RADIUS: 5,
-  LINK_WEIGHT: 2,
-};
-
-config.fancyTree = {
-  CHART_WIDTH: 1000,
-  CHART_HEIGHT: 500,
+  else if (type === 'fancyTree') return {
+  CHART_WIDTH: 1000 * zoomLevel,
+  CHART_HEIGHT: 1000 * zoomLevel,
   // multiplier between 0 and 1 that determines horizontal spacing of tree
   // generations.  Smaller is 'more compact'.
   DEPTH_SPACING_FACTOR: 0.25,
@@ -26,12 +25,12 @@ config.fancyTree = {
   // generations.  Smaller is 'more compact'.
   BREADTH_SPACING_FACTOR: 0.4,
   NODE_RADIUS: 7,
-  LINK_WEIGHT: 5,
+  LINK_WEIGHT: 1,
 };
 
-config.comfyTree = {
+if (type === 'cozyTree') return {
   CHART_WIDTH: 500,
-  CHART_HEIGHT: 250,
+  CHART_HEIGHT: 1000,
   // multiplier between 0 and 1 that determines horizontal spacing of tree
   // generations.  Smaller is 'more compact'.
   DEPTH_SPACING_FACTOR: 0.7,
@@ -43,7 +42,8 @@ config.comfyTree = {
 
 };
 
-config.list = {
+if (type === 'basicList') return {
+
   CHART_WIDTH: 250,
   CHART_HEIGHT: 250,
   DEPTH_SPACING_FACTOR: 0.25,
@@ -52,7 +52,7 @@ config.list = {
   RECT_WIDTH: 50,
 
 };
-
+}
 const exports = {};
 
 // //--- D3 LOGIC -----////
@@ -60,14 +60,15 @@ const exports = {};
 
 // takes in DOM element to be transformed into DefaultCluster,
 // && data that the DefaultCluster visualizes
-exports.transformVizNode = function transformVizNode(element, data, type = 'cozyTree', searchTerm = null) {
+exports.transformVizNode = function transformVizNode(element, data, type = 'cozyTree', searchTerm = null, zoomLevel = 1) {
+  console.log('zoomLevel: ', zoomLevel);
   if (type === 'comfyTree') {
-    buildBasicTree(element, data, config.comfyTree, searchTerm);
+    buildBasicTree(element, data, getConfig(type, zoomLevel), searchTerm);
   } else if (type === 'cozyTree') {
-    buildBasicTree(element, data, config.cozyTree, searchTerm)
+    buildBasicTree(element, data, getConfig(type, zoomLevel), searchTerm)
   }
   else if (type === 'fancyTree') {
-    buildFancyTree(element, data, config.fancyTree, searchTerm);
+    buildFancyTree(element, data, getConfig(type, zoomLevel), searchTerm);
   }
 };
 function buildBasicList(element, data, config, searchTerm) {
@@ -178,8 +179,8 @@ function buildBasicTree(element, data, config, searchTerm) {
     .style('fill', 'darkblue');
 }
 
-function project(x, y) {
-  var angle = (x - 90) / 180 * Math.PI, radius = y;
+function project(x, y, radiusMultiplier = 1) {
+  var angle = (x - 90) / 180 * Math.PI, radius = y * radiusMultiplier;
   return [radius * Math.cos(angle), radius * Math.sin(angle)];
 }
 
@@ -193,7 +194,7 @@ function buildFancyTree(element, data, config, searchTerm) {
   .attr('transform', `translate(${CHART_WIDTH / 2}, ${CHART_HEIGHT / 2})`);
 
   const ourTree = tree()
-    .size([360, CHART_WIDTH / 5])
+    .size([360, CHART_WIDTH / 2.3])
     .separation((a, b) => {
       return (a.parent === b.parent ? 2 : 3) / a.depth;
     });
@@ -214,10 +215,11 @@ function buildFancyTree(element, data, config, searchTerm) {
     .attr('class', 'link')
     .style('stroke-width', LINK_WEIGHT)
     .attr("d", function(d) {
-        return "M" + project(d.x, d.y)
+      let radiusMultiplier = d.children ? 0.5 : 1
+        return "M" + project(d.x, d.y, radiusMultiplier)
             + "C" + project(d.x, (d.y + d.parent.y) / 2)
             + " " + project(d.parent.x, (d.y + d.parent.y) / 2)
-            + " " + project(d.parent.x, d.parent.y);
+            + " " + project(d.parent.x, d.parent.y, 0.5);
     });
 
     // entering the nodes --> finally appending to DOM
@@ -229,7 +231,8 @@ function buildFancyTree(element, data, config, searchTerm) {
       return 'node' + (d.children ? 'node-internal' : 'node-leaf');
     })
     .attr('transform', function(d) {
-      return 'translate(' + project(d.x, d.y) + ')';
+      let radiusMultiplier = d.children ? 0.5 : 1
+      return 'translate(' + project(d.x, d.y, radiusMultiplier) + ')';
     });
 
   nodeEnter.append('circle')

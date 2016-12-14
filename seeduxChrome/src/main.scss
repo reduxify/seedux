@@ -1,4 +1,4 @@
-$bgColor: #fff5cc;
+$bgColor: #f0f0f0;
 $primColor: darkblue;
 
 .well {
@@ -98,10 +98,11 @@ button:active, .custom-file-input::-webkit-file-upload-button:active, .activeSet
   opacity: 0;
 }
 .link {
-  stroke: #ffff00;
+  stroke: #0a0a0a;
   fill: none;
-  z-index: 5;
 }
-g {
-  z-index: 0;
+.chart-container {
+  width: 100%;
+  height: 100vh;
+  overflow: scroll;
 }

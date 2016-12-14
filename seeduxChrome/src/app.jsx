@@ -27,7 +27,8 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     // dig around in LocalStorage to get saved settings
-    const storedSettings = JSON.parse(localStorage.getItem('seeduxSettings'));
+    // const storedSettings = JSON.parse(localStorage.getItem('seeduxSettings'));
+    let storedSettings;
     console.log('Dug up settings: ', storedSettings);
     const settings = storedSettings ? storedSettings
       : {
@@ -37,6 +38,7 @@ class App extends React.Component {
         transactionLog: true,
         logFrozen: false,
         chartType: 'fancyTree',
+        zoomLevel: 1.5,
       };
 
     this.state = {
@@ -105,13 +107,13 @@ class App extends React.Component {
   assembleVizData() {
     const assembledData = {
       name: 'APP',
-      children: [
-
-      ],
+      children: [],
     };
-    if (this.state.settings.containersViz) assembledData.children.push(this.state.ui);
-    if (this.state.settings.reducersViz) assembledData.children.push(this.state.reducers);
-    if (this.state.settings.actionCreatorsViz) assembledData.children.push(this.state.actionCreators);
+    if (this.state.settings.containersViz && this.state.ui.name) assembledData.children.push(this.state.ui);
+    if (this.state.settings.reducersViz && this.state.reducers.name) assembledData.children.push(this.state.reducers);
+    if (this.state.settings.actionCreatorsViz && this.state.actionCreators.name) assembledData.children.push(this.state.actionCreators);
+    if (!assembledData.children.length) assembledData.children = null;
+    console.log('assembledData: ', assembledData);
     return assembledData;
   }
   createViz(data, name) {
@@ -236,7 +238,7 @@ class App extends React.Component {
           <SettingsMenu toggleSettings = {this.toggleSettings.bind(this)} settings = {this.state.settings}/>
         </span>
         <div className='chart-container'>
-          <D3Viz data={this.assembleVizData()} style = { vizSelectSetting} chartType={this.state.settings.chartType} searchTerm = { this.state.history.length ? this.state.history[this.state.history.length - 1].modifiedAction.type : null }/>
+          <D3Viz data={this.assembleVizData()} style = { vizSelectSetting} chartType={this.state.settings.chartType} zoomLevel = {this.state.settings.zoomLevel} searchTerm = { this.state.history.length ? this.state.history[this.state.history.length - 1].modifiedAction.type : null }/>
         </div>
         <select value={this.state.settings.chartType} onChange={this.handleSelectChange.bind(this)} style = { vizSelectSetting }>
           <option value="fancyTree">Fancy Tree</option>
