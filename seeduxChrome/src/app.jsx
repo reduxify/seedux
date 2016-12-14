@@ -70,7 +70,6 @@ class App extends React.Component {
           future: response.future,
           d3Table: response.d3Table
         });
-        console.log('d3Table', d3Table)
     });
 
     // add a listener for new log Entries from the content script
