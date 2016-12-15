@@ -133,7 +133,7 @@ function buildBasicTree(element, data, config, d3Table, searchTerms = false) {
         searchTerms.forEach(term => {
           if (d3Table[term]) {
             console.log('parent node in d3', d.data.parent)
-            if (d3Table[term].includes(d.data.name) || term === d.data.name && d3Table[term].includes(d.data.parent.name)) {
+            if (d3Table[term].includes(d.data.name) || term === d.data.name) {
               linkClass = 'active-link';
             }
           }
@@ -222,7 +222,7 @@ function buildFancyTree(element, data, config, d3Table, searchTerms = false) {
       if (searchTerms) {
         searchTerms.forEach(term => {
           if (d3Table[term]) {
-            if (d3Table[term].includes(d.data.name) || term === d.data.name && d3Table[term].includes(d.data.parent.name)) {
+            if (d3Table[term].includes(d.data.name) || term === d.data.name) {
               linkClass = 'active-link';
             }
           }
