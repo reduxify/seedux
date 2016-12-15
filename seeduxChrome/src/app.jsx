@@ -37,6 +37,7 @@ class App extends React.Component {
         transactionLog: true,
         logFrozen: false,
         chartType: 'fancyTree',
+        // theme: 'galaxy',
         zoomLevel: 1,
       };
     this.state = {
@@ -246,6 +247,11 @@ class App extends React.Component {
       settings: newSettings
     });
   }
+  // selectTheme(e) {
+  //   e.preventDefault();
+  //   let newTheme = e.target.value;
+  //   let newSettings = Object.assign({}, this.state.settings, { theme: newTheme } );
+  // }
   generateSearchTerms() {
     const searchTerms = [];
     if (this.state.history.length) {
