@@ -5,6 +5,7 @@ import D3Viz from './components/D3Viz';
 import ParsingError from './components/ParsingError';
 import ActionCreator from './components/ActionCreator';
 import Log from './components/Log';
+import LogDrawer from './components/LogDrawer';
 import Flash from './components/Flash';
 import SettingsMenu from './components/SettingsMenu';
 import getGreetings from './greetings';
@@ -256,7 +257,7 @@ class App extends React.Component {
     const searchTerms = [];
     if (this.state.history.length) {
       let actionType = this.state.history[this.state.history.length - 1].modifiedAction.type;
-      if (actionType !== '@@INIT') { searchTerms.push(actionType) }; 
+      if (actionType !== '@@INIT') { searchTerms.push(actionType) };
       this.state.history[this.state.history.length - 1].diffs.forEach(diff => {
         if (diff.path) {
           diff.path.forEach(p => {
@@ -279,36 +280,39 @@ class App extends React.Component {
     const undo = () => this.restore('past', this.state.history.length - 2);
     const redo = () => this.restore('future', 0);
 
-    // Check state for settings booleans to determine whether to render visualization select element or/and transaction log elements and component via inline style
-    const vizSelectSetting = this.state.settings.containersViz || this.state.settings.actionCreatorsViz || this.state.settings.reducersViz ? { display: 'inline' } : { display: 'none' };
-    const transactionLogSetting = this.state.settings.transactionLog ? { display: 'inline' } : { display: 'none'};
     return (
       <div>
+        <div className='header'>
+        <header>
         <Flash text={this.state.flashMessage} />
-        <span>
-          <SettingsMenu toggleSettings = {this.toggleSettings.bind(this)} settings = {this.state.settings}/>
-        </span>
+        <div className='toolbar-container'>
+          <div className='subToolbar'>
+            <button onClick={() => this.handleZoomClick('in')}><i className="fa fa-search-plus" aria-hidden="true"></i></button>
+            <button onClick={() => this.handleZoomClick('out')}><i className="fa fa-search-minus" aria-hidden="true"></i></button>
+          </div>
+            <ActionCreator actionTypes={this.state.actionTypes}/>
+            <div className='subToolbar move-left'>
+              <button onClick={undo}><span className="scaled">&#9100; </span> Undo</button>
+              <button onClick={redo}><span className="flipped">&#9100; </span> Redo</button>
+            </div>
+            <div className='subToolbar move-right'>
+              <SettingsMenu toggleSettings = {this.toggleSettings.bind(this)} settings = {this.state.settings} handleSelectChange={this.handleSelectChange.bind(this)} chartSelectValue={this.state.settings.chartType}/>
+              <LogDrawer stashLog={() => this.stashLog()}
+                unStashLog={() => this.unStashLog()}
+                exportLog={() => this.exportLog()}
+                importLog={this.importLog.bind(this)}
+                resetLog={() => this.resetLog()} />
+            </div>
+            <div className='subToolbar'>
+            </div>
+      </div>
+    </header>
+  </div>
         <div className='chart-container'>
-          <D3Viz data={this.assembleVizData()} style = { vizSelectSetting} chartType={this.state.settings.chartType} zoomLevel = {this.state.settings.zoomLevel} d3Table = { this.state.d3Table }  searchTerms = { this.generateSearchTerms() }/>
+          <D3Viz data={this.assembleVizData()}  chartType={this.state.settings.chartType} zoomLevel = {this.state.settings.zoomLevel} d3Table = { this.state.d3Table }  searchTerms = { this.generateSearchTerms() }/>
         </div>
-        <button onClick={() => this.handleZoomClick('in')}>+</button>
-        <button onClick={() => this.handleZoomClick('out')}>-</button>
-        <select value={this.state.settings.chartType} onChange={this.handleSelectChange.bind(this)} style = { vizSelectSetting }>
-          <option value="fancyTree">Fancy Tree</option>
-          <option value="comfyTree">Comfy Tree</option>
-          <option value="cozyTree">Cozy Tree</option>
-        </select>
-        <div style = { transactionLogSetting }>
-          <button onClick={() => this.resetLog()}>Reset Log</button>
-          <button onClick={() => this.exportLog()}>Export Log</button>
-          <input type="file" id="file" className="custom-file-input" onChange={this.importLog.bind(this)} />
-          <button onClick={() => this.stashLog()}>Stash Log</button>
-          <button onClick={() => this.unStashLog()}>Unstash Log</button>
-          <button onClick={undo}>Undo</button>
-          <button onClick={redo}>Redo</button>
-          <ActionCreator actionTypes={this.state.actionTypes}/>
+        <hr />
           <Log history={this.state.history} future={this.state.future} restoreFromHistory={restoreFromHistory} restoreFromFuture={restoreFromFuture} />
-        </div>
       </div>
     )
   }

@@ -17,10 +17,10 @@ const DiffList = ({ diffs }) => {
         Path
       </td>
       <td className='col2'>
-        LHS
+        Previous
       </td>
       <td className='col3'>
-        RHS
+        Current
       </td>
     </tr>
       {diffElements}
