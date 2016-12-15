@@ -127,7 +127,19 @@ function buildBasicTree(element, data, config, d3Table, searchTerms = false) {
   .slice(1))
   .enter()
   .append('path')
-  .attr('class', 'link')
+  .attr('class', function(d) {
+      let linkClass = 'link';
+      if (searchTerms) {
+        searchTerms.forEach(term => {
+          if (d3Table[term]) {
+            if (d3Table[term].includes(d.data.name) || term === d.data.name) {
+              linkClass = 'active-link';
+            }
+          }
+        })
+      }
+      return linkClass;
+    })
   .attr('d', function(d) {
     return `M ${d.y} ${d.x}
     Q ${(d.parent.y)} ${(d.x + d.parent.x) / 2}
