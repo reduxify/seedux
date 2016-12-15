@@ -227,7 +227,7 @@ var Collapsible = React.createClass({
     // this is cheesy
     let trigger;
     if (this.props.role === 'logEntry') trigger = <ActionTitle clickHandler={this.handleTriggerClick} titleString={this.props.titleString} buttonHandler={this.props.buttonHandler} />
-    else if (this.props.role === 'settingsMenu') trigger =<SettingsTitle clickHandler={this.handleTriggerClick} titleString={this.props.titleString} />
+    else if (this.props.role === 'titleMenu') trigger =<SettingsTitle clickHandler={this.handleTriggerClick} titleString={this.props.titleString} />
     else if (this.props.role === 'drawer') trigger =<DrawerTitle clickHandler={this.handleTriggerClick} titleString={this.props.titleString} />
 
     return(

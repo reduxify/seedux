@@ -5,6 +5,7 @@ import D3Viz from './components/D3Viz';
 import ParsingError from './components/ParsingError';
 import ActionCreator from './components/ActionCreator';
 import Log from './components/Log';
+import LogDrawer from './components/LogDrawer';
 import Flash from './components/Flash';
 import SettingsMenu from './components/SettingsMenu';
 import getGreetings from './greetings';
@@ -37,6 +38,7 @@ class App extends React.Component {
         transactionLog: true,
         logFrozen: false,
         chartType: 'fancyTree',
+        // theme: 'galaxy',
         zoomLevel: 1,
       };
     this.state = {
@@ -246,6 +248,11 @@ class App extends React.Component {
       settings: newSettings
     });
   }
+  // selectTheme(e) {
+  //   e.preventDefault();
+  //   let newTheme = e.target.value;
+  //   let newSettings = Object.assign({}, this.state.settings, { theme: newTheme } );
+  // }
   generateSearchTerms() {
     const searchTerms = [];
     if (this.state.history.length) {
@@ -273,42 +280,34 @@ class App extends React.Component {
     const undo = () => this.restore('past', this.state.history.length - 2);
     const redo = () => this.restore('future', 0);
 
-    // Check state for settings booleans to determine whether to render visualization select element or/and transaction log elements and component via inline style
-    const vizSelectSetting = this.state.settings.containersViz || this.state.settings.actionCreatorsViz || this.state.settings.reducersViz ? { display: 'inline' } : { display: 'none' };
-    const transactionLogSetting = this.state.settings.transactionLog ? { display: 'inline' } : { display: 'none'};
     return (
       <div>
+        <header>
         <Flash text={this.state.flashMessage} />
-        <span>
-          <SettingsMenu toggleSettings = {this.toggleSettings.bind(this)} settings = {this.state.settings}/>
-        </span>
-        <select value={this.state.settings.chartType} onChange={this.handleSelectChange.bind(this)} style = { vizSelectSetting }>
-          <option value="fancyTree">Fancy Tree</option>
-          <option value="comfyTree">Comfy Tree</option>
-          <option value="cozyTree">Cozy Tree</option>
-        </select>
-        <div className='chart-container'>
-          <D3Viz data={this.assembleVizData()} style = { vizSelectSetting} chartType={this.state.settings.chartType} zoomLevel = {this.state.settings.zoomLevel} d3Table = { this.state.d3Table }  searchTerms = { this.generateSearchTerms() }/>
-        </div>
-        <hr />
-
-        <div className='chart-controls'>
-          <button onClick={() => this.handleZoomClick('in')}><i className="fa fa-search-plus" aria-hidden="true"></i></button>
-          <button onClick={() => this.handleZoomClick('out')}><i className="fa fa-search-minus" aria-hidden="true"></i></button>
-        </div>
-        <div style = { transactionLogSetting } className='toolbar'>
-          <ActionCreator actionTypes={this.state.actionTypes}/>
+        <div className='toolbar-container'>
           <div className='subToolbar'>
-            <button onClick={undo}><span className="scaled">&#9100; </span> Undo</button>
-            <button onClick={redo}><span className="flipped">&#9100; </span> Redo</button>
-            <button onClick={() => this.stashLog()}><i className="fa fa-archive" aria-hidden="true"></i> Stash Log</button>
-            <button onClick={() => this.unStashLog()}><i className="fa fa-envelope-open" aria-hidden="true"></i> Unstash Log</button>
-
-            <button onClick={() => this.exportLog()}><i className="fa fa-floppy-o" aria-hidden="true">&nbsp;</i>Export Log</button>
-            <input type="file" id="file" className="custom-file-input" onChange={this.importLog.bind(this)} />
-
-            <button className='btn-reset' onClick={() => this.resetLog()}> <i className="fa fa-trash" aria-hidden="true"></i> Reset Log</button>
+            <button onClick={() => this.handleZoomClick('in')}><i className="fa fa-search-plus" aria-hidden="true"></i></button>
+            <button onClick={() => this.handleZoomClick('out')}><i className="fa fa-search-minus" aria-hidden="true"></i></button>
           </div>
+            <ActionCreator actionTypes={this.state.actionTypes}/>
+            <div className='subToolbar move-left'>
+              <button onClick={undo}><span className="scaled">&#9100; </span> Undo</button>
+              <button onClick={redo}><span className="flipped">&#9100; </span> Redo</button>
+            </div>
+            <div className='subToolbar move-right'>
+              <SettingsMenu toggleSettings = {this.toggleSettings.bind(this)} settings = {this.state.settings} handleSelectChange={this.handleSelectChange.bind(this)} chartSelectValue={this.state.settings.chartType}/>
+              <LogDrawer stashLog={() => this.stashLog()}
+                unStashLog={() => this.unStashLog()}
+                exportLog={() => this.exportLog()}
+                importLog={this.importLog.bind(this)}
+                resetLog={() => this.resetLog()} />
+            </div>
+            <div className='subToolbar'>
+            </div>
+      </div>
+    </header>
+        <div className='chart-container'>
+          <D3Viz data={this.assembleVizData()}  chartType={this.state.settings.chartType} zoomLevel = {this.state.settings.zoomLevel} d3Table = { this.state.d3Table }  searchTerms = { this.generateSearchTerms() }/>
         </div>
         <hr />
           <Log history={this.state.history} future={this.state.future} restoreFromHistory={restoreFromHistory} restoreFromFuture={restoreFromFuture} />

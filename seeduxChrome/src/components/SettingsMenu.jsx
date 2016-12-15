@@ -10,15 +10,22 @@ function saveSettings(settings) {
   localStorage.setItem('seeduxSettings', JSON.stringify(settings));
 }
 
-const SettingsMenu = ({ toggleSettings, settings }) => {
+const SettingsMenu = ({ toggleSettings, selectTheme, settings, chartSelectValue, handleSelectChange }) => {
 
   return (
-    <div className = 'settings-menu'>
-      <Collapsible titleString = '&#9776;' role='settingsMenu'>
+      <Collapsible titleString = 'Settings' role='drawer'>
         <div className = 'menu-contents'>
-
         <h4>
-          Visualizations
+          Chart Type
+        </h4>
+        <select value={chartSelectValue} onChange={handleSelectChange} >
+          <option value="fancyTree">Fancy Tree</option>
+          <option value="comfyTree">Comfy Tree</option>
+          <option value="cozyTree">Cozy Tree</option>
+        </select>
+        <hr />
+        <h4>
+          Chart Visibility
         </h4>
         <ul>
           <li className = 'menu-line'><button className = { getSettingsClass(settings.containersViz) } onClick = { toggleSettings } id = 'containersViz'> Containers </button></li>
@@ -26,6 +33,9 @@ const SettingsMenu = ({ toggleSettings, settings }) => {
           <li className = 'menu-line'><button className = { getSettingsClass(settings.reducersViz) } onClick = { toggleSettings } id = 'reducersViz'> Reducers </button></li>
           </ul>
           <hr></hr>
+          <h4>
+            Other Options
+          </h4>
           <ul>
         <li className = 'menu-line'><button className = { getSettingsClass(settings.transactionLog) } onClick = { toggleSettings } id = 'transactionLog'> Transaction Log </button></li>
           <li className = 'menu-line'><button className = { getSettingsClass(settings.logFrozen) } onClick = { toggleSettings } id = 'logFrozen'> Freeze Log </button></li>
@@ -33,7 +43,6 @@ const SettingsMenu = ({ toggleSettings, settings }) => {
         </ul>
       </div>
       </Collapsible>
-    </div>
   );
 };
 
@@ -48,3 +57,12 @@ const SettingsMenu = ({ toggleSettings, settings }) => {
 // };
 
 export default SettingsMenu;
+// theme menu code TO BE USED LATER
+// <li className = 'menu-line'>
+//   <select onChange = { selectTheme }>
+//     <option value = 'aqua'>Aqua</option>
+//     <option value = 'galaxy'>Galaxy</option>
+//     <option value = 'original'>Original</option>
+//     <option value = 'wilderness'>Wilderness</option>
+//   </select>
+// </li>
