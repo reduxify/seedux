@@ -1,6 +1,11 @@
 $bgColor: #f0f0f0;
 $primColor: darkblue;
 
+@mixin background-opacity($color, $opacity: 0.3) {
+    background: $color; /* The Fallback */
+    background: rgba($color, $opacity);
+}
+
 .well {
   border-radius: 0.2em;
   background-color: $bgColor * 1.5;
@@ -18,12 +23,13 @@ body {
 h1 {
   display: inline;
 }
-.flashMessage {
-  margin: 0 1em;
-}
 
 ul {
   padding-left: 0;
+  list-style: none;
+}
+.flashMessage {
+  margin: 0 1em;
 }
 
 .diff-json-container {
@@ -59,6 +65,7 @@ ul {
 }
 .Collapsible {
   border: 1px solid $primColor;
+  padding-left: 1em;
 }
 button, select, .custom-file-input::-webkit-file-upload-button {
   cursor: pointer;
@@ -69,14 +76,39 @@ button, select, .custom-file-input::-webkit-file-upload-button {
   padding: 0.25em 0.5em;
   margin: 0.5em;
 }
+
+.flipped {
+  display: inline-block;
+  -moz-transform: scale(-1, 1);
+  -webkit-transform: scale(-1, 1);
+  transform: scale(-1.4, 1.4);
+  padding-left: 0.25em;
+}
+.scaled {
+  -webkit-transform: scale(-1.4, 1.4);
+  transform: scale(-1.4, 1.4);
+}
+// content, file folder: 	&#128194;
+
 button:active, .custom-file-input::-webkit-file-upload-button:active, .activeSetting {
   background: green;
 }
-
-.disabledSetting {
+.toolbar {
+  display: inline-flex;
+}
+.subToolbar {
+  position: absolute;
+  display: inherit;
+  left: 16em;
+  min-width: 60em;
+}
+.disabledSetting, .btn-reset {
   background-color: red;
 }
-
+.btn-reset {
+  position: absolute;
+  right: 0em;
+}
 .menu-lines {
   list-style-type: none;
   text-align: center;
@@ -85,17 +117,20 @@ button:active, .custom-file-input::-webkit-file-upload-button:active, .activeSet
   padding: 1em;
   height: 3em;
   position: fixed;
-  width: 88%;
+  width: 100%;
   top: 0;
   background-color: $bgColor * 0.8;
 }
 .settings-menu > div {
+  background-color: transparent !important;
   position: fixed;
   min-height: 5em;
   right: 0;
   text-align: center;
   z-index: 1;
   border: 0;
+  padding: 0;
+  list-style: none;
 }
 .settings-title {
   text-align: center;
@@ -109,8 +144,40 @@ button:active, .custom-file-input::-webkit-file-upload-button:active, .activeSet
   stroke: #0a0a0a;
   fill: none;
 }
+.action-creator {
+  width: 25em;
+  display: inline-block;
+  position: absolute;
+}
+.action-creator > .Collapsible {
+  padding: 0;
+  background-color: transparent;
+  width: content;
+  border: 0;
+}
+.action-creator > .Collapsible > .Collapsible__contentOuter > .Collapsible__contentInner, .settings-menu > .Collapsible > .Collapsible__contentOuter > .Collapsible__contentInner  {
+  @include background-opacity($bgColor * 0.7, 1);
+  border: 1px solid $primColor;
+  border-radius: 5px;
+  padding: 1em;
+}
+.chart-controls {
+  display: inline;
+  z-index: 5;
+}
 .chart-container {
+  z-index: 0;
   width: 100%;
   height: 100vh;
   overflow: scroll;
+}
+.log-entry-history, .log-entry-future {
+  padding-left: 1em;
+}
+.log-container {
+  padding: 0.5em;
+  padding-top: 3em;
+}
+.menu-contents {
+  list-style: none;
 }

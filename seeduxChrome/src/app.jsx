@@ -250,7 +250,7 @@ class App extends React.Component {
     const searchTerms = [];
     if (this.state.history.length) {
       let actionType = this.state.history[this.state.history.length - 1].modifiedAction.type;
-      if (actionType !== '@@INIT') { searchTerms.push(actionType) }; 
+      if (actionType !== '@@INIT') { searchTerms.push(actionType) };
       this.state.history[this.state.history.length - 1].diffs.forEach(diff => {
         if (diff.path) {
           diff.path.forEach(p => {
@@ -282,27 +282,36 @@ class App extends React.Component {
         <span>
           <SettingsMenu toggleSettings = {this.toggleSettings.bind(this)} settings = {this.state.settings}/>
         </span>
-        <div className='chart-container'>
-          <D3Viz data={this.assembleVizData()} style = { vizSelectSetting} chartType={this.state.settings.chartType} zoomLevel = {this.state.settings.zoomLevel} d3Table = { this.state.d3Table }  searchTerms = { this.generateSearchTerms() }/>
-        </div>
-        <button onClick={() => this.handleZoomClick('in')}>+</button>
-        <button onClick={() => this.handleZoomClick('out')}>-</button>
         <select value={this.state.settings.chartType} onChange={this.handleSelectChange.bind(this)} style = { vizSelectSetting }>
           <option value="fancyTree">Fancy Tree</option>
           <option value="comfyTree">Comfy Tree</option>
           <option value="cozyTree">Cozy Tree</option>
         </select>
-        <div style = { transactionLogSetting }>
-          <button onClick={() => this.resetLog()}>Reset Log</button>
-          <button onClick={() => this.exportLog()}>Export Log</button>
-          <input type="file" id="file" className="custom-file-input" onChange={this.importLog.bind(this)} />
-          <button onClick={() => this.stashLog()}>Stash Log</button>
-          <button onClick={() => this.unStashLog()}>Unstash Log</button>
-          <button onClick={undo}>Undo</button>
-          <button onClick={redo}>Redo</button>
-          <ActionCreator actionTypes={this.state.actionTypes}/>
-          <Log history={this.state.history} future={this.state.future} restoreFromHistory={restoreFromHistory} restoreFromFuture={restoreFromFuture} />
+        <div className='chart-container'>
+          <D3Viz data={this.assembleVizData()} style = { vizSelectSetting} chartType={this.state.settings.chartType} zoomLevel = {this.state.settings.zoomLevel} d3Table = { this.state.d3Table }  searchTerms = { this.generateSearchTerms() }/>
         </div>
+        <hr />
+
+        <div className='chart-controls'>
+          <button onClick={() => this.handleZoomClick('in')}><i className="fa fa-search-plus" aria-hidden="true"></i></button>
+          <button onClick={() => this.handleZoomClick('out')}><i className="fa fa-search-minus" aria-hidden="true"></i></button>
+        </div>
+        <div style = { transactionLogSetting } className='toolbar'>
+          <ActionCreator actionTypes={this.state.actionTypes}/>
+          <div className='subToolbar'>
+            <button onClick={undo}><span className="scaled">&#9100; </span> Undo</button>
+            <button onClick={redo}><span className="flipped">&#9100; </span> Redo</button>
+            <button onClick={() => this.stashLog()}><i className="fa fa-archive" aria-hidden="true"></i> Stash Log</button>
+            <button onClick={() => this.unStashLog()}><i className="fa fa-envelope-open" aria-hidden="true"></i> Unstash Log</button>
+
+            <button onClick={() => this.exportLog()}><i className="fa fa-floppy-o" aria-hidden="true">&nbsp;</i>Export Log</button>
+            <input type="file" id="file" className="custom-file-input" onChange={this.importLog.bind(this)} />
+
+            <button className='btn-reset' onClick={() => this.resetLog()}> <i className="fa fa-trash" aria-hidden="true"></i> Reset Log</button>
+          </div>
+        </div>
+        <hr />
+          <Log history={this.state.history} future={this.state.future} restoreFromHistory={restoreFromHistory} restoreFromFuture={restoreFromFuture} />
       </div>
     )
   }

@@ -1,5 +1,6 @@
 import ActionTitle from './ActionTitle';
 import SettingsTitle from './SettingsTitle';
+import DrawerTitle from './DrawerTitle';
 
 // The MIT License (MIT)
 //
@@ -217,21 +218,21 @@ var Collapsible = React.createClass({
 
     var openClass = this.state.isClosed ? 'is-closed' : 'is-open';
 
-    //If user wants different text when tray is open
-    var trigger = (this.state.isClosed === false) && (this.props.triggerWhenOpen !== undefined) ? this.props.triggerWhenOpen : this.props.trigger;
-
     // Don't render children until the first opening of the Collapsible if lazy rendering is enabled
     var children = this.props.children;
     if(this.props.lazyRender)
       if(!this.state.hasBeenOpened)
           children = null;
 
-    const actionTitle = <ActionTitle clickHandler={this.handleTriggerClick} titleString={this.props.titleString} buttonHandler={this.props.buttonHandler} />
-    const settingsTitle = <SettingsTitle clickHandler={this.handleTriggerClick} titleString={this.props.titleString} />
+    // this is cheesy
+    let trigger;
+    if (this.props.role === 'logEntry') trigger = <ActionTitle clickHandler={this.handleTriggerClick} titleString={this.props.titleString} buttonHandler={this.props.buttonHandler} />
+    else if (this.props.role === 'settingsMenu') trigger =<SettingsTitle clickHandler={this.handleTriggerClick} titleString={this.props.titleString} />
+    else if (this.props.role === 'drawer') trigger =<DrawerTitle clickHandler={this.handleTriggerClick} titleString={this.props.titleString} />
 
     return(
       <div className={this.props.classParentString}>
-        {this.props.titleString.includes('Action') ? actionTitle: settingsTitle}
+        {trigger}
         <div className={this.props.classParentString + "__contentOuter" } ref="outer" style={dropdownStyle}>
           <div className={this.props.classParentString + "__contentInner"} ref="inner">
             {children}

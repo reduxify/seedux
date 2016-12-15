@@ -31,15 +31,15 @@ const LogEntry = ({ entry, index, futury, present, restore }) => {
   delete payload.type;
   const entryClass = futury ? 'log-entry-future' : 'log-entry-history';
   return (
-    <Collapsible open={present} className={entryClass} 
+    <Collapsible open={present} className={entryClass} role={'logEntry'}
       titleString={`Action # ${index} : ${modifiedAction.type}`} buttonHandler={() => restore(index)}>
       <div className='log-payload-container'>
-        <span className='log-action-label'>payloads: </span>
+        <span className='log-action-label'>Payload: </span>
         <JSONTree data={payload} theme={theme} shouldExpandNode={() => false}/>
       </div>
-      <span className='log-action-label'>store diffs: </span>
+      <span className='log-action-label'>Store diffs: </span>
       <DiffList diffs={diffs} />
-      <span className='log-action-label'>new complete store: </span>
+      <span className='log-action-label'>New complete store: </span>
       <JSONTree data={newState} theme={theme} shouldExpandNode={() => false} />
       <hr />
     </Collapsible>

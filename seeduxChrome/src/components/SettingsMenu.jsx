@@ -14,15 +14,24 @@ const SettingsMenu = ({ toggleSettings, settings }) => {
 
   return (
     <div className = 'settings-menu'>
-      <Collapsible titleString = '&#9776;'>
+      <Collapsible titleString = '&#9776;' role='settingsMenu'>
+        <div className = 'menu-contents'>
+
+        <h4>
+          Visualizations
+        </h4>
         <ul>
-          <li className = 'menu-line'><button className = { getSettingsClass(settings.containersViz) } onClick = { toggleSettings } id = 'containersViz'> Containers Visualization </button></li>
-          <li className = 'menu-line'><button className = { getSettingsClass(settings.actionCreatorsViz) } onClick = { toggleSettings } id = 'actionCreatorsViz'> Action Creators Visualization </button></li>
-          <li className = 'menu-line'><button className = { getSettingsClass(settings.reducersViz) } onClick = { toggleSettings } id = 'reducersViz'> Reducers Visualization </button></li>
-          <li className = 'menu-line'><button className = { getSettingsClass(settings.transactionLog) } onClick = { toggleSettings } id = 'transactionLog'> Store Transaction Log </button></li>
+          <li className = 'menu-line'><button className = { getSettingsClass(settings.containersViz) } onClick = { toggleSettings } id = 'containersViz'> Containers </button></li>
+          <li className = 'menu-line'><button className = { getSettingsClass(settings.actionCreatorsViz) } onClick = { toggleSettings } id = 'actionCreatorsViz'> Action Creators </button></li>
+          <li className = 'menu-line'><button className = { getSettingsClass(settings.reducersViz) } onClick = { toggleSettings } id = 'reducersViz'> Reducers </button></li>
+          </ul>
+          <hr></hr>
+          <ul>
+        <li className = 'menu-line'><button className = { getSettingsClass(settings.transactionLog) } onClick = { toggleSettings } id = 'transactionLog'> Transaction Log </button></li>
           <li className = 'menu-line'><button className = { getSettingsClass(settings.logFrozen) } onClick = { toggleSettings } id = 'logFrozen'> Freeze Log </button></li>
-          <li className = 'menu-line'><button className = 'btn-save-settings' onClick = { () => saveSettings(settings) }> Save Settings as Default </button></li>
+          <li className = 'menu-line'><button className = 'btn-save-settings' onClick = { () => saveSettings(settings) }> Save Defaults </button></li>
         </ul>
+      </div>
       </Collapsible>
     </div>
   );
