@@ -13,7 +13,6 @@ function populateTable(codeObj) {
 }
 
 function addUIToTable(ui, uiResources, actionMap) {
-  console.log('Adding UI to table. params: uiResources, actionMap :', uiResources, actionMap);
   const uiNameNodes = ui.children; // Array of container node objects
   let d3TableKeys = Object.keys(d3Table);
   if (uiResources) { // Object with structure -> { container: { prop: [state or action creators] } }
@@ -25,34 +24,46 @@ function addUIToTable(ui, uiResources, actionMap) {
         potentialActionCreatorOrStateArr.forEach(p => {
           if (actionMap[p]) {
             let actionType = actionMap[p];
-            d3Table[actionType] ? d3Table[actionType].push(prop) : d3Table[actionType] = [prop];
-            if (!d3Table[actionType].includes(name)) { d3Table[actionType].push(node.name); }
+            if (d3Table[actionType]) {
+              if (!d3Table[actionType].includes(prop)) {
+                d3Table[actionType].push(prop);
+              }
+            }
+            else {
+              d3Table[actionType] = [prop];
+            }
+            if (!d3Table[actionType].includes(node.name)) { d3Table[actionType].push(node.name); }
             if (!d3Table[actionType].includes('Containers')) { d3Table[actionType].push('Containers'); }
           }
           else {
-            let stateKey = p;
-            d3TableKeys.includes(stateKey) ? d3Table[stateKey].push(prop) : d3Table[stateKey] = [prop];
-            if (!d3Table[stateKey].includes(name)) { d3Table[stateKey].push(node.name); }
+            let stateKey = p; 
+            if (d3Table[stateKey]) {
+              if (!d3Table[stateKey].includes(prop)) {
+                d3Table[stateKey].push(prop);
+              }
+            }
+            else {
+              d3Table[stateKey] = [prop];
+            }
+            if (!d3Table[stateKey].includes(node.name)) { d3Table[stateKey].push(node.name); }
             if (!d3Table[stateKey].includes('Containers')) { d3Table[stateKey].push('Containers'); }
           }
         });
       })
     })
   }
-  console.log('table after ui added: ', d3Table);
   return d3Table;
 }
 
 function addReducersToTable(reducers, actionTypes = []) {
-  console.log('Adding reducers to table');
   const reducerNameNodes = reducers.children;
   if (actionTypes.length) {
     actionTypes.forEach(a => {
       if (!d3Table[a]) { d3Table[a] = []; };
       reducerNameNodes.forEach(node => {
-        if (node.children.length) {
+        if (node.children.length) { 
           node.children.forEach(childNode => {
-            if (childNode.name === a) {
+            if (childNode.name === a && !d3Table[a].includes(node.name)) {
               d3Table[a].push(node.name);
               if (!d3Table[a].includes('Reducers')) { d3Table[a].push('Reducers'); }
             }
@@ -65,8 +76,6 @@ function addReducersToTable(reducers, actionTypes = []) {
 }
 
 function addActionCreatorsToTable(actionCreators, actionTypes = []) {
-  if (actionCreators) {
-
   const actionCreatorNameNodes = actionCreators.children;
   if (actionTypes.length) {
     actionTypes.forEach(a => {
@@ -74,7 +83,7 @@ function addActionCreatorsToTable(actionCreators, actionTypes = []) {
       actionCreatorNameNodes.forEach(node => {
         if (node.children.length) {
           node.children.forEach(childNode => {
-            if (childNode.name === a) {
+            if (childNode.name === a && !d3Table[a].includes(node.name)) {
               d3Table[a].push(node.name);
               if (!d3Table[a].includes('Action Creators')) { d3Table[a].push('Action Creators'); }
             }
@@ -83,7 +92,6 @@ function addActionCreatorsToTable(actionCreators, actionTypes = []) {
       });
     });
   }
-}
   return d3Table;
 }
 

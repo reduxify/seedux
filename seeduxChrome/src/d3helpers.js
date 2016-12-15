@@ -132,7 +132,8 @@ function buildBasicTree(element, data, config, d3Table, searchTerms = false) {
       if (searchTerms) {
         searchTerms.forEach(term => {
           if (d3Table[term]) {
-            if (d3Table[term].includes(d.data.name) || term === d.data.name) {
+            console.log('parent node in d3', d.data.parent)
+            if (d3Table[term].includes(d.data.name) || term === d.data.name && d3Table[term].includes(d.data.name).includes(d.data.parent.name)) {
               linkClass = 'active-link';
             }
           }
