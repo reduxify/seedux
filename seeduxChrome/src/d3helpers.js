@@ -129,11 +129,14 @@ function buildBasicTree(element, data, config, d3Table, searchTerms = false) {
   .append('path')
   .attr('class', function(d) {
       let linkClass = 'link';
-      if (searchTerms) {
+      if (searchTerms.length) {
         searchTerms.forEach(term => {
           if (d3Table[term]) {
             if (d3Table[term].includes(d.data.name) || term === d.data.name) {
-              linkClass = 'active-link';
+              if (d.parent) {
+                if (d3Table[term].includes(d.parent.data.name)) { linkClass = 'active-link'; }
+              }
+              else { linkClass = 'active-link' }
             }
           }
         })
@@ -163,11 +166,18 @@ function buildBasicTree(element, data, config, d3Table, searchTerms = false) {
     .attr('r', NODE_RADIUS)
     .style('fill', function(d) {
       let color = 'lightsteelblue';
-      if (searchTerms) {
+      if (searchTerms.length) {
         searchTerms.forEach(term => {
           if (d3Table[term]) {
             if (d3Table[term].includes(d.data.name) || term === d.data.name) {
-              color = 'yellow';
+              if (d.parent) {
+                if (d3Table[term].includes(d.parent.data.name)) {
+                  color = 'yellow';
+                }
+              }
+              else {
+                color = 'yellow'
+              }
             }
           }
         })
@@ -218,11 +228,14 @@ function buildFancyTree(element, data, config, d3Table, searchTerms = false) {
     .append('path')
     .attr('class', function(d) {
       let linkClass = 'link';
-      if (searchTerms) {
+      if (searchTerms.length) {
         searchTerms.forEach(term => {
           if (d3Table[term]) {
             if (d3Table[term].includes(d.data.name) || term === d.data.name) {
-              linkClass = 'active-link';
+              if (d.parent) {
+                if (d3Table[term].includes(d.parent.data.name)) { linkClass = 'active-link'; }
+              }
+              else { linkClass = 'active-link' }
             }
           }
         })
@@ -259,7 +272,10 @@ function buildFancyTree(element, data, config, d3Table, searchTerms = false) {
         searchTerms.forEach(term => {
           if (d3Table[term]) {
             if (d3Table[term].includes(d.data.name) || term === d.data.name) {
-              color = 'yellow';
+              if (d.parent) {
+                if (d3Table[term].includes(d.parent.data.name)) { color = 'yellow'; }
+              }
+              else { color = 'yellow' }
             }
           }
         })
