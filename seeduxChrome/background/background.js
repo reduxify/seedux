@@ -7,7 +7,9 @@ function populateTable(codeObj) {
   addReducersToTable(codeObj.reducers, codeObj.actionTypes);
   addUIToTable(codeObj.ui, codeObj.uiResources, codeObj.actionMap);
   let d3TableKeys = Object.keys(d3Table);
-  d3TableKeys.forEach(key => { d3Table[key].push('APP'); })
+  d3TableKeys.forEach(key => { 
+    if (!d3Table[key].includes('APP')) { d3Table[key].push('APP'); }
+  })
   console.log('heres the table', d3Table)
   return d3Table;
 }
