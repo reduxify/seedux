@@ -282,6 +282,7 @@ class App extends React.Component {
 
     return (
       <div>
+        <div className='header'>
         <header>
         <Flash text={this.state.flashMessage} />
         <div className='toolbar-container'>
@@ -306,6 +307,7 @@ class App extends React.Component {
             </div>
       </div>
     </header>
+  </div>
         <div className='chart-container'>
           <D3Viz data={this.assembleVizData()}  chartType={this.state.settings.chartType} zoomLevel = {this.state.settings.zoomLevel} d3Table = { this.state.d3Table }  searchTerms = { this.generateSearchTerms() }/>
         </div>
