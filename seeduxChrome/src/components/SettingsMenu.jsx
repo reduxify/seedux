@@ -10,7 +10,7 @@ function saveSettings(settings) {
   localStorage.setItem('seeduxSettings', JSON.stringify(settings));
 }
 
-const SettingsMenu = ({ toggleSettings, selectTheme, settings }) => {
+const SettingsMenu = ({ toggleSettings, settings }) => {
 
   return (
     <div className = 'settings-menu'>
@@ -21,20 +21,21 @@ const SettingsMenu = ({ toggleSettings, selectTheme, settings }) => {
           <li className = 'menu-line'><button className = { getSettingsClass(settings.reducersViz) } onClick = { toggleSettings } id = 'reducersViz'> Reducers View </button></li>
           <li className = 'menu-line'><button className = { getSettingsClass(settings.transactionLog) } onClick = { toggleSettings } id = 'transactionLog'> Store Transaction Log </button></li>
           <li className = 'menu-line'><button className = { getSettingsClass(settings.logFrozen) } onClick = { toggleSettings } id = 'logFrozen'> Freeze Log </button></li>
-          <li className = 'menu-line'>
-            <select onChange = { selectTheme }>
-              <option value = 'aqua'>Aqua</option>
-              <option value = 'galaxy'>Galaxy</option>
-              <option value = 'original'>Original</option>
-              <option value = 'wilderness'>Wilderness</option>
-            </select>
-          </li>
           <li className = 'menu-line'><button className = 'btn-save-settings' onClick = { () => saveSettings(settings) }> Save Settings as Default </button></li>
         </ul>
       </Collapsible>
     </div>
   );
 };
+
+          // <li className = 'menu-line'>
+            // <select onChange = { selectTheme }>
+            //   <option value = 'aqua'>Aqua</option>
+            //   <option value = 'galaxy'>Galaxy</option>
+            //   <option value = 'original'>Original</option>
+            //   <option value = 'wilderness'>Wilderness</option>
+            // </select>
+          // </li>
 
 // SettingsMenu.propTypes = {
 //   toggleSettings: PropTypes.func.isRequired,
