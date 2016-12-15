@@ -22,7 +22,7 @@ const ActionCreator = ({ actionTypes }) => {
   });
   return (
     <div className='action-creator'>
-    <Collapsible titleString='Custom Action' role='drawer' >
+    <Collapsible titleString='Custom Action &#9660;' role='drawer' >
       <button onClick={dispatchAction}>Dispatch</button>
       <select id='action-select' defaultValue={actionTypes[0]}>
         {selectOptions}

@@ -96,6 +96,9 @@ text {
   border: 1px solid $primColor;
   padding-left: 1em;
 }
+button:hover, select:hover, .custom-file-input::-webkit-file-upload-button:hover {
+  background: $primColor * 0.7;
+}
 button, select, .custom-file-input::-webkit-file-upload-button {
   cursor: pointer;
   background: $primColor;
@@ -104,7 +107,6 @@ button, select, .custom-file-input::-webkit-file-upload-button {
   border-radius: 5px;
   padding: 0.25em 0.5em;
   margin: 0.5em;
-
 }
 
 .flipped {
@@ -125,12 +127,12 @@ button:active, .custom-file-input::-webkit-file-upload-button:active, .activeSet
 }
 .move-left {
   display: inherit;
-  left: 16em;
+  left: 17.5em;
   min-width: 20em;
 }
 .move-right {
   display: inherit;
-  left: 28em;
+  left: 29.5em;
 }
 .disabledSetting, .btn-reset {
   background-color: red;
@@ -183,7 +185,7 @@ button:active, .custom-file-input::-webkit-file-upload-button:active, .activeSet
 .subToolbar > .Collapsible:nth-child(1) {
   position: absolute;
   width: 15em;
-  left: 8em;
+  left: 9.5em;
 }
 .action-creator > .Collapsible > .Collapsible__contentOuter > .Collapsible__contentInner, .settings-menu > .Collapsible > .Collapsible__contentOuter > .Collapsible__contentInner, .subToolbar > .Collapsible > .Collapsible__contentOuter > .Collapsible__contentInner  {
   @include background-opacity($bgColor * 0.7, 1);

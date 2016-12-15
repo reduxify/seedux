@@ -13,7 +13,7 @@ function saveSettings(settings) {
 const SettingsMenu = ({ toggleSettings, selectTheme, settings, chartSelectValue, handleSelectChange }) => {
 
   return (
-      <Collapsible titleString = 'Settings' role='drawer'>
+      <Collapsible titleString = 'Settings &#9660;' role='drawer'>
         <div className = 'menu-contents'>
         <h4>
           Chart Type
@@ -45,6 +45,15 @@ const SettingsMenu = ({ toggleSettings, selectTheme, settings, chartSelectValue,
       </Collapsible>
   );
 };
+
+          // <li className = 'menu-line'>
+            // <select onChange = { selectTheme }>
+            //   <option value = 'aqua'>Aqua</option>
+            //   <option value = 'galaxy'>Galaxy</option>
+            //   <option value = 'original'>Original</option>
+            //   <option value = 'wilderness'>Wilderness</option>
+            // </select>
+          // </li>
 
 // SettingsMenu.propTypes = {
 //   toggleSettings: PropTypes.func.isRequired,
