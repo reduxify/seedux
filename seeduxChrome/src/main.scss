@@ -157,13 +157,34 @@ button:active, .custom-file-input::-webkit-file-upload-button:active, .activeSet
   outline: none;
   -webkit-user-select: none;
 }
-.link {
+.link-inactive {
   stroke: $linkColor;
   fill: none;
 }
-.active-link {
+.link-active {
   stroke: yellow;
   fill: none;
+}
+.link-hidden {
+  display: none;
+}
+.node-inactive {
+  fill: $linkColor;
+}
+.node-active {
+  fill: yellow;
+}
+.node-hidden {
+  display: none;
+}
+.node-text-active {
+  fill: white;
+}
+.node-text-inactive {
+  fill: white;
+}
+.node-text-hidden {
+  display: none;
 }
 .action-creator {
   width: 25em;

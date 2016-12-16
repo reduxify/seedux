@@ -162,6 +162,12 @@ const redoAction4 = () => {
   }
 }
 
+function moveCard(lastX, lastY, nextX, nextY) {
+ return (dispatch) => {
+   dispatch({ type: MOVE_CARD, lastX, lastY, nextX, nextY });
+ };
+}
+
 
 // Simulates code injected into Redux's native bindActionCreators function
 
@@ -181,6 +187,7 @@ const testActionCreators = seeduxbindActionCreatorsLogic({addTodo, setVisibility
 const testActionCreators2 = seeduxbindActionCreatorsLogic({addTodo2, setVisibilityFilter2, toggleTodo2, undoAction2, redoAction2});
 const testActionCreators3 = seeduxbindActionCreatorsLogic({addTodo3, setVisibilityFilter3, toggleTodo3, undoAction3, redoAction3});
 const testActionCreators4 = seeduxbindActionCreatorsLogic({addTodo4, setVisibilityFilter4, toggleTodo4, undoAction4, redoAction4});
+const testActionCreators5 = seeduxbindActionCreatorsLogic({moveCard})
 
 const answerActionCreators = {
   'name': 'Action Creators',
@@ -366,4 +373,18 @@ const answerActionCreators4 = {
   ]
 }
 
-module.exports = { testActionCreators, testActionCreators2, testActionCreators3, testActionCreators4, answerActionCreators, answerActionCreators2, answerActionCreators3, answerActionCreators4 };
+const answerActionCreators5 = {
+  'name': 'Action Creators',
+  'children': [
+    {
+      'name': 'moveCard',
+      'children': [
+        {
+          'name': 'MOVE_CARD'
+        }
+      ]
+    }
+  ]
+}
+
+module.exports = { testActionCreators, testActionCreators2, testActionCreators3, testActionCreators4, testActionCreators5, answerActionCreators, answerActionCreators2, answerActionCreators3, answerActionCreators4, answerActionCreators5 };
