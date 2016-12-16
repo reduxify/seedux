@@ -1,13 +1,14 @@
 const chai = require('chai');
 const expect = require('chai').expect;
-const { testActionCreators, testActionCreators2, testActionCreators3, testActionCreators4, answerActionCreators, answerActionCreators2, answerActionCreators3, answerActionCreators4 } = require('./fixtures/seeduxActionExtractorFixtures');
+const { testActionCreators, testActionCreators2, testActionCreators3, testActionCreators4, testActionCreators5, answerActionCreators, answerActionCreators2, answerActionCreators3, answerActionCreators4, answerActionCreators5 } = require('./fixtures/seeduxActionExtractorFixtures');
 const { actionCreatorsExtractor } = require('./../lib/seedux/src/seeduxExtractor');
 // const { Node } = require('./../lib/seedux/src/seeduxAssembler');
 const assemblerUtils = require('./../lib/seedux/src/seeduxAssembler');
 const output = actionCreatorsExtractor(testActionCreators);
 const output2 = actionCreatorsExtractor(testActionCreators2);
 const output3 = actionCreatorsExtractor(testActionCreators3);
-const output4 = actionCreatorsExtractor(testActionCreators4)
+const output4 = actionCreatorsExtractor(testActionCreators4);
+const output5 = actionCreatorsExtractor(testActionCreators5);
 
 describe('actionCreatorsExtractor', () => {
 
@@ -36,6 +37,14 @@ describe('actionCreatorsExtractor', () => {
 
   it('should return a properly structured D3 hierarchical tree output for a given input where type is a property of a different object', () => {
     expect(output4).to.deep.equal(answerActionCreators4);
+  })
+
+  it('should return a properly structured D3 hierarchical tree output for a given input where type is a property of a different object', () => {
+    expect(output4).to.deep.equal(answerActionCreators4);
+  })
+
+  it('should return a properly structured D3 hierarchical tree output for a given input where is one of many keys returned in a payload object', () => {
+    expect(output5).to.deep.equal(answerActionCreators5);
   })
 
 });
