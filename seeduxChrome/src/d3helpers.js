@@ -73,6 +73,7 @@ exports.transformVizNode = function transformVizNode(element, data, type = 'cozy
   }
 };
 function buildBasicList(element, data, config, d3Table, searchTerms) {
+  removeHiddenClasses();
   let svg = select(element)
   .append('svg')
   .attr('width', CHART_WIDTH)
@@ -103,6 +104,7 @@ function buildBasicList(element, data, config, d3Table, searchTerms) {
 
 function buildBasicTree(element, data, config, d3Table, searchTerms = false) {
   const { CHART_WIDTH, CHART_HEIGHT, DEPTH_SPACING_FACTOR, BREADTH_SPACING_FACTOR, NODE_RADIUS, LINK_WEIGHT } = config;
+  removeHiddenClasses();
   let svg = select(element)
   .append('svg')
   .attr('width', CHART_WIDTH)
@@ -128,15 +130,15 @@ function buildBasicTree(element, data, config, d3Table, searchTerms = false) {
   .enter()
   .append('path')
   .attr('class', function(d) {
-      let linkClass = 'link';
+      let linkClass = 'link-inactive';
       if (searchTerms.length) {
         searchTerms.forEach(term => {
           if (d3Table[term]) {
             if (d3Table[term].includes(d.data.name) || term === d.data.name) {
               if (d.parent) {
-                if (d3Table[term].includes(d.parent.data.name)) { linkClass = 'active-link'; }
+                if (d3Table[term].includes(d.parent.data.name)) { linkClass = 'link-active'; }
               }
-              else { linkClass = 'active-link' }
+              else { linkClass = 'link-active' }
             }
           }
         })
@@ -164,32 +166,55 @@ function buildBasicTree(element, data, config, d3Table, searchTerms = false) {
 
   nodeEnter.append('circle')
     .attr('r', NODE_RADIUS)
-    .style('fill', function(d) {
-      let color = 'lightsteelblue';
+    .attr('class', function(d) {
+      let nodeClass = 'node-inactive';
       if (searchTerms.length) {
         searchTerms.forEach(term => {
           if (d3Table[term]) {
             if (d3Table[term].includes(d.data.name) || term === d.data.name) {
               if (d.parent) {
                 if (d3Table[term].includes(d.parent.data.name)) {
-                  color = 'yellow';
+                  nodeClass = 'node-active';
                 }
               }
               else {
-                color = 'yellow'
+                nodeClass = 'node-active'
               }
             }
           }
         })
       }
-      return color;
+      return nodeClass;
     });
 
-  nodeEnter.append('text')
-    .text(function(d) {
-      return d.data.name;
-    })
-    //.style('fill', 'darkblue');
+    nodeEnter.append('text')
+        .text(function(d) {
+          return d.data.name;
+        })
+        .attr('class', function(d) {
+          let textClass = 'node-text-inactive';
+          if (searchTerms.length) {
+            searchTerms.forEach(term => {
+              if (d3Table[term]) {
+                if (d3Table[term].includes(d.data.name) || term === d.data.name) {
+                  if (d.parent) {
+                    if (d3Table[term].includes(d.parent.data.name)) { textClass = 'node-text-active'; }
+                  }
+                  else { textClass = 'node-text-active' }
+                }
+              }
+            })
+          }
+          return textClass;
+        })
+
+    if (searchTerms) {
+      let activeNodes = Array.from(document.querySelectorAll('svg .node-active'));
+
+      activeNodes.forEach((el) => {
+        el.addEventListener('click', toggleBranchVisibility);
+      }) 
+    }
 }
 
 function project(x, y, radiusMultiplier = 1) {
@@ -200,6 +225,7 @@ function project(x, y, radiusMultiplier = 1) {
 function buildFancyTree(element, data, config, d3Table, searchTerms = false) {
           console.log('d3Table', d3Table)
   const { CHART_WIDTH, CHART_HEIGHT, DEPTH_SPACING_FACTOR, BREADTH_SPACING_FACTOR, NODE_RADIUS, LINK_WEIGHT } = config;
+  removeHiddenClasses();
   let svg = select(element)
   .append('svg')
   .attr('width', CHART_WIDTH)
@@ -227,15 +253,15 @@ function buildFancyTree(element, data, config, d3Table, searchTerms = false) {
     .enter()
     .append('path')
     .attr('class', function(d) {
-      let linkClass = 'link';
+      let linkClass = 'link-inactive';
       if (searchTerms.length) {
         searchTerms.forEach(term => {
           if (d3Table[term]) {
             if (d3Table[term].includes(d.data.name) || term === d.data.name) {
               if (d.parent) {
-                if (d3Table[term].includes(d.parent.data.name)) { linkClass = 'active-link'; }
+                if (d3Table[term].includes(d.parent.data.name)) { linkClass = 'link-active'; }
               }
-              else { linkClass = 'active-link' }
+              else { linkClass = 'link-active' }
             }
           }
         })
@@ -266,32 +292,88 @@ function buildFancyTree(element, data, config, d3Table, searchTerms = false) {
 
   nodeEnter.append('circle')
     .attr('r', NODE_RADIUS)
-    .style('fill', function(d) {
-      let color = 'lightsteelblue';
+    .attr('class', function(d) {
+      let nodeClass = 'node-inactive';
       if (searchTerms.length) {
         searchTerms.forEach(term => {
           if (d3Table[term]) {
             if (d3Table[term].includes(d.data.name) || term === d.data.name) {
               if (d.parent) {
-                if (d3Table[term].includes(d.parent.data.name)) { color = 'yellow'; }
+                if (d3Table[term].includes(d.parent.data.name)) { nodeClass = 'node-active'; }
               }
-              else { color = 'yellow' }
+              else { nodeClass = 'node-active' }
             }
           }
         })
       }
-      return color;
-    });
+      return nodeClass;
+    })
+
+
+
+        // inactiveNodes.style.display === 'none' ? inactiveNodes.style.display = 'inherit' : inactiveNodes.style.display = 'inherit';
+        // linksToToggle.style.display === 'none' ? linksToToggle.style.display = 'inherit' : linksToToggle.style.display = 'inherit';
+
 
   nodeEnter.append('text')
     .text(function(d) {
       return d.data.name;
     })
+    .attr('class', function(d) {
+      let textClass = 'node-text-inactive';
+      // if (searchTerms.length) {
+      //   searchTerms.forEach(term => {
+      //     if (d3Table[term]) {
+      //       if (d3Table[term].includes(d.data.name) || term === d.data.name) {
+      //         if (d.parent) {
+      //          if (d3Table[term].includes(d.parent.data.name)) { textClass = 'node-text-active'; }
+      //         }
+      //         else { textClass = 'node-text-active' }
+      //       }
+      //     }
+      //   })
+      // }
+      return textClass;
+    })
+
     // .attr("transform", function(d) {
     //   if (!d.children) return "rotate(" + (d.x < 180 ? d.x - 90 : d.x + 90) + ")";
     //   return null;
     //   })
     // .style('fill', 'darkblue');
+    
+    if (searchTerms) {
+      let activeNodes = Array.from(document.querySelectorAll('svg .node-active'));
+
+      activeNodes.forEach((el) => {
+        el.addEventListener('click', toggleBranchVisibility);
+      }) 
+    }
 }
+
+  function removeHiddenClasses() {
+    let inactiveNodes = Array.from(document.querySelectorAll('svg .node-inactive'));
+    let inactiveLinks = Array.from(document.querySelectorAll('svg .link-inactive'));
+    let inactiveNodeText = Array.from(document.querySelectorAll('svg .node-text-inactive'));
+    let activeNodes = Array.from(document.querySelectorAll('svg .node-active'));
+    let activeLinks = Array.from(document.querySelectorAll('svg .link-active'));
+    let activeNodeText = Array.from(document.querySelectorAll('svg .node-text-active'));
+    if (inactiveNodes.length) inactiveNodes.forEach(node => node.classList.remove('node-hidden'));
+    if (inactiveLinks.length) inactiveLinks.forEach(link => link.classList.remove('link-hidden'));
+    if (inactiveNodeText.length) inactiveNodeText.forEach(text => text.classList.remove('node-text-hidden'));
+    if (activeNodes.length) activeNodes.forEach(node => node.classList.remove('node-hidden'));
+    if (activeLinks.length) activeLinks.forEach(link => link.classList.remove('link-hidden'));
+    if (activeNodeText.length) activeNodeText.forEach(text => text.classList.remove('node-text-hidden'));
+  }
+
+  function toggleBranchVisibility(e) {
+    e.preventDefault();
+    let inactiveNodes = Array.from(document.querySelectorAll('svg .node-inactive'));
+    let inactiveLinks = Array.from(document.querySelectorAll('svg .link-inactive'));
+    let inactiveNodeText = Array.from(document.querySelectorAll('svg .node-text-inactive'));
+    inactiveNodes.forEach(node => node.classList.toggle('node-hidden'));
+    inactiveLinks.forEach(link => link.classList.toggle('link-hidden'));
+    inactiveNodeText.forEach(text => text.classList.toggle('node-text-hidden'));
+  }
 
 module.exports = exports;
