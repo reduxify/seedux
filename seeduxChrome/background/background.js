@@ -7,7 +7,7 @@ function populateTable(codeObj) {
   addReducersToTable(codeObj.reducers, codeObj.actionTypes);
   addUIToTable(codeObj.ui, codeObj.uiResources, codeObj.actionMap);
   let d3TableKeys = Object.keys(d3Table);
-  d3TableKeys.forEach(key => { 
+  d3TableKeys.forEach(key => {
     if (!d3Table[key].includes('APP')) { d3Table[key].push('APP'); }
   })
   console.log('heres the table', d3Table)
@@ -15,9 +15,10 @@ function populateTable(codeObj) {
 }
 
 function addUIToTable(ui, uiResources, actionMap) {
+  if (ui) {
   const uiNameNodes = ui.children; // Array of container node objects
   let d3TableKeys = Object.keys(d3Table);
-  if (uiResources) { // Object with structure -> { container: { prop: [state or action creators] } }
+  if (uiResources && uiNameNodes) { // Object with structure -> { container: { prop: [state or action creators] } }
     uiNameNodes.forEach(node => {
       let name = uiResources[node.name]; // Look through container keys and uiResources
       let props = Object.keys(name); // Props of container in format -> { prop: [state or action creators] }
@@ -38,7 +39,7 @@ function addUIToTable(ui, uiResources, actionMap) {
             if (!d3Table[actionType].includes('Containers')) { d3Table[actionType].push('Containers'); }
           }
           else {
-            let stateKey = p; 
+            let stateKey = p;
             if (d3Table[stateKey]) {
               if (!d3Table[stateKey].includes(prop)) {
                 d3Table[stateKey].push(prop);
@@ -54,6 +55,7 @@ function addUIToTable(ui, uiResources, actionMap) {
       })
     })
   }
+}
   return d3Table;
 }
 
@@ -63,7 +65,7 @@ function addReducersToTable(reducers, actionTypes = []) {
     actionTypes.forEach(a => {
       if (!d3Table[a]) { d3Table[a] = []; };
       reducerNameNodes.forEach(node => {
-        if (node.children.length) { 
+        if (node.children.length) {
           node.children.forEach(childNode => {
             if (childNode.name === a && !d3Table[a].includes(node.name)) {
               d3Table[a].push(node.name);
@@ -77,7 +79,7 @@ function addReducersToTable(reducers, actionTypes = []) {
   return d3Table;
 }
 
-function addActionCreatorsToTable(actionCreators, actionTypes = []) {
+function addActionCreatorsToTable(actionCreators = { children: [] }, actionTypes = []) {
   const actionCreatorNameNodes = actionCreators.children;
   if (actionTypes.length) {
     actionTypes.forEach(a => {
