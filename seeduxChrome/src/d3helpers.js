@@ -104,7 +104,6 @@ function buildBasicList(element, data, config, d3Table, searchTerms) {
 
 function buildBasicTree(element, data, config, d3Table, searchTerms = false) {
   const { CHART_WIDTH, CHART_HEIGHT, DEPTH_SPACING_FACTOR, BREADTH_SPACING_FACTOR, NODE_RADIUS, LINK_WEIGHT } = config;
-  removeHiddenClasses();
   let svg = select(element)
   .append('svg')
   .attr('width', CHART_WIDTH)
@@ -225,7 +224,6 @@ function project(x, y, radiusMultiplier = 1) {
 function buildFancyTree(element, data, config, d3Table, searchTerms = false) {
           console.log('d3Table', d3Table)
   const { CHART_WIDTH, CHART_HEIGHT, DEPTH_SPACING_FACTOR, BREADTH_SPACING_FACTOR, NODE_RADIUS, LINK_WEIGHT } = config;
-  removeHiddenClasses();
   let svg = select(element)
   .append('svg')
   .attr('width', CHART_WIDTH)
@@ -309,12 +307,6 @@ function buildFancyTree(element, data, config, d3Table, searchTerms = false) {
       return nodeClass;
     })
 
-
-
-        // inactiveNodes.style.display === 'none' ? inactiveNodes.style.display = 'inherit' : inactiveNodes.style.display = 'inherit';
-        // linksToToggle.style.display === 'none' ? linksToToggle.style.display = 'inherit' : linksToToggle.style.display = 'inherit';
-
-
   nodeEnter.append('text')
     .text(function(d) {
       return d.data.name;
@@ -350,21 +342,6 @@ function buildFancyTree(element, data, config, d3Table, searchTerms = false) {
       }) 
     }
 }
-
-  function removeHiddenClasses() {
-    let inactiveNodes = Array.from(document.querySelectorAll('svg .node-inactive'));
-    let inactiveLinks = Array.from(document.querySelectorAll('svg .link-inactive'));
-    let inactiveNodeText = Array.from(document.querySelectorAll('svg .node-text-inactive'));
-    let activeNodes = Array.from(document.querySelectorAll('svg .node-active'));
-    let activeLinks = Array.from(document.querySelectorAll('svg .link-active'));
-    let activeNodeText = Array.from(document.querySelectorAll('svg .node-text-active'));
-    if (inactiveNodes.length) inactiveNodes.forEach(node => node.classList.remove('node-hidden'));
-    if (inactiveLinks.length) inactiveLinks.forEach(link => link.classList.remove('link-hidden'));
-    if (inactiveNodeText.length) inactiveNodeText.forEach(text => text.classList.remove('node-text-hidden'));
-    if (activeNodes.length) activeNodes.forEach(node => node.classList.remove('node-hidden'));
-    if (activeLinks.length) activeLinks.forEach(link => link.classList.remove('link-hidden'));
-    if (activeNodeText.length) activeNodeText.forEach(text => text.classList.remove('node-text-hidden'));
-  }
 
   function toggleBranchVisibility(e) {
     e.preventDefault();

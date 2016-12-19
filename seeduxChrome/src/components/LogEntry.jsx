@@ -53,7 +53,6 @@ const LogEntry = ({ entry, index, futury, present, restore }) => {
   const payload = Object.assign({}, modifiedAction);
   delete payload.type;
   const entryClass = futury ? 'log-entry-future' : 'log-entry-history';
-  console.log(theme);
   return (
     <Collapsible open={present} className={entryClass} role={'logEntry'}
       titleString={`Action # ${index} : ${modifiedAction.type}`} buttonHandler={() => restore(index)}>
