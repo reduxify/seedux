@@ -70,11 +70,9 @@ const testReducers = {
 }
 
 // testActionTypes1 corresponds with testReducers
-
 const testActionTypes1 = ['SET_VISIBILITY_FILTER', 'ADD_TODO', 'TOGGLE_TODO'];
 
 // testActionTypes2 corresponds with testActionCreators
-
 const testActionTypes2 = ['ADD_TODO', 'SET_VISIBILITY_FILTER', 'TOGGLE_TODO', 'UNDO', 'REDO'];
 
 const testUI = {

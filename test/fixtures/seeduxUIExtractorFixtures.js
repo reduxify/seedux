@@ -80,7 +80,6 @@ function mapDispatchToPropsTestLink(dispatch, ownProps) {
 	}
 
 // Browserified TodoList:
-
 	var BrowserifyTestTodoList = function BrowserifyTestTodoList(_ref) {
   var _ref$todos = _ref.todos,
       todos = _ref$todos === undefined ? [] : _ref$todos,
@@ -101,7 +100,6 @@ function mapDispatchToPropsTestLink(dispatch, ownProps) {
 };
 
 // Simulates code injected into React-Redux's native Connect function
-
 function seeduxReactReduxConnectLogic(mapStateToProps, mapDispatchToProps) {
   let mappedStateString, mappedDispatchString;
 	if (!mapStateToProps && !mapDispatchToProps) { 
