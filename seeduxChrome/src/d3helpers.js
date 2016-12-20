@@ -213,7 +213,7 @@ function buildBasicTree(element, data, config, d3Table, searchTerms = false) {
 
       activeNodes.forEach((el) => {
         el.addEventListener('click', toggleBranchVisibility);
-      }) 
+      })
     }
 }
 
@@ -321,18 +321,18 @@ function buildFancyTree(element, data, config, d3Table, searchTerms = false) {
     })
     .attr('class', function(d) {
       let textClass = 'node-text-inactive';
-      // if (searchTerms.length) {
-      //   searchTerms.forEach(term => {
-      //     if (d3Table[term]) {
-      //       if (d3Table[term].includes(d.data.name) || term === d.data.name) {
-      //         if (d.parent) {
-      //          if (d3Table[term].includes(d.parent.data.name)) { textClass = 'node-text-active'; }
-      //         }
-      //         else { textClass = 'node-text-active' }
-      //       }
-      //     }
-      //   })
-      // }
+      if (searchTerms.length) {
+        searchTerms.forEach(term => {
+          if (d3Table[term]) {
+            if (d3Table[term].includes(d.data.name) || term === d.data.name) {
+              if (d.parent) {
+               if (d3Table[term].includes(d.parent.data.name)) { textClass = 'node-text-active'; }
+              }
+              else { textClass = 'node-text-active' }
+            }
+          }
+        })
+      }
       return textClass;
     })
 
@@ -341,13 +341,13 @@ function buildFancyTree(element, data, config, d3Table, searchTerms = false) {
     //   return null;
     //   })
     // .style('fill', 'darkblue');
-    
+
     if (searchTerms) {
       let activeNodes = Array.from(document.querySelectorAll('svg .node-active'));
 
       activeNodes.forEach((el) => {
         el.addEventListener('click', toggleBranchVisibility);
-      }) 
+      })
     }
 }
 

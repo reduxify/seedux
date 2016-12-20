@@ -13,7 +13,18 @@ const Log = ({ history, future, restoreFromHistory, restoreFromFuture }) => {
   return (
     <div className='log-container'>
       {historyEntries}
+      <div className='time-label'>
+        <i className="fa fa-arrow-up" aria-hidden="true"></i>
+        &nbsp; PAST &nbsp;
+        <i className="fa fa-arrow-up" aria-hidden="true"></i>
+      </div>
       <hr />
+      <div className='time-label'>
+        <i className="fa fa-arrow-down" aria-hidden="true"></i>
+        &nbsp; FUTURE &nbsp;
+        <i className="fa fa-arrow-down" aria-hidden="true"></i>
+
+      </div>
       {futureEntries}
     </div>
   )

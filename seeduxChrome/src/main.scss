@@ -5,10 +5,10 @@
 // $linkColor: #0a0a0a;
 
 // Night theme!
-
-$bgColor: #050A24;
-$primColor: #6E89FF;
-$linkColor: #214AFF;
+//
+// $bgColor: #050A24;
+// $primColor: #6E89FF;
+// $linkColor: #214AFF;
 
 // Nature theme!
 
@@ -18,9 +18,12 @@ $linkColor: #214AFF;
 
 // Ocean theme!
 
-// $bgColor: #024C3F;
-// $primColor: #04BF9D;
-// $linkColor: #05FFFF;
+$bgColor: #fafafa;
+$primColor: #171C44;
+$linkColor: $primColor * 6;
+$activeColor: #f40051;
+
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|Syncopate:700');
 
 @mixin background-opacity($color, $opacity: 0.3) {
     background: $color; /* The Fallback */
@@ -37,16 +40,21 @@ $linkColor: #214AFF;
 .header {
   position: fixed;
   width: 100%;
-  height: 7em;
-  background-color: $bgColor;
+  height: 8em;
+  background-color: $bgColor * 0.9;
+  border-bottom: $primColor 1px solid;
 }
 body {
   color: $primColor;
   background-color: $bgColor;
   padding: 0;
   margin: 0;
+  font-family: 'Open Sans';
 }
 h1 {
+  font-family: "Syncopate";
+  font-weight: 700;
+  font-size: 3em;
   display: inline;
 }
 
@@ -55,12 +63,8 @@ ul {
   list-style: none;
 }
 .flashMessage {
+  font-size: 1.2em;
   margin: 0 1em;
-}
-
-text {
-  fill: $primColor;
-  font-weight: bold;
 }
 
 .diff-json-container {
@@ -92,7 +96,7 @@ text {
   font-weight: 700;
 }
 .Collapsible:nth-of-type(odd) {
-  background-color: $bgColor * 3;
+  background-color: $bgColor * 0.8;
 }
 .Collapsible {
   border: 1px solid $primColor;
@@ -102,13 +106,15 @@ button:hover, select:hover, .custom-file-input::-webkit-file-upload-button:hover
   background: $primColor * 0.7;
 }
 button, select, .custom-file-input::-webkit-file-upload-button {
+  font-family: 'Open Sans';
+  font-weight: 700;
   cursor: pointer;
   background: $primColor;
   color: white;
   border: none;
   border-radius: 5px;
-  padding: 0.25em 0.5em;
-  margin: 0.5em;
+  padding: 0.5em 0.75em;
+  margin: 0.25em;
 }
 
 .flipped {
@@ -127,14 +133,19 @@ button, select, .custom-file-input::-webkit-file-upload-button {
 button:active, .custom-file-input::-webkit-file-upload-button:active, .activeSetting {
   background: green;
 }
+.time-label {
+  text-align: center;
+  font-size: 1.5em;
+  font-weight: 700;
+}
 .move-left {
   display: inherit;
-  left: 17.5em;
+  left: 7.5em;
   min-width: 20em;
 }
 .move-right {
   display: inherit;
-  left: 29.5em;
+  left: 32.5em;
 }
 .disabledSetting, .btn-reset {
   background-color: red;
@@ -162,7 +173,7 @@ button:active, .custom-file-input::-webkit-file-upload-button:active, .activeSet
   fill: none;
 }
 .link-active {
-  stroke: yellow;
+  stroke: $activeColor;
   fill: none;
 }
 .link-hidden {
@@ -172,16 +183,16 @@ button:active, .custom-file-input::-webkit-file-upload-button:active, .activeSet
   fill: $linkColor;
 }
 .node-active {
-  fill: yellow;
+  fill: $activeColor;
 }
 .node-hidden {
   display: none;
 }
 .node-text-active {
-  fill: white;
+  fill: black;
 }
 .node-text-inactive {
-  fill: white;
+  fill: $primColor;
 }
 .node-text-hidden {
   display: none;
@@ -189,7 +200,7 @@ button:active, .custom-file-input::-webkit-file-upload-button:active, .activeSet
 .action-creator {
   width: 25em;
   display: inline;
-  left: 6.5em;
+  left: 21em;
   position: absolute;
 }
 .action-creator > .Collapsible, .subToolbar > .Collapsible {
@@ -207,10 +218,10 @@ button:active, .custom-file-input::-webkit-file-upload-button:active, .activeSet
 .subToolbar > .Collapsible:nth-child(1) {
   position: absolute;
   width: 15em;
-  left: 9.5em;
+  left: 10em;
 }
 .action-creator > .Collapsible > .Collapsible__contentOuter > .Collapsible__contentInner, .settings-menu > .Collapsible > .Collapsible__contentOuter > .Collapsible__contentInner, .subToolbar > .Collapsible > .Collapsible__contentOuter > .Collapsible__contentInner  {
-  @include background-opacity($bgColor * 0.7, 1);
+  @include background-opacity($bgColor * 0.7, 0.8);
   border: 1px solid $primColor;
   border-radius: 5px;
   padding: 1em;

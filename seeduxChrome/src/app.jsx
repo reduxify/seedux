@@ -290,11 +290,11 @@ class App extends React.Component {
             <button onClick={() => this.handleZoomClick('in')}><i className="fa fa-search-plus" aria-hidden="true"></i></button>
             <button onClick={() => this.handleZoomClick('out')}><i className="fa fa-search-minus" aria-hidden="true"></i></button>
           </div>
-            <ActionCreator actionTypes={this.state.actionTypes}/>
             <div className='subToolbar move-left'>
               <button onClick={undo}><span className="scaled">&#9100; </span> Undo</button>
               <button onClick={redo}><span className="flipped">&#9100; </span> Redo</button>
             </div>
+            <ActionCreator actionTypes={this.state.actionTypes}/>
             <div className='subToolbar move-right'>
               <SettingsMenu toggleSettings = {this.toggleSettings.bind(this)} settings = {this.state.settings} handleSelectChange={this.handleSelectChange.bind(this)} chartSelectValue={this.state.settings.chartType}/>
               <LogDrawer stashLog={() => this.stashLog()}
@@ -302,8 +302,6 @@ class App extends React.Component {
                 exportLog={() => this.exportLog()}
                 importLog={this.importLog.bind(this)}
                 resetLog={() => this.resetLog()} />
-            </div>
-            <div className='subToolbar'>
             </div>
       </div>
     </header>
