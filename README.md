@@ -1,6 +1,6 @@
 <div align='center'>
   <img src='https://github.com/reduxify/seedux/blob/master/assets/threedux-small.png' alt='Seedux Logo'>
-  # [SEEDUX]
+  <h1 text-align='center'> [SEEDUX] </h1>
 </div>
 
 # Description
