@@ -1,5 +1,5 @@
 <div align='center'>
-  <img src='http://i63.tinypic.com/11j9e83.png' alt='Seedux Logo'>
+  <img src='http://i67.tinypic.com/24e2kbr.png' alt='Seedux Logo'>
 </div>
 
 # Description
