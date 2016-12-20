@@ -6,9 +6,11 @@
 
 // Night theme!
 //
-// $bgColor: #050A24;
-// $primColor: #6E89FF;
-// $linkColor: #214AFF;
+$bgColor: #050A24;
+$primColor: #6E89FF;
+$linkColor: #214AFF;
+$activeColor: #f40051;
+$popColor: white;
 
 // Nature theme!
 
@@ -18,10 +20,10 @@
 
 // Ocean theme!
 
-$bgColor: #fafafa;
-$primColor: #171C44;
-$linkColor: $primColor * 6;
-$activeColor: #f40051;
+// $bgColor: #fafafa;
+// $primColor: #171C44;
+// $linkColor: $primColor * 6;
+// $popColor: black;
 
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|Syncopate:700');
 
@@ -50,6 +52,9 @@ body {
   padding: 0;
   margin: 0;
   font-family: 'Open Sans';
+}
+table {
+  color: $popColor;
 }
 h1 {
   font-family: "Syncopate";
@@ -189,7 +194,7 @@ button:active, .custom-file-input::-webkit-file-upload-button:active, .activeSet
   display: none;
 }
 .node-text-active {
-  fill: black;
+  fill: $popColor;
 }
 .node-text-inactive {
   fill: $primColor;
