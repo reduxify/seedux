@@ -39,6 +39,7 @@ $popColor: white;
   padding: 1em;
   margin: 0;
 }
+
 .header {
   position: fixed;
   width: 100%;
@@ -46,6 +47,7 @@ $popColor: white;
   background-color: $bgColor * 0.9;
   border-bottom: $primColor 1px solid;
 }
+
 body {
   color: $primColor;
   background-color: $bgColor;
@@ -56,6 +58,7 @@ body {
 table {
   color: $popColor;
 }
+
 h1 {
   font-family: "Syncopate";
   font-weight: 700;
@@ -67,6 +70,7 @@ ul {
   padding-left: 0;
   list-style: none;
 }
+
 .flashMessage {
   font-size: 1.2em;
   margin: 0 1em;
@@ -79,10 +83,11 @@ ul {
   width: 30%;
   display: inline-block;
 }
+
 .log-action-label {
   font-weight: 700;
 }
-// debug borders
+
 .col1, .col2, .col3 {
   display: inline-block;
   border-top: 1px solid $primColor;
@@ -90,26 +95,33 @@ ul {
   border-right: 1px solid $primColor;
   width: 15em;
 }
+
 .diff-json-container {
   width: 13em;
 }
+
 .diff-path, .diff-json-container {
   height: inherit;
 }
+
 .Collapsible__trigger {
   font-size: 1.5em;
   font-weight: 700;
 }
+
 .Collapsible:nth-of-type(odd) {
   background-color: $bgColor * 0.8;
 }
+
 .Collapsible {
   border: 1px solid $primColor;
   padding-left: 1em;
 }
+
 button:hover, select:hover, .custom-file-input::-webkit-file-upload-button:hover {
   background: $primColor * 0.7;
 }
+
 button, select, .custom-file-input::-webkit-file-upload-button {
   font-family: 'Open Sans';
   font-weight: 700;
@@ -129,11 +141,11 @@ button, select, .custom-file-input::-webkit-file-upload-button {
   transform: scale(-1.4, 1.4);
   padding-left: 0.25em;
 }
+
 .scaled {
   -webkit-transform: scale(-1.4, 1.4);
   transform: scale(-1.4, 1.4);
 }
-// content, file folder: 	&#128194;
 
 button:active, .custom-file-input::-webkit-file-upload-button:active, .activeSetting {
   background: green;
@@ -148,110 +160,136 @@ button:active, .custom-file-input::-webkit-file-upload-button:active, .activeSet
   left: 7.5em;
   min-width: 20em;
 }
+
 .move-right {
   display: inherit;
   left: 32.5em;
 }
+
 .disabledSetting, .btn-reset {
   background-color: red;
 }
+
 .menu-lines {
   list-style-type: none;
   text-align: center;
 }
+
 .banner {
   padding: 1em;
   height: 3em;
   width: 100%;
   top: 0;
 }
+
 .settings-title {
   text-align: center;
   cursor: pointer;
 }
+
 .custom-file-input::-webkit-file-upload-button {
   outline: none;
   -webkit-user-select: none;
 }
+
 .link-inactive {
   stroke: $linkColor;
   fill: none;
 }
+
 .link-active {
   stroke: $activeColor;
   fill: none;
 }
+
 .link-hidden {
   display: none;
 }
+
 .node-inactive {
   fill: $linkColor;
 }
 .node-active {
   fill: $activeColor;
 }
+
 .node-hidden {
   display: none;
 }
+
 .node-text-active {
   fill: $popColor;
 }
+
 .node-text-inactive {
   fill: $primColor;
 }
+
 .node-text-hidden {
   display: none;
 }
+
 .action-creator {
   width: 25em;
   display: inline;
   left: 21em;
   position: absolute;
 }
+
 .action-creator > .Collapsible, .subToolbar > .Collapsible {
   padding: 0;
   background-color: transparent;
   border: 0;
 }
+
 .subToolbar > .Collapsible:nth-child(2) {
   display: inherit;
   width: 15em;
 }
+
 .subToolbar > .Collapsible > div > div {
   text-align: center;
 }
+
 .subToolbar > .Collapsible:nth-child(1) {
   position: absolute;
   width: 15em;
   left: 10em;
 }
+
 .action-creator > .Collapsible > .Collapsible__contentOuter > .Collapsible__contentInner, .settings-menu > .Collapsible > .Collapsible__contentOuter > .Collapsible__contentInner, .subToolbar > .Collapsible > .Collapsible__contentOuter > .Collapsible__contentInner  {
   @include background-opacity($bgColor * 0.7, 0.8);
   border: 1px solid $primColor;
   border-radius: 5px;
   padding: 1em;
 }
+
 .subToolbar {
   display: inline;
   z-index: 5;
   position: absolute;
 }
+
 .chart-container {
   padding-top: 5em;
   z-index: 0;
   width: 100%;
   overflow: scroll;
 }
+
 .log-entry-history, .log-entry-future {
   padding-left: 1em;
 }
+
 .log-container {
   padding: 0.5em;
   padding-top: 3em;
 }
+
 .menu-contents {
   list-style: none;
 }
+
 .toolbar-container {
   display: inline;
 }

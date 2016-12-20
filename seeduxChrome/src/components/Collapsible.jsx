@@ -111,9 +111,9 @@ var Collapsible = React.createClass({
   },
 
   componentDidMount: function() {
+
     //Set up event listener to listen to transitionend so we can switch the height from fixed pixel to auto for much responsiveness;
     //TODO:  Once Synthetic transitionend events have been exposed in the next release of React move this funciton to a function handed to the onTransitionEnd prop
-
     this.refs.outer.addEventListener(this.whichTransitionEnd(this.refs.outer), (event) => {
       if(this.state.isClosed === false){
         this.setState({
@@ -127,6 +127,7 @@ var Collapsible = React.createClass({
   componentDidUpdate: function(prevProps) {
 
     if(this.state.shouldSwitchAutoOnNextCycle === true && this.state.isClosed === false) {
+
       //Set the height to auto to make compoenent re-render with the height set to auto.
       //This way the dropdown will be responsive and also change height if there is another dropdown within it.
       this.makeResponsive();
@@ -196,6 +197,7 @@ var Collapsible = React.createClass({
   },
 
   prepareToOpen: function() {
+
     //The height has been changes back to fixed pixel, we set a small timeout to force the CSS transition back to 0 on the next tick.
     window.setTimeout(() => {
       this.setState({
@@ -224,7 +226,6 @@ var Collapsible = React.createClass({
       if(!this.state.hasBeenOpened)
           children = null;
 
-    // this is cheesy
     let trigger;
     if (this.props.role === 'logEntry') trigger = <ActionTitle clickHandler={this.handleTriggerClick} titleString={this.props.titleString} buttonHandler={this.props.buttonHandler} />
     else if (this.props.role === 'titleMenu') trigger =<SettingsTitle clickHandler={this.handleTriggerClick} titleString={this.props.titleString} />

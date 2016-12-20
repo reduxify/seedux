@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react'
 import LogEntry from './LogEntry';
 
 const Log = ({ history, future, restoreFromHistory, restoreFromFuture }) => {
+  
   // map over history and future arrays to assemble their respective LogEntry components
   const historyEntries = history.map((historyEntry, index) => {
     return (<LogEntry key={index} index={index} entry={historyEntry} futury={false} present={index === history.length - 1} restore={restoreFromHistory}/>)

@@ -13,6 +13,7 @@ import getGreetings from './greetings';
 function getPaddedMinutes(dateObj) {
   return dateObj.getMinutes() < 10 ? `0${dateObj.getMinutes()}` : dateObj.getMinutes();
 }
+
 function makeStashableLog({ history, future, actionCreators, actionTypes, reducers, ui }, format) {
   const separator = format ? 2 : null;
   return JSON.stringify({
@@ -24,12 +25,13 @@ function makeStashableLog({ history, future, actionCreators, actionTypes, reduce
     ui,
   }, null, separator);
 }
+
 class App extends React.Component {
   constructor(props) {
     super(props);
+
     // dig around in LocalStorage to get saved settings
     const storedSettings = JSON.parse(localStorage.getItem('seeduxSettings'));
-    console.log('Dug up settings: ', storedSettings);
     const settings = storedSettings ? storedSettings
       : {
         containersViz: true,
@@ -38,7 +40,6 @@ class App extends React.Component {
         transactionLog: true,
         logFrozen: false,
         chartType: 'fancyTree',
-        // theme: 'galaxy',
         zoomLevel: 1,
       };
     this.state = {
@@ -53,6 +54,7 @@ class App extends React.Component {
       chartType: 'comfyTree',
       flashMessage: getGreetings(),
     };
+
     // send a msg to the background script to ask for the current Log
     // and set the freezeLog state.
     chrome.extension.sendMessage(
@@ -62,7 +64,6 @@ class App extends React.Component {
           freezeLog: this.state.freezeLog,
         },
       }, (response) => {
-        console.log('Initial Log Population: ', response.history, response.future);
         this.setState({
           ui: response.codeObj.ui || {},
           actionCreators: response.codeObj.actionCreators || {},
@@ -76,12 +77,13 @@ class App extends React.Component {
 
     // add a listener for new log Entries from the content script
     chrome.runtime.onMessage.addListener((msg, sender, response) => {
+
       // msg from content script with new history entry
       if (msg.type === 'addToLog' && !this.state.settings.logFrozen) {
+
         // add to our local copy of the log and update State,
         // discarding any existing future
         const newHistory = this.state.history;
-        // console.log('Got New Entry!');
         newHistory.push(msg.historyEntry);
         this.setState({
           history: newHistory,
@@ -91,16 +93,18 @@ class App extends React.Component {
     });
     this.generateSearchTerms.bind(this);
   }
+
   resetLog() {
+
     // send a message to the background script to reset its history
     chrome.extension.sendMessage({type: 'resetLog'}, (response) => {
-      // console.log('Log Reset.');
       this.setState({
         future: [],
         history: [],
       });
     });
   }
+
   handleSelectChange(event) {
     const newSettings =  {
       ...this.state.settings,
@@ -108,6 +112,7 @@ class App extends React.Component {
     }
     this.setState({settings: newSettings});
   }
+
   handleZoomClick(direction) {
     let newZoomLevel = this.state.settings.zoomLevel;
     if (direction === 'in') {
@@ -120,6 +125,7 @@ class App extends React.Component {
       settings: { ...this.state.settings, zoomLevel: newZoomLevel },
     });
   }
+
   assembleVizData() {
     const assembledData = {
       name: 'APP',
@@ -131,62 +137,20 @@ class App extends React.Component {
     if (!assembledData.children.length) assembledData.children = null;
     return assembledData;
   }
-  createViz(data, name) {
-    // DEPRECATED: this is still here in case we want to use the logic to render an appropriate error message in the
-    // case that incomplete code parsing data has been returned from our extractor functions.
-    console.log('createVizdata: ', data);
 
-    // Providing mapping object to allow for constant time look-up of setting booleans in state using headNode names
-
-    const mapNodeNamesToSettings = {
-      'Containers': 'containersViz',
-      'Reducers': 'reducersViz',
-      'Action Creators': 'actionCreatorsViz'
-    }
-
-    // If given setting boolean in state is false, return rather than displaying visualization or an error message
-
-    if (!this.state.settings[mapNodeNamesToSettings[data.name]]) {
-      return
-    }
-
-    const searchTerms = [];
-    let actionType = this.state.history.length ? this.state.history[this.state.history.length - 1].modifiedAction.type : null;
-    if (actionType) { searchTerms.push(actionType); }
-    if (this.state.history[this.state.history.length - 1].diffs.length) {
-      this.state.history[this.state.history.length - 1].diffs.forEach(diff => {
-        if (diff.path) {
-          diff.path.forEach(p => {
-            searchTerms.push(p);
-          });
-        }
-      });
-    }
-
-    // check if our code parsing data has come through.  if not, render a
-    // friendly message.
-    return (!data.children || !data.children.length) ?
-      <ParsingError failureType={name} /> :
-      <D3Viz data={data}
-        chartType={this.state.settings.chartType}
-        d3Table = { this.state.d3Table }
-
-        // Add additional search term(s) of state keys with changed values
-
-        searchTerms = { searchTerms } />
-  }
   stashLog() {
     localStorage.setItem('seeduxLog', makeStashableLog(this.state, false));
-    console.log('Extension Settings Stashed.');
   }
+
   unStashLog() {
     if (localStorage.getItem('seeduxLog')) {
       const newState = Object.assign({}, JSON.parse(localStorage.getItem('seeduxLog')));
-      console.log('Re-loading Extension State: ', newState);
       this.setState(newState);
     }
   }
+
   restore(direction, index) {
+
     // this is the 'brains' of the entire restore-state process; it determines what the newHistory
     // and newFuture should be, and sends them to the background script for storage.  The background script passes
     // just the 'new' i.e. restored state on to the content script -> seeduxLogger listener -> combineReducers listener route,
@@ -200,17 +164,15 @@ class App extends React.Component {
       newHistory = this.state.history.concat(this.state.future.slice(0, index + 1));
     }
     if (newHistory && newFuture) chrome.extension.sendMessage({type: 'restoreFromTool', newHistory, newFuture }, (response) => {
-      console.log('Restoring to index: ', index, ' from ', direction);
-      console.log('new history: ', newHistory, ' new Future: ', newFuture);
       this.setState({
         history: newHistory,
         future: newFuture,
       });
     });
   }
+
   importLog(evt) {
     const file = evt.target.files[0];
-    console.log('Got File: ', file);
     if (!file) return;
     const reader = new FileReader();
     reader.onload = (readEvt) => {
@@ -224,20 +186,25 @@ class App extends React.Component {
     }
     reader.readAsText(file);
   }
+
   flashMessage(flashMessage) {
     this.setState(flashMessage);
   }
+
   exportLog() {
     const now = new Date();
     const formattedDate = `${now.getMonth()}-${now.getDate()}-${now.getYear().toString().slice(1)} ${now.getHours()}-${getPaddedMinutes(now)}`;
     const blob = new Blob([makeStashableLog(this.state, true)], {type: "text/plain;charset=utf-8"});
     fileSaver.saveAs(blob, `seeduxLog ${formattedDate}.json`);
   }
+
   toggleSettings(e) {
+
     // handle clicks in the settings menu by toggling the associated boolean stored in state.settings
     e.preventDefault();
     let changedSetting = e.target.id;
     let newSettingStatus = !this.state.settings[changedSetting];
+
     // in the case that logFrozen is toggled, we must notify the background script as well
     if (e.target.id === 'logFrozen') {
       chrome.extension.sendMessage({type: 'freezeLog'}, (response) => {
@@ -248,11 +215,7 @@ class App extends React.Component {
       settings: newSettings
     });
   }
-  // selectTheme(e) {
-  //   e.preventDefault();
-  //   let newTheme = e.target.value;
-  //   let newSettings = Object.assign({}, this.state.settings, { theme: newTheme } );
-  // }
+
   generateSearchTerms() {
     const searchTerms = [];
     if (this.state.history.length) {
@@ -268,12 +231,15 @@ class App extends React.Component {
     }
     return searchTerms;
   }
+
   render() {
+
     // retrieve latest diffs from our history
     let diffs = [];
     if (this.state.history.length) {
       diffs = this.state.history[this.state.history.length - 1].diffs;
     }
+
     // (partially) apply our restore function to provide invididual button functionality to be passed as props
     const restoreFromHistory = (index) => this.restore('past', index);
     const restoreFromFuture = (index) => this.restore('future', index);
@@ -283,18 +249,18 @@ class App extends React.Component {
     return (
       <div>
         <div className='header'>
-        <header>
-        <Flash text={this.state.flashMessage} />
-        <div className='toolbar-container'>
-          <div className='subToolbar'>
-            <button onClick={() => this.handleZoomClick('in')}><i className="fa fa-search-plus" aria-hidden="true"></i></button>
-            <button onClick={() => this.handleZoomClick('out')}><i className="fa fa-search-minus" aria-hidden="true"></i></button>
-          </div>
+          <header>
+          <Flash text={this.state.flashMessage} />
+          <div className='toolbar-container'>
+            <div className='subToolbar'>
+              <button onClick={() => this.handleZoomClick('in')}><i className="fa fa-search-plus" aria-hidden="true"></i></button>
+              <button onClick={() => this.handleZoomClick('out')}><i className="fa fa-search-minus" aria-hidden="true"></i></button>
+            </div>
+            <ActionCreator actionTypes={this.state.actionTypes}/>
             <div className='subToolbar move-left'>
               <button onClick={undo}><span className="scaled">&#9100; </span> Undo</button>
               <button onClick={redo}><span className="flipped">&#9100; </span> Redo</button>
             </div>
-            <ActionCreator actionTypes={this.state.actionTypes}/>
             <div className='subToolbar move-right'>
               <SettingsMenu toggleSettings = {this.toggleSettings.bind(this)} settings = {this.state.settings} handleSelectChange={this.handleSelectChange.bind(this)} chartSelectValue={this.state.settings.chartType}/>
               <LogDrawer stashLog={() => this.stashLog()}
@@ -303,15 +269,15 @@ class App extends React.Component {
                 importLog={this.importLog.bind(this)}
                 resetLog={() => this.resetLog()} />
             </div>
+          </div>
+          </header>
       </div>
-    </header>
-  </div>
-        <div className='chart-container'>
-          <D3Viz data={this.assembleVizData()}  chartType={this.state.settings.chartType} zoomLevel = {this.state.settings.zoomLevel} d3Table = { this.state.d3Table }  searchTerms = { this.generateSearchTerms() }/>
-        </div>
+      <div className='chart-container'>
+        <D3Viz data={this.assembleVizData()}  chartType={this.state.settings.chartType} zoomLevel = {this.state.settings.zoomLevel} d3Table = { this.state.d3Table }  searchTerms = { this.generateSearchTerms() }/>
         <hr />
-          <Log history={this.state.history} future={this.state.future} restoreFromHistory={restoreFromHistory} restoreFromFuture={restoreFromFuture} />
+        <Log history={this.state.history} future={this.state.future} restoreFromHistory={restoreFromHistory} restoreFromFuture={restoreFromFuture} />
       </div>
+    </div>
     )
   }
 }

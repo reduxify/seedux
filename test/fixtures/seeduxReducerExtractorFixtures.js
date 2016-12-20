@@ -1,5 +1,4 @@
 // testReducers: switch statements
-
 const visibilityFilter = (state = 'SHOW_ALL', action) => {
   switch (action.type) {
     case 'SET_VISIBILITY_FILTER':
@@ -48,7 +47,6 @@ const todos = (state = [], action) => {
 }
 
 // testReducers2: ternary statements
-
 const counter = (state = 0, action) => {
   action.type === 'INCREMENT' ? state + 1 : state;
   action.type === 'DECREMENT' ? state - 1 : state;
@@ -60,7 +58,6 @@ const stack = (state = [], action) => {
 }
 
 // testReducers3: conditional statements
-
 const counter2 = (state = 0, action) => {
   if (action.type === 'INCREMENT') {
     return state++;
@@ -86,7 +83,6 @@ const stack2 = (state = [], action) => {
 }
 
 // testReducers4: switch statements and constants object
-
 const constants = {
   SET_VISIBILITY_FILTER: 'SET_VISIBILITY_FILTER',
   ADD_TODO: 'ADD_TODO',
@@ -145,7 +141,6 @@ const todos2 = (state = [], action) => {
 }
 
 // testReducers5: ternary statements and constants object
-
 const counter3 = (state = 0, action) => {
   action.type === constants.INCREMENT ? state + 1 : state;
   action.type === constants.DECREMENT ? state - 1 : state;
@@ -157,7 +152,6 @@ const stack3 = (state = [], action) => {
 }
 
 // testReducers6: conditional statements and constants object
-
 const counter4 = (state = 0, action) => {
   if (action.type === constants.INCREMENT) {
     return state++;
@@ -183,7 +177,6 @@ const stack4 = (state = [], action) => {
 }
 
 // Simulates code injected into Redux's native combineReducers function
-
 function seeduxCombineReducersLogic(reducers) {
   var reducerKeys = Object.keys(reducers)
   
