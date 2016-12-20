@@ -4,7 +4,7 @@ const { webpackTestUI1, webpackTestUI2, webpackTestUI3, webpackTestUI4, webpackT
 const { uiExtractor } = require('./../lib/seedux/src/seeduxExtractor');
 const { Node, resetUIHeadNode } = require('./../lib/seedux/src/seeduxAssembler');
 
-describe('uiExtractor (React)', () => {
+describe('uiExtractor', () => {
 
 afterEach(() => {
   resetUIHeadNode();

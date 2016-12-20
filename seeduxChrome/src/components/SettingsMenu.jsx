@@ -6,7 +6,6 @@ function getSettingsClass(setting) {
 }
 
 function saveSettings(settings) {
-  console.log('Saving settings: ', settings);
   localStorage.setItem('seeduxSettings', JSON.stringify(settings));
 }
 
@@ -46,32 +45,4 @@ const SettingsMenu = ({ toggleSettings, selectTheme, settings, chartSelectValue,
   );
 };
 
-          // <li className = 'menu-line'>
-            // <select onChange = { selectTheme }>
-            //   <option value = 'aqua'>Aqua</option>
-            //   <option value = 'galaxy'>Galaxy</option>
-            //   <option value = 'original'>Original</option>
-            //   <option value = 'wilderness'>Wilderness</option>
-            // </select>
-          // </li>
-
-// SettingsMenu.propTypes = {
-//   toggleSettings: PropTypes.func.isRequired,
-//   settings: PropTypes.objectOf(PropTypes.shape({
-//     containersViz: PropTypes.bool.isRequired,
-//     actionCreatorsViz: PropTypes.bool.isRequired,
-//     reducersViz: PropTypes.bool.isRequired,
-//     transactionLog: PropTypes.bool.isRequired
-//   }).isRequired).isRequired
-// };
-
 export default SettingsMenu;
-// theme menu code TO BE USED LATER
-// <li className = 'menu-line'>
-//   <select onChange = { selectTheme }>
-//     <option value = 'aqua'>Aqua</option>
-//     <option value = 'galaxy'>Galaxy</option>
-//     <option value = 'original'>Original</option>
-//     <option value = 'wilderness'>Wilderness</option>
-//   </select>
-// </li>

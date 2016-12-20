@@ -9,8 +9,9 @@ class D3Viz extends Component {
 
   render() {
     const { data, chartType, zoomLevel, d3Table, searchTerms } = this.props;
-    // //--- D3 LOGIC -----////
-    // The canvas for the tree//
+
+    //--- D3 LOGIC -----
+    // The canvas for the tree
     const fauxNode = ReactFauxDom.createElement('div');
     transformVizNode(fauxNode, data, chartType, zoomLevel, d3Table, searchTerms);
     return fauxNode.toReact();

@@ -5,9 +5,11 @@ function getConfig(type, zoomLevel) {
   if (type === 'cozyTree') return {
     CHART_WIDTH: 250,
     CHART_HEIGHT: 200,
+
     // multiplier between 0 and 1 that determines horizontal spacing of tree
     // generations.  Smaller is 'more compact'.
     DEPTH_SPACING_FACTOR: 0.7,
+
     // multiplier between 0 and 1 that determines vertical spacing of tree
     // generations.  Smaller is 'more compact'.
     BREADTH_SPACING_FACTOR: 0.5,
@@ -18,9 +20,11 @@ function getConfig(type, zoomLevel) {
   else if (type === 'fancyTree') return {
   CHART_WIDTH: Math.max(500, 1000 * zoomLevel),
   CHART_HEIGHT: Math.max(500, 1000 * zoomLevel),
+
   // multiplier between 0 and 1 that determines horizontal spacing of tree
   // generations.  Smaller is 'more compact'.
   DEPTH_SPACING_FACTOR: 0.25,
+
   // multiplier between 0 and 1 that determines vertical spacing of tree
   // generations.  Smaller is 'more compact'.
   BREADTH_SPACING_FACTOR: 0.4,
@@ -31,9 +35,11 @@ function getConfig(type, zoomLevel) {
 if (type === 'comfyTree') return {
   CHART_WIDTH: Math.max(250, 500 * zoomLevel),
   CHART_HEIGHT: Math.max(500, 1000 * zoomLevel),
+
   // multiplier between 0 and 1 that determines horizontal spacing of tree
   // generations.  Smaller is 'more compact'.
   DEPTH_SPACING_FACTOR: 0.7,
+
   // multiplier between 0 and 1 that determines vertical spacing of tree
   // generations.  Smaller is 'more compact'.
   BREADTH_SPACING_FACTOR: 1,
@@ -62,7 +68,6 @@ const exports = {};
 // && data that the DefaultCluster visualizes
 
 exports.transformVizNode = function transformVizNode(element, data, type = 'cozyTree', zoomLevel = 1, d3Table, searchTerms = null) {
-  console.log('zoomLevel: ', zoomLevel);
   if (type === 'comfyTree') {
     buildBasicTree(element, data, getConfig(type, zoomLevel), d3Table, searchTerms);
   } else if (type === 'cozyTree') {
@@ -116,10 +121,9 @@ function buildBasicTree(element, data, config, d3Table, searchTerms = false) {
     .separation(function(a, b) {
       return a.parent == b.parent ? 2 : 3;
     });
-  // passes hierarchiacal data into tree to create the root node
 
+  // passes hierarchiacal data into tree to create the root node
   let nodeHierarchy = hierarchy(data);
-  // let nodeHierarchy = data;
   ourCluster(nodeHierarchy);
 
   //creating links
@@ -222,7 +226,6 @@ function project(x, y, radiusMultiplier = 1) {
 }
 
 function buildFancyTree(element, data, config, d3Table, searchTerms = false) {
-          console.log('d3Table', d3Table)
   const { CHART_WIDTH, CHART_HEIGHT, DEPTH_SPACING_FACTOR, BREADTH_SPACING_FACTOR, NODE_RADIUS, LINK_WEIGHT } = config;
   let svg = select(element)
   .append('svg')
@@ -236,15 +239,14 @@ function buildFancyTree(element, data, config, d3Table, searchTerms = false) {
     .separation((a, b) => {
       return (a.parent === b.parent ? 2 : 3) / a.depth;
     });
-  // passes hierarchiacal data into tree to create the root node
 
+  // passes hierarchiacal data into tree to create the root node
   const nodeHierarchy = hierarchy(data);
 
   ourTree(nodeHierarchy);
 
 
   //creating links
-
   let link = svg.selectAll('.node')
     .data(nodeHierarchy.descendants()
       .slice(1))
@@ -313,26 +315,20 @@ function buildFancyTree(element, data, config, d3Table, searchTerms = false) {
     })
     .attr('class', function(d) {
       let textClass = 'node-text-inactive';
-      // if (searchTerms.length) {
-      //   searchTerms.forEach(term => {
-      //     if (d3Table[term]) {
-      //       if (d3Table[term].includes(d.data.name) || term === d.data.name) {
-      //         if (d.parent) {
-      //          if (d3Table[term].includes(d.parent.data.name)) { textClass = 'node-text-active'; }
-      //         }
-      //         else { textClass = 'node-text-active' }
-      //       }
-      //     }
-      //   })
-      // }
+      if (searchTerms.length) {
+        searchTerms.forEach(term => {
+          if (d3Table[term]) {
+            if (d3Table[term].includes(d.data.name) || term === d.data.name) {
+              if (d.parent) {
+               if (d3Table[term].includes(d.parent.data.name)) { textClass = 'node-text-active'; }
+              }
+              else { textClass = 'node-text-active' }
+            }
+          }
+        })
+      }
       return textClass;
     })
-
-    // .attr("transform", function(d) {
-    //   if (!d.children) return "rotate(" + (d.x < 180 ? d.x - 90 : d.x + 90) + ")";
-    //   return null;
-    //   })
-    // .style('fill', 'darkblue');
     
     if (searchTerms) {
       let activeNodes = Array.from(document.querySelectorAll('svg .node-active'));
