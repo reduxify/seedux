@@ -4,6 +4,7 @@ import App from './app.jsx';
 
 require('./main.scss');
 require('file?name=[name].[ext]!./index.html');
+require("font-awesome-webpack");
 
 ReactDOM.render(
   <App />,

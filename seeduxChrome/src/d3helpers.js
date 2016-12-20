@@ -67,14 +67,14 @@ const exports = {};
 // takes in DOM element to be transformed into DefaultCluster,
 // && data that the DefaultCluster visualizes
 
-exports.transformVizNode = function transformVizNode(element, data, type = 'cozyTree', zoomLevel = 1, d3Table, searchTerms = null) {
+exports.transformVizNode = function transformVizNode(element, data, type = 'cozyTree', zoomLevel = 1, d3Table, searchTerms = null, applyFilter) {
   if (type === 'comfyTree') {
-    buildBasicTree(element, data, getConfig(type, zoomLevel), d3Table, searchTerms);
+    buildBasicTree(element, data, getConfig(type, zoomLevel), d3Table, searchTerms, applyFilter);
   } else if (type === 'cozyTree') {
-    buildBasicTree(element, data, getConfig(type, zoomLevel), d3Table, searchTerms);
+    buildBasicTree(element, data, getConfig(type, zoomLevel), d3Table, searchTerms, applyFilter);
   }
   else if (type === 'fancyTree') {
-    buildFancyTree(element, data, getConfig(type, zoomLevel), d3Table, searchTerms);
+    buildFancyTree(element, data, getConfig(type, zoomLevel), d3Table, searchTerms, applyFilter);
   }
 };
 function buildBasicList(element, data, config, d3Table, searchTerms) {
@@ -107,7 +107,7 @@ function buildBasicList(element, data, config, d3Table, searchTerms) {
         .text(function(d) { return id(d); });
 }
 
-function buildBasicTree(element, data, config, d3Table, searchTerms = false) {
+function buildBasicTree(element, data, config, d3Table, searchTerms = false, applyFilter) {
   const { CHART_WIDTH, CHART_HEIGHT, DEPTH_SPACING_FACTOR, BREADTH_SPACING_FACTOR, NODE_RADIUS, LINK_WEIGHT } = config;
   let svg = select(element)
   .append('svg')
@@ -211,13 +211,7 @@ function buildBasicTree(element, data, config, d3Table, searchTerms = false) {
           return textClass;
         })
 
-    if (searchTerms) {
-      let activeNodes = Array.from(document.querySelectorAll('svg .node-active'));
-
-      activeNodes.forEach((el) => {
-        el.addEventListener('click', toggleBranchVisibility);
-      }) 
-    }
+    applyFilter();
 }
 
 function project(x, y, radiusMultiplier = 1) {
@@ -225,7 +219,7 @@ function project(x, y, radiusMultiplier = 1) {
   return [radius * Math.cos(angle), radius * Math.sin(angle)];
 }
 
-function buildFancyTree(element, data, config, d3Table, searchTerms = false) {
+function buildFancyTree(element, data, config, d3Table, searchTerms = false, applyFilter) {
   const { CHART_WIDTH, CHART_HEIGHT, DEPTH_SPACING_FACTOR, BREADTH_SPACING_FACTOR, NODE_RADIUS, LINK_WEIGHT } = config;
   let svg = select(element)
   .append('svg')
@@ -329,24 +323,13 @@ function buildFancyTree(element, data, config, d3Table, searchTerms = false) {
       }
       return textClass;
     })
-    
-    if (searchTerms) {
-      let activeNodes = Array.from(document.querySelectorAll('svg .node-active'));
+    // .attr("transform", function(d) {
+    //   if (!d.children) return "rotate(" + (d.x < 180 ? d.x - 90 : d.x + 90) + ")";
+    //   return null;
+    //   })
+    // .style('fill', 'darkblue');
 
-      activeNodes.forEach((el) => {
-        el.addEventListener('click', toggleBranchVisibility);
-      }) 
-    }
+    applyFilter();
 }
-
-  function toggleBranchVisibility(e) {
-    e.preventDefault();
-    let inactiveNodes = Array.from(document.querySelectorAll('svg .node-inactive'));
-    let inactiveLinks = Array.from(document.querySelectorAll('svg .link-inactive'));
-    let inactiveNodeText = Array.from(document.querySelectorAll('svg .node-text-inactive'));
-    inactiveNodes.forEach(node => node.classList.toggle('node-hidden'));
-    inactiveLinks.forEach(link => link.classList.toggle('link-hidden'));
-    inactiveNodeText.forEach(text => text.classList.toggle('node-text-hidden'));
-  }
 
 module.exports = exports;

@@ -30,7 +30,9 @@ const SettingsMenu = ({ toggleSettings, selectTheme, settings, chartSelectValue,
           <li className = 'menu-line'><button className = { getSettingsClass(settings.containersViz) } onClick = { toggleSettings } id = 'containersViz'> Containers </button></li>
           <li className = 'menu-line'><button className = { getSettingsClass(settings.actionCreatorsViz) } onClick = { toggleSettings } id = 'actionCreatorsViz'> Action Creators </button></li>
           <li className = 'menu-line'><button className = { getSettingsClass(settings.reducersViz) } onClick = { toggleSettings } id = 'reducersViz'> Reducers </button></li>
-          </ul>
+          <li className = 'menu-line'><button className = { getSettingsClass(settings.recentFilter) } onClick = { toggleSettings } id = 'recentFilter'> Recent Only </button></li>
+
+        </ul>
           <hr></hr>
           <h4>
             Other Options
