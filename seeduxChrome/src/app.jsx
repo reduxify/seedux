@@ -32,7 +32,6 @@ class App extends React.Component {
 
     // dig around in LocalStorage to get saved settings
     const storedSettings = JSON.parse(localStorage.getItem('seeduxSettings'));
-    console.log('Dug up settings ', storedSettings);
     const settings = storedSettings ? storedSettings
       : {
         containersViz: true,
@@ -42,8 +41,8 @@ class App extends React.Component {
         logFrozen: false,
         chartType: 'fancyTree',
         zoomLevel: 1,
-        recentFilter: false,
       };
+      settings.recentFilter = false;
     this.state = {
       settings,
       history: [],
@@ -56,7 +55,6 @@ class App extends React.Component {
       chartType: 'comfyTree',
       flashMessage: getGreetings(),
     };
-
     // send a msg to the background script to ask for the current Log
     // and set the freezeLog state.
     chrome.extension.sendMessage(
@@ -107,8 +105,7 @@ class App extends React.Component {
     });
   }
   applyFilter() {
-    if (this.state.settings.recentFilter) {
-      console.log('Showing All');
+    if (!this.state.settings.recentFilter) {
       let hiddenNodes = Array.from(document.querySelectorAll('svg .node-hidden'));
       let hiddenLinks = Array.from(document.querySelectorAll('svg .link-hidden'));
       let hiddenNodeText = Array.from(document.querySelectorAll('svg .node-text-hidden'));
@@ -116,7 +113,6 @@ class App extends React.Component {
       hiddenLinks.forEach(link => link.classList.remove('link-hidden'));
       hiddenNodeText.forEach(text => text.classList.remove('node-text-hidden'));
     } else {
-      console.log('Showing Some');
       let inactiveNodes = Array.from(document.querySelectorAll('svg .node-inactive'));
       let inactiveLinks = Array.from(document.querySelectorAll('svg .link-inactive'));
       let inactiveNodeText = Array.from(document.querySelectorAll('svg .node-text-inactive'));
@@ -230,7 +226,6 @@ class App extends React.Component {
     e.preventDefault();
     let changedSetting = e.target.id;
     let newSettingStatus = !this.state.settings[changedSetting];
-    console.log('Changing ');
     // in the case that logFrozen is toggled, we must notify the background script as well
     if (e.target.id === 'logFrozen') {
       chrome.extension.sendMessage({type: 'freezeLog'}, (response) => {
