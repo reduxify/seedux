@@ -32,6 +32,7 @@ class App extends React.Component {
 
     // dig around in LocalStorage to get saved settings
     const storedSettings = JSON.parse(localStorage.getItem('seeduxSettings'));
+    console.log('Dug up settings ', storedSettings);
     const settings = storedSettings ? storedSettings
       : {
         containersViz: true,
@@ -41,6 +42,7 @@ class App extends React.Component {
         logFrozen: false,
         chartType: 'fancyTree',
         zoomLevel: 1,
+        recentFilter: false,
       };
     this.state = {
       settings,
@@ -104,7 +106,31 @@ class App extends React.Component {
       });
     });
   }
-
+  applyFilter() {
+    if (this.state.settings.recentFilter) {
+      console.log('Showing All');
+      let hiddenNodes = Array.from(document.querySelectorAll('svg .node-hidden'));
+      let hiddenLinks = Array.from(document.querySelectorAll('svg .link-hidden'));
+      let hiddenNodeText = Array.from(document.querySelectorAll('svg .node-text-hidden'));
+      hiddenNodes.forEach(node => node.classList.remove('node-hidden'));
+      hiddenLinks.forEach(link => link.classList.remove('link-hidden'));
+      hiddenNodeText.forEach(text => text.classList.remove('node-text-hidden'));
+    } else {
+      console.log('Showing Some');
+      let inactiveNodes = Array.from(document.querySelectorAll('svg .node-inactive'));
+      let inactiveLinks = Array.from(document.querySelectorAll('svg .link-inactive'));
+      let inactiveNodeText = Array.from(document.querySelectorAll('svg .node-text-inactive'));
+      inactiveNodes.forEach(node => node.classList.toggle('node-hidden'));
+      inactiveLinks.forEach(link => link.classList.toggle('link-hidden'));
+      inactiveNodeText.forEach(text => text.classList.toggle('node-text-hidden'));
+  }
+  // this.setState({
+  //     settings : {
+  //       ...this.state.settings,
+  //       recentFilter: !this.state.settings.recentFilter,
+  //     },
+  // });
+}
   handleSelectChange(event) {
     const newSettings =  {
       ...this.state.settings,
@@ -204,7 +230,7 @@ class App extends React.Component {
     e.preventDefault();
     let changedSetting = e.target.id;
     let newSettingStatus = !this.state.settings[changedSetting];
-
+    console.log('Changing ');
     // in the case that logFrozen is toggled, we must notify the background script as well
     if (e.target.id === 'logFrozen') {
       chrome.extension.sendMessage({type: 'freezeLog'}, (response) => {
@@ -262,7 +288,7 @@ class App extends React.Component {
               <button onClick={redo}><span className="flipped">&#9100; </span> Redo</button>
             </div>
             <div className='subToolbar move-right'>
-              <SettingsMenu toggleSettings = {this.toggleSettings.bind(this)} settings = {this.state.settings} handleSelectChange={this.handleSelectChange.bind(this)} chartSelectValue={this.state.settings.chartType}/>
+              <SettingsMenu toggleSettings = {this.toggleSettings.bind(this)} settings = {this.state.settings} handleSelectChange={this.handleSelectChange.bind(this)} chartSelectValue={this.state.settings.chartType} />
               <LogDrawer stashLog={() => this.stashLog()}
                 unStashLog={() => this.unStashLog()}
                 exportLog={() => this.exportLog()}
@@ -273,7 +299,7 @@ class App extends React.Component {
           </header>
       </div>
       <div className='chart-container'>
-        <D3Viz data={this.assembleVizData()}  chartType={this.state.settings.chartType} zoomLevel = {this.state.settings.zoomLevel} d3Table = { this.state.d3Table }  searchTerms = { this.generateSearchTerms() }/>
+        <D3Viz data={this.assembleVizData()} chartType={this.state.settings.chartType} zoomLevel = {this.state.settings.zoomLevel} d3Table = { this.state.d3Table }  searchTerms = { this.generateSearchTerms() } applyFilter={() => this.applyFilter()} />
         <hr />
         <Log history={this.state.history} future={this.state.future} restoreFromHistory={restoreFromHistory} restoreFromFuture={restoreFromFuture} />
       </div>

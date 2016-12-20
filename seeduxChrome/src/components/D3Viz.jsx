@@ -8,12 +8,12 @@ class D3Viz extends Component {
   }
 
   render() {
-    const { data, chartType, zoomLevel, d3Table, searchTerms } = this.props;
+    const { data, chartType, zoomLevel, d3Table, searchTerms, applyFilter } = this.props;
 
     //--- D3 LOGIC -----
     // The canvas for the tree
     const fauxNode = ReactFauxDom.createElement('div');
-    transformVizNode(fauxNode, data, chartType, zoomLevel, d3Table, searchTerms);
+    transformVizNode(fauxNode, data, chartType, zoomLevel, d3Table, searchTerms, applyFilter);
     return fauxNode.toReact();
   }
 }

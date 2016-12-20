@@ -213,20 +213,12 @@ button:active, .custom-file-input::-webkit-file-upload-button:active, .activeSet
   fill: $activeColor;
 }
 
-.node-hidden {
+.node-hidden, .node-text-hidden {
   display: none;
 }
 
-.node-text-active {
+text {
   fill: $popColor;
-}
-
-.node-text-inactive {
-  fill: $primColor;
-}
-
-.node-text-hidden {
-  display: none;
 }
 
 .action-creator {
