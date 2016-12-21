@@ -1,5 +1,5 @@
 <div align='center'>
-  <img src='http://www.seedux.net/duck' width="25em" alt='Seedux Logo'>
+  <img src='http://www.seedux.net/duck' width="33vh" alt='Seedux Logo'>
   <h1 text-align='center'> [SEEDUX] </h1>
 </div>
 
@@ -16,8 +16,8 @@ A Chrome developer tool that provides a new tab that actively logs and visualize
 - Import/Export and Stash/Unstash complete store logs from disk or localStorage, respectively.
 
 <div align='center'>
-  <img src='http://www.seedux.net/screen1' width="25em" style="display:inline" alt='Viz Screenshot'>
-  <img src='http://www.seedux.net/screen2' width="25em" style="display:inline" alt='Log Screenshot'>
+  <img src='http://www.seedux.net/screen1' width="33vh" style="display:inline" alt='Viz Screenshot'>
+  <img src='http://www.seedux.net/screen2' width="33vh" style="display:inline" alt='Log Screenshot'>
 </div>
 # How to Install
 
