@@ -67,14 +67,14 @@ const exports = {};
 // takes in DOM element to be transformed into DefaultCluster,
 // && data that the DefaultCluster visualizes
 
-exports.transformVizNode = function transformVizNode(element, data, type = 'cozyTree', zoomLevel = 1, d3Table, searchTerms = null, applyFilter) {
+exports.transformVizNode = function transformVizNode(element, data, type = 'cozyTree', zoomLevel = 1, d3Table, searchTerms = null, recentFilter) {
   if (type === 'comfyTree') {
-    buildBasicTree(element, data, getConfig(type, zoomLevel), d3Table, searchTerms, applyFilter);
+    buildBasicTree(element, data, getConfig(type, zoomLevel), d3Table, searchTerms, recentFilter);
   } else if (type === 'cozyTree') {
-    buildBasicTree(element, data, getConfig(type, zoomLevel), d3Table, searchTerms, applyFilter);
+    buildBasicTree(element, data, getConfig(type, zoomLevel), d3Table, searchTerms, recentFilter);
   }
   else if (type === 'fancyTree') {
-    buildFancyTree(element, data, getConfig(type, zoomLevel), d3Table, searchTerms, applyFilter);
+    buildFancyTree(element, data, getConfig(type, zoomLevel), d3Table, searchTerms, recentFilter);
   }
 };
 function buildBasicList(element, data, config, d3Table, searchTerms) {
@@ -107,7 +107,7 @@ function buildBasicList(element, data, config, d3Table, searchTerms) {
         .text(function(d) { return id(d); });
 }
 
-function buildBasicTree(element, data, config, d3Table, searchTerms = false, applyFilter) {
+function buildBasicTree(element, data, config, d3Table, searchTerms = false, recentFilter) {
   const { CHART_WIDTH, CHART_HEIGHT, DEPTH_SPACING_FACTOR, BREADTH_SPACING_FACTOR, NODE_RADIUS, LINK_WEIGHT } = config;
   let svg = select(element)
   .append('svg')
@@ -133,7 +133,8 @@ function buildBasicTree(element, data, config, d3Table, searchTerms = false, app
   .enter()
   .append('path')
   .attr('class', function(d) {
-      let linkClass = 'link-inactive';
+      let linkClass;
+      recentFilter ? linkClass = 'link-hidden' : linkClass = 'link-inactive';
       if (searchTerms.length) {
         searchTerms.forEach(term => {
           if (d3Table[term]) {
@@ -170,7 +171,8 @@ function buildBasicTree(element, data, config, d3Table, searchTerms = false, app
   nodeEnter.append('circle')
     .attr('r', NODE_RADIUS)
     .attr('class', function(d) {
-      let nodeClass = 'node-inactive';
+      let nodeClass;
+      recentFilter ? nodeClass = 'node-hidden' : nodeClass = 'node-inactive';
       if (searchTerms.length) {
         searchTerms.forEach(term => {
           if (d3Table[term]) {
@@ -195,7 +197,8 @@ function buildBasicTree(element, data, config, d3Table, searchTerms = false, app
           return d.data.name;
         })
         .attr('class', function(d) {
-          let textClass = 'node-text-inactive';
+          let textClass;
+          recentFilter ? textClass = 'node-text-hidden' : textClass = 'node-text-inactive';
           if (searchTerms.length) {
             searchTerms.forEach(term => {
               if (d3Table[term]) {
@@ -211,7 +214,6 @@ function buildBasicTree(element, data, config, d3Table, searchTerms = false, app
           return textClass;
         })
 
-    applyFilter();
 }
 
 function project(x, y, radiusMultiplier = 1) {
@@ -219,7 +221,7 @@ function project(x, y, radiusMultiplier = 1) {
   return [radius * Math.cos(angle), radius * Math.sin(angle)];
 }
 
-function buildFancyTree(element, data, config, d3Table, searchTerms = false, applyFilter) {
+function buildFancyTree(element, data, config, d3Table, searchTerms = false, recentFilter) {
   const { CHART_WIDTH, CHART_HEIGHT, DEPTH_SPACING_FACTOR, BREADTH_SPACING_FACTOR, NODE_RADIUS, LINK_WEIGHT } = config;
   let svg = select(element)
   .append('svg')
@@ -247,7 +249,8 @@ function buildFancyTree(element, data, config, d3Table, searchTerms = false, app
     .enter()
     .append('path')
     .attr('class', function(d) {
-      let linkClass = 'link-inactive';
+      let linkClass;
+      recentFilter ? linkClass = 'link-hidden' : linkClass = 'link-inactive';
       if (searchTerms.length) {
         searchTerms.forEach(term => {
           if (d3Table[term]) {
@@ -287,7 +290,8 @@ function buildFancyTree(element, data, config, d3Table, searchTerms = false, app
   nodeEnter.append('circle')
     .attr('r', NODE_RADIUS)
     .attr('class', function(d) {
-      let nodeClass = 'node-inactive';
+      let nodeClass;
+      recentFilter ? nodeClass = 'node-hidden' : nodeClass = 'node-inactive';
       if (searchTerms.length) {
         searchTerms.forEach(term => {
           if (d3Table[term]) {
@@ -308,7 +312,8 @@ function buildFancyTree(element, data, config, d3Table, searchTerms = false, app
       return d.data.name;
     })
     .attr('class', function(d) {
-      let textClass = 'node-text-inactive';
+      let textClass;
+      recentFilter ? textClass = 'node-text-hidden' : textClass = 'node-text-inactive';
       if (searchTerms.length) {
         searchTerms.forEach(term => {
           if (d3Table[term]) {
@@ -329,7 +334,6 @@ function buildFancyTree(element, data, config, d3Table, searchTerms = false, app
     //   })
     // .style('fill', 'darkblue');
 
-    applyFilter();
 }
 
 module.exports = exports;
