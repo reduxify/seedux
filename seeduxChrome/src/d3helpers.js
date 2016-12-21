@@ -2,9 +2,9 @@ import { select, tree, hierarchy, append, layout } from 'd3';
 
 // default chart size and spacing constants
 function getConfig(type, zoomLevel) {
-  if (type === 'cozyTree') return {
-    CHART_WIDTH: 250,
-    CHART_HEIGHT: 200,
+  if (type === 'comfyTree') return {
+    CHART_WIDTH: Math.max(250, 500 * zoomLevel),
+    CHART_HEIGHT: Math.max(500, 1000 * zoomLevel),
 
     // multiplier between 0 and 1 that determines horizontal spacing of tree
     // generations.  Smaller is 'more compact'.
@@ -12,100 +12,63 @@ function getConfig(type, zoomLevel) {
 
     // multiplier between 0 and 1 that determines vertical spacing of tree
     // generations.  Smaller is 'more compact'.
-    BREADTH_SPACING_FACTOR: 0.5,
-    NODE_RADIUS: 5,
-    LINK_WEIGHT: 2,
+    BREADTH_SPACING_FACTOR: 1,
+    NODE_RADIUS: 10,
+    LINK_WEIGHT: 1,
+
   };
 
   else if (type === 'fancyTree') return {
-  CHART_WIDTH: Math.max(500, 1000 * zoomLevel),
-  CHART_HEIGHT: Math.max(500, 1000 * zoomLevel),
+    CHART_WIDTH: Math.max(500, 1000 * zoomLevel),
+    CHART_HEIGHT: Math.max(500, 1000 * zoomLevel),
 
-  // multiplier between 0 and 1 that determines horizontal spacing of tree
-  // generations.  Smaller is 'more compact'.
-  DEPTH_SPACING_FACTOR: 0.25,
+    // multiplier between 0 and 1 that determines horizontal spacing of tree
+    // generations.  Smaller is 'more compact'.
+    DEPTH_SPACING_FACTOR: 0.25,
 
-  // multiplier between 0 and 1 that determines vertical spacing of tree
-  // generations.  Smaller is 'more compact'.
-  BREADTH_SPACING_FACTOR: 0.4,
-  NODE_RADIUS: 7,
-  LINK_WEIGHT: 1,
-};
+    // multiplier between 0 and 1 that determines vertical spacing of tree
+    // generations.  Smaller is 'more compact'.
+    BREADTH_SPACING_FACTOR: 0.4,
+    NODE_RADIUS: 7,
+    LINK_WEIGHT: 1,
+  };
 
-if (type === 'comfyTree') return {
-  CHART_WIDTH: Math.max(250, 500 * zoomLevel),
-  CHART_HEIGHT: Math.max(500, 1000 * zoomLevel),
+  else if (type === 'basicList') return {
+    CHART_WIDTH: 250,
+    CHART_HEIGHT: 250,
+    DEPTH_SPACING_FACTOR: 0.25,
+    BREADTH_SPACING_FACTOR: 0.25,
+    RECT_HEIGHT: 20,
+    RECT_WIDTH: 50,
 
-  // multiplier between 0 and 1 that determines horizontal spacing of tree
-  // generations.  Smaller is 'more compact'.
-  DEPTH_SPACING_FACTOR: 0.7,
-
-  // multiplier between 0 and 1 that determines vertical spacing of tree
-  // generations.  Smaller is 'more compact'.
-  BREADTH_SPACING_FACTOR: 1,
-  NODE_RADIUS: 10,
-  LINK_WEIGHT: 1,
-
-};
-
-if (type === 'basicList') return {
-
-  CHART_WIDTH: 250,
-  CHART_HEIGHT: 250,
-  DEPTH_SPACING_FACTOR: 0.25,
-  BREADTH_SPACING_FACTOR: 0.25,
-  RECT_HEIGHT: 20,
-  RECT_WIDTH: 50,
-
-};
+  };
 }
 const exports = {};
 
-// //--- D3 LOGIC -----////
-// The canvas for the tree//
-
-// takes in DOM element to be transformed into DefaultCluster,
-// && data that the DefaultCluster visualizes
+/**
+ * @desc These helper functions perform the DOM manipulation necessary to
+ * render our visualizations using D3 based on settings that live in the App's
+ * state (hence all of the params). The 'Dom Element' passed in is actualy a
+ * faux element, which can be mangled by d3 before being rendered on to React.
+ * @return {} This function is used for its side effects only,
+ * specifically DOM manipulation via D3.
+ * @param {DOM Element, Object, String, Number, Object, Array, Boolean} Whew.
+ * In order: DOM Element to be mangled by D3, 'parsedCodeObj' hierarchical
+ * Object sent by our extractor functions, chartType String that lives in
+ * state.settings with zoomLevel Number, a d3Table lookup Object also sent by the
+ * extractors, an Array of 'active' parts of the redux data flow based on the last action
+ * dispatched, and a Boolean recentFilter that lives in state.settings that
+ * determines whether to show all nodes, or just those that are 'active'.
+ */
 
 exports.transformVizNode = function transformVizNode(element, data, type = 'cozyTree', zoomLevel = 1, d3Table, searchTerms = null, recentFilter) {
   if (type === 'comfyTree') {
-    buildBasicTree(element, data, getConfig(type, zoomLevel), d3Table, searchTerms, recentFilter);
-  } else if (type === 'cozyTree') {
     buildBasicTree(element, data, getConfig(type, zoomLevel), d3Table, searchTerms, recentFilter);
   }
   else if (type === 'fancyTree') {
     buildFancyTree(element, data, getConfig(type, zoomLevel), d3Table, searchTerms, recentFilter);
   }
 };
-function buildBasicList(element, data, config, d3Table, searchTerms) {
-  removeHiddenClasses();
-  let svg = select(element)
-  .append('svg')
-  .attr('width', CHART_WIDTH)
-  .attr('height', CHART_HEIGHT)
-  .append('g')
-  .attr('transform', 'translate(20,0)');
-
-  var layout = layout.indent()
-  .children(function(d) { return d.children; })
-  .nodeSize([10, 15])
-  .separation(function(node, previousNode) { return node.parent === previousNode.parent || node.parent === previousNode ? 1 : 2; });
-
-  const nodes = layout(data);
-
-  labels = svg.selectAll(".label")
-        .data(nodes, function(d) { return d.name });
-
-    labels.enter()
-        .append("text")
-        .attr({
-          "class": "label",
-          dy: ".35em",
-          transform: function(d) { return "translate(" + (d.x - 200) + "," + d.y + ")"; }
-        })
-        .style("font-weight", function(d) { return d.Country ? null : "bold" })
-        .text(function(d) { return id(d); });
-}
 
 function buildBasicTree(element, data, config, d3Table, searchTerms = false, recentFilter) {
   const { CHART_WIDTH, CHART_HEIGHT, DEPTH_SPACING_FACTOR, BREADTH_SPACING_FACTOR, NODE_RADIUS, LINK_WEIGHT } = config;
@@ -334,6 +297,35 @@ function buildFancyTree(element, data, config, d3Table, searchTerms = false, rec
     //   })
     // .style('fill', 'darkblue');
 
+}
+
+function buildBasicList(element, data, config, d3Table, searchTerms) {
+  let svg = select(element)
+  .append('svg')
+  .attr('width', CHART_WIDTH)
+  .attr('height', CHART_HEIGHT)
+  .append('g')
+  .attr('transform', 'translate(20,0)');
+
+  var layout = layout.indent()
+  .children(function(d) { return d.children; })
+  .nodeSize([10, 15])
+  .separation(function(node, previousNode) { return node.parent === previousNode.parent || node.parent === previousNode ? 1 : 2; });
+
+  const nodes = layout(data);
+
+  labels = svg.selectAll(".label")
+        .data(nodes, function(d) { return d.name });
+
+    labels.enter()
+        .append("text")
+        .attr({
+          "class": "label",
+          dy: ".35em",
+          transform: function(d) { return "translate(" + (d.x - 200) + "," + d.y + ")"; }
+        })
+        .style("font-weight", function(d) { return d.Country ? null : "bold" })
+        .text(function(d) { return id(d); });
 }
 
 module.exports = exports;
