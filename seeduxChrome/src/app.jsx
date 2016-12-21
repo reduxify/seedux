@@ -177,8 +177,9 @@ class App extends React.Component {
     const reader = new FileReader();
     reader.onload = (readEvt) => {
       const readResult = JSON.parse(readEvt.target.result);
+      console.log(readResult);
       const filename = file.name;
-      if (Object.keys(readResult).includes('chartType')) {
+      if (Object.keys(readResult).includes('history')) {
         const flashMessage = `Loaded ${filename}.`;
         this.setState({...readResult, flashMessage});
       }
@@ -188,7 +189,7 @@ class App extends React.Component {
   }
 
   flashMessage(flashMessage) {
-    this.setState(flashMessage);
+    this.setState({flashMessage});
   }
 
   exportLog() {
