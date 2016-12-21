@@ -16,8 +16,8 @@ A Chrome developer tool that provides a new tab that actively logs and visualize
 - Import/Export and Stash/Unstash complete store logs from disk or localStorage, respectively.
 
 <div align='center'>
-  <img src='https://github.com/bartlett705/reduxifyChrome/blob/master/assets/seeduxscreen.png' alt='Viz Screenshot'>
-  <img src='https://github.com/bartlett705/reduxifyChrome/blob/master/assets/seeduxscreen2.png' alt='Log Screenshot'>
+  <img src='https://github.com/bartlett705/reduxifyChrome/blob/master/assets/seeduxscreen.png' style="width: 25em; display: inline" alt='Viz Screenshot'>
+  <img src='https://github.com/bartlett705/reduxifyChrome/blob/master/assets/seeduxscreen2.png' style="width: 25em; display: inline" alt='Log Screenshot'>
 </div>
 # How to Install
 
