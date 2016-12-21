@@ -1,8 +1,11 @@
-echo 'Cleaning extension build directory...'
+echo 'Cleaning npm package build directory...'
 rm -rf npm-dist
 echo 'Removing old library bundle...'
 rm lib-bundle.js
 mkdir npm-dist
+echo 'Cleaning extension build directory...'
+rm -rf seeduxChrome/dist
+mkdir seeduxChrome/dist
 echo 'Building extension...'
 npm run build:production:extension
 echo 'Copying extension...'
@@ -12,8 +15,7 @@ mkdir npm-dist/extension/popup
 mkdir npm-dist/extension/background
 mkdir npm-dist/extension/content
 
-cp seeduxChrome/dist/index.html npm-dist/extension/dist
-cp seeduxChrome/dist/bundle.js npm-dist/extension/dist
+cp seeduxChrome/dist/*.* npm-dist/extension/dist
 cp seeduxChrome/popup/*.* npm-dist/extension/popup
 cp seeduxChrome/content/*.* npm-dist/extension/content
 cp seeduxChrome/background/*.* npm-dist/extension/background
