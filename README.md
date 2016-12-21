@@ -15,6 +15,10 @@ A Chrome developer tool that provides a new tab that actively logs and visualize
 - Ability to dispatch actions with custom payloads
 - Import/Export and Stash/Unstash complete store logs from disk or localStorage, respectively.
 
+<div align='center'>
+  <img src='https://github.com/reduxify/seedux/blob/master/assets/seeduxscreen.png' alt='Viz Screenshot'>
+  <img src='https://github.com/reduxify/seedux/blob/master/assets/seeduxscreen2.png' alt='Log Screenshot'>
+</div>
 # How to Install
 
 ### NPM Module (recommended)
@@ -36,17 +40,11 @@ npm run build:both
 
 ## Getting Started:
 
-Import `createStore`, `combineReducers`, `bindActionCreators`, and `connect` from Seedux, rather than Redux. The examples below assume you are working with the npm module. If you are working from the git repo, replace 'seedux' with your repo path!
+Import `createStore`, `bindActionCreators`, and `connect` from Seedux, rather than Redux. The examples below assume you are working with the npm module. If you are working from the git repo, replace 'seedux' with your repo path!
 
 ```javascript
 // import { createStore } from 'redux';
 import { createStore } from 'seedux';
-```
-
-```javascript
-// import { combineReducers } from 'redux';
-import { combineReducers } from 'seedux';
-
 ```
 
 ```javascript
@@ -74,7 +72,7 @@ Navigate to chrome://extensions
 
 Click 'load as an unpacked extension' and select ```seedux_repo_path + 'seedux/seeduxChrome'```
 
-Open your redux app in the browser. 
+Open your redux app in the browser.
 
 Click on the seeduxChrome extension icon to launch the dev tool!
 
@@ -84,7 +82,7 @@ The following import examples are for the npm package. Replace <'seedux'> with y
 
 ### Import dispatchLogger from Seedux and replace Redux's <a href='http://redux.js.org/docs/api/createStore.html'>createStore</a> function with Seedux's version. Invoke createStore as normal with applyMiddleware(dispatchLogger) as the third argument.
 
-```
+```javascript
     import React from 'react';
     import { render } from 'react-dom';
     import { Provider } from 'react-redux';
@@ -105,25 +103,9 @@ The following import examples are for the npm package. Replace <'seedux'> with y
     );
 ```
 
-### Replace Redux's <a href='http://redux.js.org/docs/api/combineReducers.html'>combineReducers</a> function with Seedux's version and invoke it with arguments as normal:
-
-```
-    // import { combineReducers } from 'redux';
-    import { combineReducers } from 'seedux';
-    import reducer1 from './reducer1';
-    import reducer2 from './reducer2';
-
-    const combinedReducer = combineReducers({
-      reducer1: reducer1,
-      reducer2: reducer2
-    })
-
-    export default combinedReducer;
-```
-
 ### Replace Redux's <a href='http://redux.js.org/docs/api/bindActionCreators.html'>bindActionCreators</a> function with Seedux's version and invoke it with arguments as normal:
 
-```
+```javascript
     // import { bindActionCreators } from 'redux';
     import { bindActionCreators } from 'seedux';
     import * as allActionCreators from './actions';
@@ -133,7 +115,7 @@ The following import examples are for the npm package. Replace <'seedux'> with y
 
 ### Replace React-Redux's <a href='https://github.com/reactjs/react-redux/blob/master/docs/api.md#connectmapstatetoprops-mapdispatchtoprops-mergeprops-options'>connect</a> function with Seedux's version and invoke it with arguments as normal:
 
-```
+```javascript
     // import { connect } from 'react-redux';
     import { connect } from 'seedux';
     import { myComponent } from './components/myComponent';
