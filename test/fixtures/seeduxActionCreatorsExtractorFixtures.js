@@ -168,8 +168,13 @@ function moveCard(lastX, lastY, nextX, nextY) {
 
 // Simulates code injected into Redux's native bindActionCreators function
 function seeduxBindActionCreatorsLogic(actionCreators, dispatch) {
-  var keys = Object.keys(actionCreators);
   let seeduxObj = {};
+  if (typeof actionCreators === 'function') {
+    seeduxObj[actionCreators.name] = actionCreators.toString();
+    return seeduxObj;
+  }
+
+  var keys = Object.keys(actionCreators);
 
     if (keys) {
       keys.forEach(ac => {
@@ -183,7 +188,8 @@ const testActionCreators = seeduxBindActionCreatorsLogic({addTodo, setVisibility
 const testActionCreators2 = seeduxBindActionCreatorsLogic({addTodo2, setVisibilityFilter2, toggleTodo2, undoAction2, redoAction2});
 const testActionCreators3 = seeduxBindActionCreatorsLogic({addTodo3, setVisibilityFilter3, toggleTodo3, undoAction3, redoAction3});
 const testActionCreators4 = seeduxBindActionCreatorsLogic({addTodo4, setVisibilityFilter4, toggleTodo4, undoAction4, redoAction4});
-const testActionCreators5 = seeduxBindActionCreatorsLogic({moveCard})
+const testActionCreators5 = seeduxBindActionCreatorsLogic({moveCard});
+const testActionCreators6 = seeduxBindActionCreatorsLogic(moveCard);
 
 const answerActionCreators = {
   'name': 'Action Creators',
@@ -383,4 +389,4 @@ const answerActionCreators5 = {
   ]
 }
 
-module.exports = { testActionCreators, testActionCreators2, testActionCreators3, testActionCreators4, testActionCreators5, answerActionCreators, answerActionCreators2, answerActionCreators3, answerActionCreators4, answerActionCreators5 };
+module.exports = { testActionCreators, testActionCreators2, testActionCreators3, testActionCreators4, testActionCreators5, testActionCreators6, answerActionCreators, answerActionCreators2, answerActionCreators3, answerActionCreators4, answerActionCreators5 };

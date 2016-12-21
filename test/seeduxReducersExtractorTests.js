@@ -23,27 +23,27 @@ describe('reducersExtractor', () => {
   })
 
 
-  it('should return a properly structured D3 hierarchical tree output for a given input that uses switch statements', () => {
+  it('should return a properly structured D3 hierarchical tree output for a given object input that uses switch statements', () => {
     expect(output).to.deep.equal(answerReducers);
   })
 
-  it('should return a properly structured D3 hierarchical tree output for a given input that uses switch statements to screen for types that are properties on an object', () => {
+  it('should return a properly structured D3 hierarchical tree output for a given object input that uses switch statements to screen for types that are properties on an object', () => {
     expect(output4).to.deep.equal(answerReducers4);
   })
 
-  it('should return a properly structured D3 hierarchical tree output for a given input that uses ternary statements', () => {
+  it('should return a properly structured D3 hierarchical tree output for a given object input that uses ternary statements', () => {
     expect(output2).to.deep.equal(answerReducers2);
   })
 
-  it('should return a properly structured D3 hierarchical tree output for a given input that uses ternary statements to screen for types that are properties on an object', () => {
+  it('should return a properly structured D3 hierarchical tree output for a given object input that uses ternary statements to screen for types that are properties on an object', () => {
     expect(output5).to.deep.equal(answerReducers5);
   })
 
-  it('should return a properly structured D3 hierarchical tree output for a given input that uses conditional statements', () => {
+  it('should return a properly structured D3 hierarchical tree output for a given object input that uses conditional statements', () => {
     expect(output3).to.deep.equal(answerReducers3);
   })
 
-  it('should return a properly structured D3 hierarchical tree output for a given input that uses conditional statements to screen for types that are properties on an object', () => {
+  it('should return a properly structured D3 hierarchical tree output for a given object input that uses conditional statements to screen for types that are properties on an object', () => {
     expect(output6).to.deep.equal(answerReducers6);
   })
 

@@ -9,7 +9,7 @@ function saveSettings(settings) {
   localStorage.setItem('seeduxSettings', JSON.stringify(settings));
 }
 
-const SettingsMenu = ({ toggleSettings, selectTheme, settings, chartSelectValue, handleSelectChange }) => {
+const SettingsMenu = ({ toggleSettings, settings, chartSelectValue, handleSelectChange }) => {
 
   return (
       <Collapsible titleString = 'Settings &#9660;' role='drawer'>
