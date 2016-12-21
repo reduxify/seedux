@@ -104,29 +104,7 @@ class App extends React.Component {
       });
     });
   }
-  applyFilter() {
-    if (!this.state.settings.recentFilter) {
-      let hiddenNodes = Array.from(document.querySelectorAll('svg .node-hidden'));
-      let hiddenLinks = Array.from(document.querySelectorAll('svg .link-hidden'));
-      let hiddenNodeText = Array.from(document.querySelectorAll('svg .node-text-hidden'));
-      hiddenNodes.forEach(node => node.classList.remove('node-hidden'));
-      hiddenLinks.forEach(link => link.classList.remove('link-hidden'));
-      hiddenNodeText.forEach(text => text.classList.remove('node-text-hidden'));
-    } else {
-      let inactiveNodes = Array.from(document.querySelectorAll('svg .node-inactive'));
-      let inactiveLinks = Array.from(document.querySelectorAll('svg .link-inactive'));
-      let inactiveNodeText = Array.from(document.querySelectorAll('svg .node-text-inactive'));
-      inactiveNodes.forEach(node => node.classList.toggle('node-hidden'));
-      inactiveLinks.forEach(link => link.classList.toggle('link-hidden'));
-      inactiveNodeText.forEach(text => text.classList.toggle('node-text-hidden'));
-  }
-  // this.setState({
-  //     settings : {
-  //       ...this.state.settings,
-  //       recentFilter: !this.state.settings.recentFilter,
-  //     },
-  // });
-}
+
   handleSelectChange(event) {
     const newSettings =  {
       ...this.state.settings,
@@ -226,6 +204,7 @@ class App extends React.Component {
     e.preventDefault();
     let changedSetting = e.target.id;
     let newSettingStatus = !this.state.settings[changedSetting];
+    
     // in the case that logFrozen is toggled, we must notify the background script as well
     if (e.target.id === 'logFrozen') {
       chrome.extension.sendMessage({type: 'freezeLog'}, (response) => {
@@ -294,7 +273,7 @@ class App extends React.Component {
           </header>
       </div>
       <div className='chart-container'>
-        <D3Viz data={this.assembleVizData()} chartType={this.state.settings.chartType} zoomLevel = {this.state.settings.zoomLevel} d3Table = { this.state.d3Table }  searchTerms = { this.generateSearchTerms() } applyFilter={() => this.applyFilter()} />
+        <D3Viz data={this.assembleVizData()} chartType={this.state.settings.chartType} zoomLevel = {this.state.settings.zoomLevel} d3Table = { this.state.d3Table }  searchTerms = { this.generateSearchTerms() } recentFilter={this.state.settings.recentFilter} />
         <hr />
         <Log history={this.state.history} future={this.state.future} restoreFromHistory={restoreFromHistory} restoreFromFuture={restoreFromFuture} />
       </div>
