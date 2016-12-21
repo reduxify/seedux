@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Seedux",
   "description": "Redux dev tool",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "author": "Ahmad Kanawi, Michael Lampe, Stephenie Reimer",
   "browser_action": {
     "default_icon": "icon.png",
