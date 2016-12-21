@@ -104,7 +104,7 @@ class App extends React.Component {
       });
     });
   }
- 
+
   handleSelectChange(event) {
     const newSettings =  {
       ...this.state.settings,
