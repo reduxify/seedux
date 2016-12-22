@@ -11,9 +11,10 @@
     "build:production:library": "NODE_ENV=development webpack --config npm-webpack.config.js",
     "build:production:both": "webpack --config extension-webpack.config.js && NODE_ENV=development webpack --config npm-webpack.config.js",
     "dev": "webpack-dev-server --hot --inline -w",
-    "test": "mocha ./test/*",
-    "test:extractor": "mocha ./test/seeduxActionExtractorTests.js ./test/seeduxReducersExtractorTests.js ./test/seeduxUIExtractorTests.js",
-    "test:lookup": "mocha ./test/seeduxLookUpTests.js"
+    "test": "mocha ./tests/*",
+    "test:extractor": "mocha ./tests/seeduxActionExtractorTests.js ./tests/seeduxReducersExtractorTests.js ./tests/seeduxUIExtractorTests.js",
+    "test:lookup": "mocha ./tests/seeduxLookUpTests.js",
+    "test:react": "mocha ./tests/SettingsMenuTests.js"
   },
   "keywords": [],
   "author": "",
@@ -48,6 +49,7 @@
     "babel-plugin-transform-react-jsx": "^6.4.0",
     "babel-preset-es2015": "^6.18.0",
     "babel-preset-react": "^6.16.0",
+    "babel-register": "^6.18.0",
     "chai": "^3.5.0",
     "css-loader": "^0.26.0",
     "deep-diff": "^0.3.4",
