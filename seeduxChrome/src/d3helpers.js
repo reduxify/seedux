@@ -296,7 +296,6 @@ function buildFancyTree(element, data, config, d3Table, searchTerms = false, rec
     //   return null;
     //   })
     // .style('fill', 'darkblue');
-
 }
 
 function buildBasicList(element, data, config, d3Table, searchTerms) {

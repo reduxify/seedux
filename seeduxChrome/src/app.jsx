@@ -205,7 +205,6 @@ class App extends React.Component {
     e.preventDefault();
     let changedSetting = e.target.id;
     let newSettingStatus = !this.state.settings[changedSetting];
-
     // in the case that logFrozen is toggled, we must notify the background script as well
     if (e.target.id === 'logFrozen') {
       chrome.extension.sendMessage({type: 'freezeLog'}, (response) => {
