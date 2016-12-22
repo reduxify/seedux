@@ -1,6 +1,5 @@
 import React from 'react';
 import * as fileSaver from 'file-saver';
-import Graph from './components/Graph.jsx';
 import D3Viz from './components/D3Viz';
 import ParsingError from './components/ParsingError';
 import ActionCreator from './components/ActionCreator';
@@ -10,6 +9,7 @@ import Flash from './components/Flash';
 import SettingsMenu from './components/SettingsMenu';
 import getGreetings from './greetings';
 
+// helper functions that should probably be in another file
 function getPaddedMinutes(dateObj) {
   return dateObj.getMinutes() < 10 ? `0${dateObj.getMinutes()}` : dateObj.getMinutes();
 }
@@ -177,8 +177,9 @@ class App extends React.Component {
     const reader = new FileReader();
     reader.onload = (readEvt) => {
       const readResult = JSON.parse(readEvt.target.result);
+      console.log(readResult);
       const filename = file.name;
-      if (Object.keys(readResult).includes('chartType')) {
+      if (Object.keys(readResult).includes('history')) {
         const flashMessage = `Loaded ${filename}.`;
         this.setState({...readResult, flashMessage});
       }
@@ -188,7 +189,7 @@ class App extends React.Component {
   }
 
   flashMessage(flashMessage) {
-    this.setState(flashMessage);
+    this.setState({flashMessage});
   }
 
   exportLog() {
@@ -204,7 +205,6 @@ class App extends React.Component {
     e.preventDefault();
     let changedSetting = e.target.id;
     let newSettingStatus = !this.state.settings[changedSetting];
-    
     // in the case that logFrozen is toggled, we must notify the background script as well
     if (e.target.id === 'logFrozen') {
       chrome.extension.sendMessage({type: 'freezeLog'}, (response) => {
@@ -234,18 +234,17 @@ class App extends React.Component {
 
   render() {
 
-    // retrieve latest diffs from our history
-    let diffs = [];
-    if (this.state.history.length) {
-      diffs = this.state.history[this.state.history.length - 1].diffs;
-    }
-
     // (partially) apply our restore function to provide invididual button functionality to be passed as props
     const restoreFromHistory = (index) => this.restore('past', index);
     const restoreFromFuture = (index) => this.restore('future', index);
     const undo = () => this.restore('past', this.state.history.length - 2);
     const redo = () => this.restore('future', 0);
 
+    // retrieve latest diffs from our history
+    let diffs = [];
+    if (this.state.history.length) {
+      diffs = this.state.history[this.state.history.length - 1].diffs;
+    }
     return (
       <div>
         <div className='header'>
@@ -262,7 +261,10 @@ class App extends React.Component {
               <button onClick={redo}><span className="flipped">&#9100; </span> Redo</button>
             </div>
             <div className='subToolbar move-right'>
-              <SettingsMenu toggleSettings = {this.toggleSettings.bind(this)} settings = {this.state.settings} handleSelectChange={this.handleSelectChange.bind(this)} chartSelectValue={this.state.settings.chartType} />
+              <SettingsMenu toggleSettings = {this.toggleSettings.bind(this)}
+                settings = {this.state.settings}
+                handleSelectChange={this.handleSelectChange.bind(this)}
+                chartSelectValue={this.state.settings.chartType} />
               <LogDrawer stashLog={() => this.stashLog()}
                 unStashLog={() => this.unStashLog()}
                 exportLog={() => this.exportLog()}
@@ -273,9 +275,17 @@ class App extends React.Component {
           </header>
       </div>
       <div className='chart-container'>
-        <D3Viz data={this.assembleVizData()} chartType={this.state.settings.chartType} zoomLevel = {this.state.settings.zoomLevel} d3Table = { this.state.d3Table }  searchTerms = { this.generateSearchTerms() } recentFilter={this.state.settings.recentFilter} />
+        <D3Viz data={this.assembleVizData()}
+          chartType={this.state.settings.chartType}
+          zoomLevel = {this.state.settings.zoomLevel}
+          d3Table = { this.state.d3Table }
+          searchTerms = { this.generateSearchTerms() }
+          recentFilter={this.state.settings.recentFilter} />
         <hr />
-        <Log history={this.state.history} future={this.state.future} restoreFromHistory={restoreFromHistory} restoreFromFuture={restoreFromFuture} />
+        <Log history={this.state.history}
+          future={this.state.future}
+          restoreFromHistory={restoreFromHistory}
+          restoreFromFuture={restoreFromFuture} />
       </div>
     </div>
     )
