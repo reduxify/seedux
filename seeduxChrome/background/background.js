@@ -137,6 +137,7 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
   if (msg.type === 'populateLog') {
     freezeLog = msg.settings.freezeLog;
     d3Table = populateTable(codeObj);
+    console.log('codeObj', codeObj)
     response({ future, history, codeObj, d3Table });
   }
 
