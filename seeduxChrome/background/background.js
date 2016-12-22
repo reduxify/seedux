@@ -16,44 +16,44 @@ function addUIToTable(ui, uiResources, actionMap) {
   if (ui) {
   const uiNameNodes = ui.children; // Array of container node objects
   let d3TableKeys = Object.keys(d3Table);
-  if (uiResources && uiNameNodes) { // Object with structure -> { container: { prop: [state or action creators] } }
-    uiNameNodes.forEach(node => {
-      let name = uiResources[node.name]; // Look through container keys and uiResources
-      let props = Object.keys(name); // Props of container in format -> { prop: [state or action creators] }
-      props.forEach(prop => {
-        let potentialActionCreatorOrStateArr = name[prop]; // Array of action creators or state keys
-        potentialActionCreatorOrStateArr.forEach(p => {
-          if (actionMap[p]) {
-            let actionType = actionMap[p];
-            if (d3Table[actionType]) {
-              if (!d3Table[actionType].includes(prop)) {
-                d3Table[actionType].push(prop);
+    if (uiResources && uiNameNodes) { // Object with structure -> { container: { prop: [state or action creators] } }
+      uiNameNodes.forEach(node => {
+        let name = uiResources[node.name]; // Look through container keys and uiResources
+        let props = Object.keys(name); // Props of container in format -> { prop: [state or action creators] }
+        props.forEach(prop => {
+          let potentialActionCreatorOrStateArr = name[prop]; // Array of action creators or state keys
+          potentialActionCreatorOrStateArr.forEach(p => {
+            if (actionMap[p]) {
+              let actionType = actionMap[p];
+              if (d3Table[actionType]) {
+                if (!d3Table[actionType].includes(prop)) {
+                  d3Table[actionType].push(prop);
+                }
               }
+              else {
+                d3Table[actionType] = [prop];
+              }
+              if (!d3Table[actionType].includes(node.name)) { d3Table[actionType].push(node.name); }
+              if (!d3Table[actionType].includes('Containers')) { d3Table[actionType].push('Containers'); }
             }
             else {
-              d3Table[actionType] = [prop];
-            }
-            if (!d3Table[actionType].includes(node.name)) { d3Table[actionType].push(node.name); }
-            if (!d3Table[actionType].includes('Containers')) { d3Table[actionType].push('Containers'); }
-          }
-          else {
-            let stateKey = p;
-            if (d3Table[stateKey]) {
-              if (!d3Table[stateKey].includes(prop)) {
-                d3Table[stateKey].push(prop);
+              let stateKey = p;
+              if (d3Table[stateKey]) {
+                if (!d3Table[stateKey].includes(prop)) {
+                  d3Table[stateKey].push(prop);
+                }
               }
+              else {
+                d3Table[stateKey] = [prop];
+              }
+              if (!d3Table[stateKey].includes(node.name)) { d3Table[stateKey].push(node.name); }
+              if (!d3Table[stateKey].includes('Containers')) { d3Table[stateKey].push('Containers'); }
             }
-            else {
-              d3Table[stateKey] = [prop];
-            }
-            if (!d3Table[stateKey].includes(node.name)) { d3Table[stateKey].push(node.name); }
-            if (!d3Table[stateKey].includes('Containers')) { d3Table[stateKey].push('Containers'); }
-          }
-        });
+          });
+        })
       })
-    })
+    }
   }
-}
   return d3Table;
 }
 
