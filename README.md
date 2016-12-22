@@ -35,16 +35,17 @@ For a codebase suitable for modification, clone our git repository to an easily 
 
 ```javascript
 cd seedux_repo_path
+npm install
 npm run build:both
 ```
 
 ## Getting Started:
 
-Import `createStore`, `bindActionCreators`, and `connect` from Seedux, rather than Redux. The examples below assume you are working with the npm module. If you are working from the git repo, replace 'seedux' with your repo path!
+Import `combineReducers`, `bindActionCreators`, and `connect` from Seedux, rather than Redux. The examples below assume you are working with the npm module. If you are working from the git repo, replace 'seedux' with your repo path!
 
 ```javascript
-// import { createStore } from 'redux';
-import { createStore } from 'seedux';
+// import { combineReducers } from 'redux';
+import { combineReducers } from 'seedux';
 ```
 
 ```javascript
@@ -64,7 +65,7 @@ Import and call `seeduxInit`. Pass `seeduxInit` your newly created store.
 ```javascript
 import { dispatchLogger, seeduxInit } from 'seedux';
 
-const store = createStore(combinedReducer, preloadedState, applyMiddleware(dispatchLogger));
+const store = createStore(combinedReducers, preloadedState, applyMiddleware(dispatchLogger));
 seeduxInit(store);
 ```
 
@@ -101,6 +102,21 @@ The following import examples are for the npm package. Replace <'seedux'> with y
       </Provider>,
       document.getElementById('app')
     );
+```
+### Replace Redux's <a href='http://redux.js.org/docs/api/combineReducers.html'>combineReducers</a> function with Seedux's version and invoke it with arguments as normal:
+
+```javascript
+    // import { combineReducers } from 'redux';
+    import { combineReducers } from 'seedux';
+    import reducer1 from './reducer1';
+    import reducer2 from './reducer2';
+
+    const combinedReducer = combineReducers({
+      reducer1: reducer1,
+      reducer2: reducer2
+    });
+
+    export default combinedReducer;
 ```
 
 ### Replace Redux's <a href='http://redux.js.org/docs/api/bindActionCreators.html'>bindActionCreators</a> function with Seedux's version and invoke it with arguments as normal:
