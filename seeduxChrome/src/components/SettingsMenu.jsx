@@ -20,7 +20,6 @@ const SettingsMenu = ({ toggleSettings, settings, chartSelectValue, handleSelect
         <select value={chartSelectValue} onChange={handleSelectChange} >
           <option value="fancyTree">Fancy Tree</option>
           <option value="comfyTree">Comfy Tree</option>
-          <option value="cozyTree">Cozy Tree</option>
         </select>
         <hr />
         <h4>
