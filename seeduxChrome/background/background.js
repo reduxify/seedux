@@ -23,32 +23,34 @@ function addUIToTable(ui, uiResources, actionMap) {
       props.forEach(prop => {
         let potentialActionCreatorOrStateArr = name[prop]; // Array of action creators or state keys
         potentialActionCreatorOrStateArr.forEach(p => {
-          if (actionMap[p]) {
-            let actionType = actionMap[p];
-            if (d3Table[actionType]) {
-              if (!d3Table[actionType].includes(prop)) {
-                d3Table[actionType].push(prop);
+          if (actionMap) {  
+            if (actionMap[p]) {
+              let actionType = actionMap[p];
+              if (d3Table[actionType]) {
+                if (!d3Table[actionType].includes(prop)) {
+                  d3Table[actionType].push(prop);
+                }
               }
+              else {
+                d3Table[actionType] = [prop];
+              }
+              if (!d3Table[actionType].includes(node.name)) { d3Table[actionType].push(node.name); }
+              if (!d3Table[actionType].includes('Containers')) { d3Table[actionType].push('Containers'); }
             }
             else {
-              d3Table[actionType] = [prop];
-            }
-            if (!d3Table[actionType].includes(node.name)) { d3Table[actionType].push(node.name); }
-            if (!d3Table[actionType].includes('Containers')) { d3Table[actionType].push('Containers'); }
-          }
-          else {
-            let stateKey = p;
-            if (d3Table[stateKey]) {
-              if (!d3Table[stateKey].includes(prop)) {
-                d3Table[stateKey].push(prop);
+              let stateKey = p;
+              if (d3Table[stateKey]) {
+                if (!d3Table[stateKey].includes(prop)) {
+                  d3Table[stateKey].push(prop);
+                }
               }
+              else {
+                d3Table[stateKey] = [prop];
+              }
+              if (!d3Table[stateKey].includes(node.name)) { d3Table[stateKey].push(node.name); }
+              if (!d3Table[stateKey].includes('Containers')) { d3Table[stateKey].push('Containers'); }
             }
-            else {
-              d3Table[stateKey] = [prop];
-            }
-            if (!d3Table[stateKey].includes(node.name)) { d3Table[stateKey].push(node.name); }
-            if (!d3Table[stateKey].includes('Containers')) { d3Table[stateKey].push('Containers'); }
-          }
+        }
         });
       })
     })
@@ -126,7 +128,7 @@ let tabId = 0;
 let freezeLog = false;
 
 chrome.runtime.onMessage.addListener((msg, sender, response) => {
-  
+
   // forwarded from middleware by content script on each new app event
   if (msg.type === 'addToLog' && !freezeLog) {
     history.push(msg.historyEntry);
@@ -167,7 +169,7 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
   }
 
   // sent by content.js with new parsed code information
-  
+
   if (msg.type === 'storeCode') {
 
     // on launch, an app should send 2 codeObj messages.
@@ -187,7 +189,7 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
 
     // store the app's tab ID for use later in passing
     // messages from extension -> content script
-    
+
     tabId = sender.tab.id;
   }
 });

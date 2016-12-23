@@ -53,7 +53,7 @@ class App extends React.Component {
       ui: {},
       d3Table: {},
       chartType: 'comfyTree',
-      flashMessage: getGreetings(),
+      flashMessage: '',
     };
     // send a msg to the background script to ask for the current Log
     // and set the freezeLog state.
@@ -68,19 +68,28 @@ class App extends React.Component {
         console.log('Got POPULATELOG: ', response);
         // when the response comes back, check to see which parts of the
         // parsedCodeObj were succesfully extracted, and adjust settings accordingly
-        let missingCodeFlash = '';
+        let missingCodeFlash = [];
         const newSettings = {
           ...this.state.settings
         };
         if (!response.codeObj.actionCreators) {
-          missingCodeFlash += ' actionCreators (are you using bindActionCreators?) ';
+          missingCodeFlash += ' actionCreators (are you using bindActionCreators?)';
           newSettings.actionCreatorsViz = false;
         }
+        if (!response.codeObj.reducers) {
+          missingCodeFlash += ' combined reducers (are you using combineReducers?)';
+          newSettings.reducersViz = false;
+        }
         if (!response.codeObj.ui) {
-          missingCodeFlash += ' connected UI components (are you using connect?) ';
+          missingCodeFlash += ' connected UI components (are you using connect?)';
           newSettings.containersViz = false;
         }
+        console.log(missingCodeFlash);
+        const flashMessage = missingCodeFlash.length ?
+          `NOT Received: ${missingCodeFlash.join(', ')}` :
+          getGreetings();
         this.setState({
+          flashMessage,
           settings: newSettings,
           ui: response.codeObj.ui || {},
           actionCreators: response.codeObj.actionCreators || {},
@@ -222,13 +231,18 @@ class App extends React.Component {
     // unless we click a Viz button that is currently off, and there is no code to display. In that case,
     // flash a friendly message about why the button is disabled.
     let changedSetting = e.target.id;
+    console.log('changing ', changedSetting);
     if (changedSetting === 'containersViz' && !this.state.ui.name) {
       this.setState({
         flashMessage: 'No containers to display! Are you using connect()?',
       });
-    } else if (changedSetting === 'actionCreatorsViz' && !this.state.actionCreators) {
+    } else if (changedSetting === 'actionCreatorsViz' && !this.state.actionCreators.name) {
       this.setState({
         flashMessage: 'No actionCreators to display! Are you using bindActionCreators()?',
+      });
+    } else if (changedSetting === 'reducersViz' && !this.state.reducers.name) {
+      this.setState({
+        flashMessage: 'No reducers to display! Are you using combineReducers()?',
       });
 
     }
