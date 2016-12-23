@@ -47,10 +47,19 @@ class App extends React.Component {
       settings,
       history: [],
       future: [],
-      actionCreators: {},
+      actionCreators: {
+        name: 'Action Creators',
+        children: [],
+      },
       actionTypes: [],
-      reducers: {},
-      ui: {},
+      reducers: {
+        name: 'Reducers',
+        children: [],
+      },
+      ui: {
+        name: 'Containers',
+        children: [],
+      },
       d3Table: {},
       chartType: 'comfyTree',
       flashMessage: '',
@@ -72,24 +81,24 @@ class App extends React.Component {
         const newSettings = {
           ...this.state.settings
         };
-        if (!response.codeObj.actionCreators) {
-          missingCodeFlash.push(' actionCreators (are you using bindActionCreators?)');
+        if (!response.codeObj.actionCreators.children.length) {
+          missingCodeFlash.push(' actionCreators (did you pass actions to seeduxInit?)');
           newSettings.actionCreatorsViz = false;
         }
-        if (!response.codeObj.reducers) {
+        if (!response.codeObj.reducers.children.length) {
           missingCodeFlash.push(' combined reducers (are you using combineReducers?)');
           newSettings.reducersViz = false;
         }
-        if (!response.codeObj.ui) {
+        if (!response.codeObj.ui.children.length) {
           missingCodeFlash.push(' connected UI components (are you using connect?)');
           newSettings.containersViz = false;
         }
-        console.log(missingCodeFlash);
         const flashMessage = missingCodeFlash.length ?
           missingCodeFlash.length === 3 ?
             `Something is very wrong. Check out the <a href="http://www.seedux.net">docs</a>, maybe?` :
             `NOT Received: ${missingCodeFlash.join(',<br>')}` :
           getGreetings();
+        console.log(response.d3Table);
         this.setState({
           flashMessage,
           settings: newSettings,
@@ -161,9 +170,9 @@ class App extends React.Component {
       name: 'APP',
       children: [],
     };
-    if (this.state.settings.containersViz && this.state.ui.name) assembledData.children.push(this.state.ui);
-    if (this.state.settings.reducersViz && this.state.reducers.name) assembledData.children.push(this.state.reducers);
-    if (this.state.settings.actionCreatorsViz && this.state.actionCreators.name) assembledData.children.push(this.state.actionCreators);
+    if (this.state.settings.containersViz && this.state.ui.children.length) assembledData.children.push(this.state.ui);
+    if (this.state.settings.reducersViz && this.state.reducers.children.length) assembledData.children.push(this.state.reducers);
+    if (this.state.settings.actionCreatorsViz && this.state.actionCreators.children.length) assembledData.children.push(this.state.actionCreators);
     if (!assembledData.children.length) assembledData.children = null;
     return assembledData;
   }
@@ -236,15 +245,15 @@ class App extends React.Component {
     // flash a friendly message about why the button is disabled.
     let changedSetting = e.target.id;
     console.log('changing ', changedSetting);
-    if (changedSetting === 'containersViz' && !this.state.ui.name) {
+    if (changedSetting === 'containersViz' && !this.state.ui.children.length) {
       this.setState({
         flashMessage: 'No containers to display! Are you using connect()?',
       });
-    } else if (changedSetting === 'actionCreatorsViz' && !this.state.actionCreators.name) {
+    } else if (changedSetting === 'actionCreatorsViz' && !this.state.actionCreators.children.length) {
       this.setState({
         flashMessage: 'No actionCreators to display! Are you using bindActionCreators()?',
       });
-    } else if (changedSetting === 'reducersViz' && !this.state.reducers.name) {
+    } else if (changedSetting === 'reducersViz' && !this.state.reducers.children.length) {
       this.setState({
         flashMessage: 'No reducers to display! Are you using combineReducers()?',
       });
@@ -285,7 +294,7 @@ class App extends React.Component {
     if (actionType !== '@@INIT') { actionTypeSearchTerm[0] = actionType };
     return actionTypeSearchTerm;
   }
-  
+
   generateNestedStateSearchTerms(path) {
     const stateSearchTerms = [];
     let nestedSearchTerm = '';
