@@ -74,6 +74,8 @@ ul {
 .flashMessage {
   font-size: 1.2em;
   margin: 0 1em;
+  display: inline;
+  position: absolute;
 }
 
 .diff-json-container {

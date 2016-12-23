@@ -73,20 +73,22 @@ class App extends React.Component {
           ...this.state.settings
         };
         if (!response.codeObj.actionCreators) {
-          missingCodeFlash += ' actionCreators (are you using bindActionCreators?)';
+          missingCodeFlash.push(' actionCreators (are you using bindActionCreators?)');
           newSettings.actionCreatorsViz = false;
         }
         if (!response.codeObj.reducers) {
-          missingCodeFlash += ' combined reducers (are you using combineReducers?)';
+          missingCodeFlash.push(' combined reducers (are you using combineReducers?)');
           newSettings.reducersViz = false;
         }
         if (!response.codeObj.ui) {
-          missingCodeFlash += ' connected UI components (are you using connect?)';
+          missingCodeFlash.push(' connected UI components (are you using connect?)');
           newSettings.containersViz = false;
         }
         console.log(missingCodeFlash);
         const flashMessage = missingCodeFlash.length ?
-          `NOT Received: ${missingCodeFlash.join(', ')}` :
+          missingCodeFlash.length === 3 ?
+            `Something is very wrong. Check out the <a href="http://www.seedux.net">docs</a>, maybe?` :
+            `NOT Received: ${missingCodeFlash.join(',<br>')}` :
           getGreetings();
         this.setState({
           flashMessage,
