@@ -92,6 +92,8 @@ class App extends React.Component {
       }
     });
     this.generateSearchTerms.bind(this);
+    this.generateActionTypeSearchTerm.bind(this);
+    this.generateNestedStateSearchTerms.bind(this);
   }
 
   resetLog() {
@@ -217,20 +219,38 @@ class App extends React.Component {
   }
 
   generateSearchTerms() {
-    const searchTerms = [];
-    if (this.state.history.length) {
-      let actionType = this.state.history[this.state.history.length - 1].modifiedAction.type;
-      if (actionType !== '@@INIT') { searchTerms.push(actionType) };
-      this.state.history[this.state.history.length - 1].diffs.forEach(diff => {
-        if (diff.path) {
-          diff.path.forEach(p => {
-            searchTerms.push(p);
-          });
-        }
-      });
-    }
+    let searchTerms = [];
+      if (this.state.history.length) {
+        searchTerms = this.generateActionTypeSearchTerm();
+        const diff = this.state.history[this.state.history.length - 1].diffs[1] || this.state.history[this.state.history.length - 1].diffs[0];
+          if (diff) {
+            searchTerms = searchTerms.concat(this.generateNestedStateSearchTerms(diff.path));
+          }
+      }
     return searchTerms;
   }
+
+  generateActionTypeSearchTerm() {
+    const actionTypeSearchTerm = [];
+    let actionType = this.state.history[this.state.history.length - 1].modifiedAction.type;
+    if (actionType !== '@@INIT') { actionTypeSearchTerm[0] = actionType };
+    return actionTypeSearchTerm;
+  }
+  
+  generateNestedStateSearchTerms(path) {
+    const stateSearchTerms = [];
+    let nestedSearchTerm = '';
+    path.forEach((p, i) => {
+      stateSearchTerms.push(p);
+      if (i === 0) { nestedSearchTerm = p }
+      if (i > 0) {
+        nestedSearchTerm = `${nestedSearchTerm}.${p}`;
+        stateSearchTerms.push(nestedSearchTerm);
+      }
+    });
+    return stateSearchTerms;
+  }
+
 
   render() {
 
