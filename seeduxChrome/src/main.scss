@@ -74,6 +74,8 @@ ul {
 .flashMessage {
   font-size: 1.2em;
   margin: 0 1em;
+  display: inline;
+  position: absolute;
 }
 
 .diff-json-container {
@@ -147,7 +149,10 @@ button, select, .custom-file-input::-webkit-file-upload-button {
   transform: scale(-1.4, 1.4);
 }
 
-button:active, .custom-file-input::-webkit-file-upload-button:active, .activeSetting {
+button:active, .custom-file-input::-webkit-file-upload-button:active {
+  background: $primColor;
+}
+.activeSetting {
   background: green;
 }
 .time-label {
