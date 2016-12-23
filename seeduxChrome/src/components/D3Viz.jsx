@@ -9,7 +9,7 @@ class D3Viz extends Component {
 
   render() {
     const { data, chartType, zoomLevel, d3Table, searchTerms, recentFilter } = this.props;
-
+    console.log(searchTerms);
     // Helper function that manipulates a faux DOM node to create the D3 visualization
     const fauxNode = ReactFauxDom.createElement('div');
     transformVizNode(fauxNode, data, chartType, zoomLevel, d3Table, searchTerms, recentFilter);

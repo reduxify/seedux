@@ -47,13 +47,22 @@ class App extends React.Component {
       settings,
       history: [],
       future: [],
-      actionCreators: {},
+      actionCreators: {
+        name: 'Action Creators',
+        children: [],
+      },
       actionTypes: [],
-      reducers: {},
-      ui: {},
+      reducers: {
+        name: 'Reducers',
+        children: [],
+      },
+      ui: {
+        name: 'Containers',
+        children: [],
+      },
       d3Table: {},
       chartType: 'comfyTree',
-      flashMessage: getGreetings(),
+      flashMessage: '',
     };
     // send a msg to the background script to ask for the current Log
     // and set the freezeLog state.
@@ -64,7 +73,35 @@ class App extends React.Component {
           freezeLog: this.state.freezeLog,
         },
       }, (response) => {
+
+        console.log('Got POPULATELOG: ', response);
+        // when the response comes back, check to see which parts of the
+        // parsedCodeObj were succesfully extracted, and adjust settings accordingly
+        let missingCodeFlash = [];
+        const newSettings = {
+          ...this.state.settings
+        };
+        if (!response.codeObj.actionCreators.children.length) {
+          missingCodeFlash.push(' actionCreators (did you pass actions to seeduxInit?)');
+          newSettings.actionCreatorsViz = false;
+        }
+        if (!response.codeObj.reducers.children.length) {
+          missingCodeFlash.push(' combined reducers (are you using combineReducers?)');
+          newSettings.reducersViz = false;
+        }
+        if (!response.codeObj.ui.children.length) {
+          missingCodeFlash.push(' connected UI components (are you using connect?)');
+          newSettings.containersViz = false;
+        }
+        const flashMessage = missingCodeFlash.length ?
+          missingCodeFlash.length === 3 ?
+            `Something is very wrong. Check out the <a href="http://www.seedux.net">docs</a>, maybe?` :
+            `NOT Received: ${missingCodeFlash.join(',<br>')}` :
+          getGreetings();
+        console.log(response.d3Table);
         this.setState({
+          flashMessage,
+          settings: newSettings,
           ui: response.codeObj.ui || {},
           actionCreators: response.codeObj.actionCreators || {},
           reducers: response.codeObj.reducers || {},
@@ -133,9 +170,9 @@ class App extends React.Component {
       name: 'APP',
       children: [],
     };
-    if (this.state.settings.containersViz && this.state.ui.name) assembledData.children.push(this.state.ui);
-    if (this.state.settings.reducersViz && this.state.reducers.name) assembledData.children.push(this.state.reducers);
-    if (this.state.settings.actionCreatorsViz && this.state.actionCreators.name) assembledData.children.push(this.state.actionCreators);
+    if (this.state.settings.containersViz && this.state.ui.children.length) assembledData.children.push(this.state.ui);
+    if (this.state.settings.reducersViz && this.state.reducers.children.length) assembledData.children.push(this.state.reducers);
+    if (this.state.settings.actionCreatorsViz && this.state.actionCreators.children.length) assembledData.children.push(this.state.actionCreators);
     if (!assembledData.children.length) assembledData.children = null;
     return assembledData;
   }
@@ -155,7 +192,7 @@ class App extends React.Component {
 
     // this is the 'brains' of the entire restore-state process; it determines what the newHistory
     // and newFuture should be, and sends them to the background script for storage.  The background script passes
-    // just the 'new' i.e. restored state on to the content script -> seeduxLogger listener -> combineReducers listener route,
+    // just the 'new' i.e. restored state on to the content script -> seeduxLogger listener -> createStore listener route,
     // where it is returned as the app's next state, completing the restoration.
     let newHistory, newFuture;
     if (direction === 'past' && index >= 0) {
@@ -204,19 +241,40 @@ class App extends React.Component {
   toggleSettings(e) {
 
     // handle clicks in the settings menu by toggling the associated boolean stored in state.settings
-    e.preventDefault();
+    // unless we click a Viz button that is currently off, and there is no code to display. In that case,
+    // flash a friendly message about why the button is disabled.
     let changedSetting = e.target.id;
-    let newSettingStatus = !this.state.settings[changedSetting];
-    // in the case that logFrozen is toggled, we must notify the background script as well
-    if (e.target.id === 'logFrozen') {
-      chrome.extension.sendMessage({type: 'freezeLog'}, (response) => {
+    console.log('changing ', changedSetting);
+    if (changedSetting === 'containersViz' && !this.state.ui.children.length) {
+      this.setState({
+        flashMessage: 'No containers to display! Are you using connect()?',
+      });
+    } else if (changedSetting === 'actionCreatorsViz' && !this.state.actionCreators.children.length) {
+      this.setState({
+        flashMessage: 'No actionCreators to display! Are you using bindActionCreators()?',
+      });
+    } else if (changedSetting === 'reducersViz' && !this.state.reducers.children.length) {
+      this.setState({
+        flashMessage: 'No reducers to display! Are you using combineReducers()?',
+      });
+
+    }
+    // handle all other cases, where we definitely want to toggle the setting.
+    else {
+      let newSettingStatus = !this.state.settings[changedSetting];
+      // in the case that logFrozen is toggled, we must notify the background script as well
+      if (e.target.id === 'logFrozen') {
+        chrome.extension.sendMessage({type: 'freezeLog'});
+      }
+      let newSettings = {
+        ...this.state.settings,
+        [changedSetting]: newSettingStatus,
+      };
+      this.setState({
+        settings: newSettings
       });
     }
-    let newSettings = Object.assign({}, this.state.settings, { [changedSetting]: newSettingStatus } );
-    this.setState({
-      settings: newSettings
-    });
-  }
+}
 
   generateSearchTerms() {
     let searchTerms = [];
@@ -236,7 +294,7 @@ class App extends React.Component {
     if (actionType !== '@@INIT') { actionTypeSearchTerm[0] = actionType };
     return actionTypeSearchTerm;
   }
-  
+
   generateNestedStateSearchTerms(path) {
     const stateSearchTerms = [];
     let nestedSearchTerm = '';

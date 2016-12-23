@@ -4,7 +4,7 @@ const Flash = ({ text }) => {
   return (
     <div className='banner'>
       <h1>[seedux]</h1>
-      <span className='flashMessage'>{text}</span>
+      <div className='flashMessage' dangerouslySetInnerHTML={{ __html: text }} />
   </div>
   )
 }

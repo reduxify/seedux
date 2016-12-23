@@ -33,23 +33,19 @@ npm install seedux --save-dev
 
 For a codebase suitable for modification, clone our git repository to an easily accessible file path on your computer and run the build:
 
-```javascript
+```bash
 cd seedux_repo_path
+npm install
 npm run build:both
 ```
 
 ## Getting Started:
 
-Import `createStore`, `bindActionCreators`, and `connect` from Seedux, rather than Redux. The examples below assume you are working with the npm module. If you are working from the git repo, replace 'seedux' with your repo path!
+Import `combineReducers`, `connect`, and `bindActionCreators` from Seedux, rather than Redux/React-Redux. The examples below assume you are working with the npm module. If you are working from the git repo, replace 'seedux' with your repo path!
 
 ```javascript
-// import { createStore } from 'redux';
-import { createStore } from 'seedux';
-```
-
-```javascript
-// import { bindActionCreators } from 'redux';
-import { bindActionCreators } from 'seedux';
+// import { combineReducers } from 'redux';
+import { combineReducers } from 'seedux';
 ```
 
 ```javascript
@@ -57,15 +53,23 @@ import { bindActionCreators } from 'seedux';
 import { connect } from 'seedux';
 ```
 
+__Note__: Seedux relies on bindActionCreators to parse your action types at runtime and provide visual feedback on dispatched actions.  If you are not using bindActionCreators, you can pass your actions directly to seeduxInit instead.
+
+```javascript
+// import { bindActionCreators } from 'redux';
+import { bindActionCreators } from 'seedux';
+```
+
 Import `dispatchLogger` from Seedux and apply it as middleware when invoking createStore.
 
-Import and call `seeduxInit`. Pass `seeduxInit` your newly created store.
+Import and call `seeduxInit`. Pass `seeduxInit` your newly created store (and actionCreators if not using bindActionCreators).
 
 ```javascript
 import { dispatchLogger, seeduxInit } from 'seedux';
+import * as actionCreators from './actions';
 
-const store = createStore(combinedReducer, preloadedState, applyMiddleware(dispatchLogger));
-seeduxInit(store);
+const store = createStore(combinedReducers, preloadedState, applyMiddleware(dispatchLogger));
+seeduxInit(store, actionCreators);
 ```
 
 Navigate to chrome://extensions
@@ -80,7 +84,7 @@ Click on the seeduxChrome extension icon to launch the dev tool!
 
 The following import examples are for the npm package. Replace <'seedux'> with your Seedux repo filepath to use the development version.
 
-### Import dispatchLogger from Seedux and replace Redux's <a href='http://redux.js.org/docs/api/createStore.html'>createStore</a> function with Seedux's version. Invoke createStore as normal with applyMiddleware(dispatchLogger) as the third argument.
+### Import dispatchLogger from Seedux and replace Redux's <a href='http://redux.js.org/docs/api/createStore.html'>createStore</a> function with Seedux's version. Invoke createStore as normal with applyMiddleware(dispatchLogger) as the third argument. Invoke seeduxInit with your store (and actionCreators, if not using bindActionCreators).
 
 ```javascript
     import React from 'react';
@@ -90,10 +94,11 @@ The following import examples are for the npm package. Replace <'seedux'> with y
     import { createStore, dispatchLogger } from 'seedux';
     import { combinedReducer } from './reducers';
     import App from './components/App';
-
+    import * as actionCreators from './actions';
     const preloadedState = {};
 
     const store = createStore(combinedReducer, preloadedState, applyMiddleware(dispatchLogger));
+    seeduxInit(store, actionCreators);
 
     render(
       <Provider store = { store }>
@@ -101,6 +106,21 @@ The following import examples are for the npm package. Replace <'seedux'> with y
       </Provider>,
       document.getElementById('app')
     );
+```
+### Replace Redux's <a href='http://redux.js.org/docs/api/combineReducers.html'>combineReducers</a> function with Seedux's version and invoke it with arguments as normal:
+
+```javascript
+    // import { combineReducers } from 'redux';
+    import { combineReducers } from 'seedux';
+    import reducer1 from './reducer1';
+    import reducer2 from './reducer2';
+
+    const combinedReducer = combineReducers({
+      reducer1: reducer1,
+      reducer2: reducer2
+    });
+
+    export default combinedReducer;
 ```
 
 ### Replace Redux's <a href='http://redux.js.org/docs/api/bindActionCreators.html'>bindActionCreators</a> function with Seedux's version and invoke it with arguments as normal:
