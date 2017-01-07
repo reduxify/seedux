@@ -1,3 +1,4 @@
+$activeColor: #f40051;
 // Original theme!
 
 // $bgColor: #f0f0f0;
@@ -9,7 +10,6 @@
 $bgColor: #050A24;
 $primColor: #6E89FF;
 $linkColor: #214AFF;
-$activeColor: #f40051;
 $popColor: white;
 
 // Nature theme!
@@ -224,6 +224,7 @@ button:active, .custom-file-input::-webkit-file-upload-button:active {
 
 text {
   fill: $popColor;
+  font-size: 12pt;
 }
 
 .action-creator {

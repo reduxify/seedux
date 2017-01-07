@@ -98,7 +98,6 @@ class App extends React.Component {
             `Something is very wrong. Check out the <a href="http://www.seedux.net">docs</a>, maybe?` :
             `NOT Received: ${missingCodeFlash.join(',<br>')}` :
           getGreetings();
-        console.log(response.d3Table);
         this.setState({
           flashMessage,
           settings: newSettings,
@@ -216,7 +215,6 @@ class App extends React.Component {
     const reader = new FileReader();
     reader.onload = (readEvt) => {
       const readResult = JSON.parse(readEvt.target.result);
-      console.log(readResult);
       const filename = file.name;
       if (Object.keys(readResult).includes('history')) {
         const flashMessage = `Loaded ${filename}.`;
@@ -233,7 +231,7 @@ class App extends React.Component {
 
   exportLog() {
     const now = new Date();
-    const formattedDate = `${now.getMonth()}-${now.getDate()}-${now.getYear().toString().slice(1)} ${now.getHours()}-${getPaddedMinutes(now)}`;
+    const formattedDate = `${now.getMonth() + 1}-${now.getDate()}-${now.getYear().toString().slice(1)} ${now.getHours()}${getPaddedMinutes(now)}`;
     const blob = new Blob([makeStashableLog(this.state, true)], {type: "text/plain;charset=utf-8"});
     fileSaver.saveAs(blob, `seeduxLog ${formattedDate}.json`);
   }
