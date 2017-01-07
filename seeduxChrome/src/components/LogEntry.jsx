@@ -59,12 +59,12 @@ const LogEntry = ({ entry, index, futury, present, restore }) => {
       titleString={titleString} buttonHandler={() => restore(index)}>
       <div className='log-payload-container'>
         <span className='log-action-label'>Payload: </span>
-        <JSONTree data={payload} theme={theme} shouldExpandNode={() => false} invertTheme={false}/>
+        <JSONTree data={payload} theme={theme} shouldExpandNode={() => false} invertTheme={true}/>
       </div>
       <span className='log-action-label'>Store diffs: </span>
       <DiffList diffs={diffs} />
       <span className='log-action-label'>New complete store: </span>
-      <JSONTree data={newState} theme={theme} shouldExpandNode={() => false} invertTheme={false} />
+      <JSONTree data={newState} theme={theme} shouldExpandNode={() => false} invertTheme={true} />
       <hr />
     </Collapsible>
   )
