@@ -2,7 +2,7 @@
   <img src='http://www.seedux.net/duck' width="400px" alt='Seedux Logo'>
   <h1 text-align='center'> [SEEDUX] </h1>
 </div>
-
+[![Build Status](https://travis-ci.org/reduxify/seedux.svg?branch=master)](https://travis-ci.org/reduxify/seedux)
 [![NPM Downloads](https://img.shields.io/npm/dm/seedux.svg)](https://www.npmjs.com/package/seedux)
 [![NPM Version](https://img.shields.io/npm/v/seedux.svg)](https://www.npmjs.com/package/seedux)
 [![License](https://img.shields.io/npm/l/seedux.svg)](https://www.npmjs.com/package/seedux)
