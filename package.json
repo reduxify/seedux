@@ -11,7 +11,7 @@
     "build:production:library": "NODE_ENV=development webpack --config npm-webpack.config.js",
     "build:production:both": "webpack --config extension-webpack.config.js && NODE_ENV=development webpack --config npm-webpack.config.js",
     "dev": "webpack-dev-server --hot --inline -w",
-    "test": "mocha ./tests/*",
+    "test": "NODE_ENV=test mocha ./tests/*",
     "test:extractor": "mocha ./tests/seeduxActionExtractorTests.js ./tests/seeduxReducersExtractorTests.js ./tests/seeduxUIExtractorTests.js",
     "test:lookup": "mocha ./tests/seeduxLookUpTests.js",
     "test:react": "mocha ./tests/SettingsMenuTests.js"
