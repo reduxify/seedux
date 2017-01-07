@@ -3,7 +3,7 @@ import { select, tree, hierarchy, append, layout } from 'd3';
 // default chart size and spacing constants
 function getConfig(type, zoomLevel) {
   if (type === 'comfyTree') return {
-    CHART_WIDTH: Math.max(250, 500 * zoomLevel),
+    CHART_WIDTH: Math.max(window.innerWidth, 500 * zoomLevel),
     CHART_HEIGHT: Math.max(500, 1000 * zoomLevel),
 
     // multiplier between 0 and 1 that determines horizontal spacing of tree
@@ -19,7 +19,7 @@ function getConfig(type, zoomLevel) {
   };
 
   else if (type === 'fancyTree') return {
-    CHART_WIDTH: Math.max(500, 1000 * zoomLevel),
+    CHART_WIDTH: Math.max(window.innerWidth, 1000 * zoomLevel),
     CHART_HEIGHT: Math.max(500, 1000 * zoomLevel),
 
     // multiplier between 0 and 1 that determines horizontal spacing of tree
