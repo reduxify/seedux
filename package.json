@@ -6,7 +6,7 @@
   "scripts": {
     "build:extension": "webpack -w --config extension-webpack.config.js",
     "build:library": "webpack -w --config library-webpack.config.js",
-    "build:both": "webpack -w --config extension-webpack.config.js | webpack -w --config library-webpack.config.js",
+    "build:both": "webpack --config extension-webpack.config.js && webpack --config library-webpack.config.js",
     "build:production:extension": "webpack --config extension-webpack.config.js",
     "build:production:library": "NODE_ENV=development webpack --config npm-webpack.config.js",
     "build:production:both": "webpack --config extension-webpack.config.js && NODE_ENV=development webpack --config npm-webpack.config.js",
