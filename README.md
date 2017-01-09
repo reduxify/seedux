@@ -9,7 +9,7 @@
 [![NPM Version](https://img.shields.io/npm/v/seedux.svg)](https://www.npmjs.com/package/seedux)
 [![License](https://img.shields.io/npm/l/seedux.svg)](https://www.npmjs.com/package/seedux)
 
-# Description
+# Seedux
 A Chrome developer tool that provides a new tab that actively logs and visualizes the Redux data flow, enabling easier, faster debugging of any React-Redux implementation.
 
 # Features
