@@ -1,0 +1,20 @@
+{
+    "extends": "airbnb",
+    "root": true,
+    "plugins": [
+        "react",
+        "jsx-a11y",
+        "import"
+    ],
+    "rules": {
+        "no-trailing-spaces": [2, { "skipBlankLines": true }],
+        "no-use-before-define": 0,
+        "space-before-function-paren": 0,
+        "func-names": 0,
+        "strict": 0,
+        "no-unused-expressions": 0,
+        "no-param-reassign": 0,
+        "prefer-template": 0,
+        "consistent-return": 0
+    }
+}
