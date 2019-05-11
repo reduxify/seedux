@@ -1,8 +1,4 @@
-<div align='center'>
-  <img src='http://www.seedux.net/duck' width="400px" alt='Seedux Logo'>
-</div>
-<br>
-<br>
+![Seedux Logo](./assets/threedux.png)
 
 [![Build Status](https://travis-ci.org/reduxify/seedux.svg?branch=master)](https://travis-ci.org/reduxify/seedux)
 [![NPM Downloads](https://img.shields.io/npm/dm/seedux.svg)](https://www.npmjs.com/package/seedux)
@@ -21,10 +17,10 @@ A Chrome developer tool that provides a new tab that actively logs and visualize
 - Ability to dispatch actions with custom payloads
 - Import/Export and Stash/Unstash complete store logs from disk or localStorage, respectively.
 
-<div align='center'>
-  <img src='http://www.seedux.net/screen1' width="400px" style="display:inline" alt='Viz Screenshot'>
-  <img src='http://www.seedux.net/screen2' width="400px" style="display:inline" alt='Log Screenshot'>
-</div>
+![Settings Screenshot](./assets/screen1.png)
+![Log Screenshot](./assets/screen2.png)
+![](./assets/screen3.png)
+
 # How to Install
 
 ### NPM Module (recommended)
